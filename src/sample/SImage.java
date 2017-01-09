@@ -1,32 +1,30 @@
 package sample;
 
-import javafx.application.Application;
-
-import java.io.*;
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-
-
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
-import java.awt.Color;
-
 
 import static java.lang.Math.*;
+import static java.lang.Math.pow;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
+/**
+ * Created by Matthew on 08/01/2017.
+ */
+public abstract class SImage extends Image {
 
-public class Main extends Application {
-    public static void main(String[] args) {
-        launch(args);
+    static int height;
+    static int width;
+    static int[] modeRGB = new int[3];
+    static long[] meanRGB = new long[3];
+    static int[] MeanOfModesRGB = new int[3];
 
-    }
 
-    public static void main2(String args[]) throws IOException {
-        File file = new File("C:\\Users\\Matthew\\Pictures\\Malice colour.png");
+
+    public static void Analyse(File file) throws IOException {
+
         BufferedImage image = ImageIO.read(file);
         int x = image.getWidth();
         int y = image.getHeight();
@@ -34,12 +32,9 @@ public class Main extends Application {
         double redAverage = 0;
         double blueAverage = 0;
         double greenAverage = 0;
-        //int[] redRange = new int[25];
-        //int[] blueRange = new int[25];
-        //int[] greenRange = new int[25];
         Color RGB = null;
+
         HashMap<Color, Double> existing = new HashMap<>();
-        //existing.put(RGB, 0);
 
         for (int ix = 0; ix < x; ix++) {
             for (int iy = 0; iy < y; iy++) {
@@ -57,27 +52,15 @@ public class Main extends Application {
                 blueAverage += pow(blue, 2.2);
                 greenAverage += pow(green, 2.2);
                 RGB = new Color(red, green, blue);
-                //RGB[0] = red;
-                //RGB[1] = green;
-                //RGB[2] = blue;
+
                 ModeRGB(existing, RGB, modifier);
-                //System.out.println("heullo");
-                //for (Color name : existing.keySet()) {
-                // String key = (Arrays.toString(name));
-                // String value = existing.get(name).toString();
-                //System.out.println(key + " " + value);
-
             }
-
         }
 
-        redAverage = pow((redAverage / pixels), (1 / 2.2));
-        blueAverage = pow((blueAverage / pixels), (1 / 2.2));
-        greenAverage = pow((greenAverage / pixels), (1 / 2.2));
+        meanRGB[1] = round(pow((redAverage / pixels), (1 / 2.2)));
+        meanRGB[2] = round(pow((blueAverage / pixels), (1 / 2.2)));
+        meanRGB[3] =round(pow((greenAverage / pixels), (1 / 2.2)));
 
-        redAverage = round(redAverage);
-        blueAverage = round(blueAverage);
-        greenAverage = round(greenAverage);
 
         System.out.println("Red Average: " + redAverage);
         System.out.println("Green Average: " + greenAverage);
@@ -112,7 +95,6 @@ public class Main extends Application {
         System.out.println("averaged Green Mode: " + (SigmaXF[1] / SigmaF));
         System.out.println("averaged Blue Mode: " + (SigmaXF[2] / SigmaF));
     }
-
 
     public static boolean isBetween(int x, int lower, int upper) {
         return lower <= x && x <= upper;
@@ -193,18 +175,6 @@ public class Main extends Application {
         System.out.println("Overall Modifer: " + (PositionWeighting * SignificanceWeighting));
         return (PositionWeighting * SignificanceWeighting);
     }
-    @Override
-    public void start(Stage stage) throws Exception{
-        BorderPane pane;
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Application.fxml"));
-        Controller controller = new Controller();
-        loader.setController(controller);
-        pane = loader.load();
-        Scene scene = new Scene(pane);
-        stage.setScene(scene);
-        stage.setTitle("Title");
-        stage.show();
-        controller.boom.setText("WIBBLE!");
-    }
+
 
 }
