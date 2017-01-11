@@ -13,17 +13,27 @@ import static java.lang.Math.pow;
 /**
  * Created by Matthew on 08/01/2017.
  */
-public abstract class SImage extends Image {
+public class SImage {
 
-    static int height;
-    static int width;
-    static int[] modeRGB = new int[3];
-    static long[] meanRGB = new long[3];
-    static int[] MeanOfModesRGB = new int[3];
+    int height;
+    int width;
+    int[] modeRGB = new int[3];
+    long[] meanRGB = new long[3];
+    int[] MeanOfModesRGB = new int[3];
 
+    File file;
 
+    public SImage(File file) {
+        this.file = file;
+        try {
+            analyse();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-    public static void Analyse(File file) throws IOException {
+    }
+
+    private void analyse() throws IOException {
 
         BufferedImage image = ImageIO.read(file);
         int x = image.getWidth();
@@ -42,7 +52,7 @@ public abstract class SImage extends Image {
                 int red = (clr & 0x00ff0000) >> 16;
                 int green = (clr & 0x0000ff00) >> 8;
                 int blue = clr & 0x000000ff;
-                double modifier = Modifier(red, green, blue, y, x, iy, ix);
+                double modifier = modifier(red, green, blue, y, x, iy, ix);
 
                 red = (int) round(red);
                 blue = (int) round(blue);
@@ -53,7 +63,7 @@ public abstract class SImage extends Image {
                 greenAverage += pow(green, 2.2);
                 RGB = new Color(red, green, blue);
 
-                ModeRGB(existing, RGB, modifier);
+                modeRGB(existing, RGB, modifier);
             }
         }
 
@@ -96,12 +106,11 @@ public abstract class SImage extends Image {
         System.out.println("averaged Blue Mode: " + (SigmaXF[2] / SigmaF));
     }
 
-    public static boolean isBetween(int x, int lower, int upper) {
+    private boolean isBetween(int x, int lower, int upper) {
         return lower <= x && x <= upper;
     }
 
-
-    public static HashMap ModeRGB(HashMap<Color, Double> existing, Color RGB, double modifier) {
+    private HashMap modeRGB(HashMap<Color, Double> existing, Color RGB, double modifier) {
         for (Color StoredRGB : existing.keySet()) {
             if ((RGB.getRed() < StoredRGB.getRed() + 5) && (RGB.getRed() > StoredRGB.getRed() - 5) && (RGB.getGreen() < StoredRGB.getGreen() + 5) && (RGB.getGreen() > StoredRGB.getGreen() - 5) && (RGB.getBlue() < StoredRGB.getBlue() + 5) && (RGB.getBlue() > StoredRGB.getBlue() - 5)) {
                 double count = existing.get(StoredRGB);
@@ -114,7 +123,7 @@ public abstract class SImage extends Image {
         return existing;
     }
 
-    public static double GreatestDifferenceModifier(int red, int green, int blue) {
+    private double greatestDifferenceModifier(int red, int green, int blue) {
         int[] RGB = {red, green, blue};
         double maxDifference = 0;
         double difference = 0;
@@ -137,16 +146,16 @@ public abstract class SImage extends Image {
         return (modifier);
     }
 
-    public static double SignificanceWeighting(int red, int green, int blue) {
+    private double significanceWeighting(int red, int green, int blue) {
         double averageRGB = (red + green + blue) / 3;
         double brighnessModifier = (5 / sqrt(2 * PI)) * pow(E, (-(pow((((1 / (46.9574))) * averageRGB) - 2.71523, 2) / 2)) - 0.05);
-        double differenceModifier = GreatestDifferenceModifier(red, green, blue);
+        double differenceModifier = greatestDifferenceModifier(red, green, blue);
         double overallModifier = brighnessModifier * differenceModifier;
         System.out.println("Significance Modifer: " + (overallModifier));
         return overallModifier;
     }
 
-    public static double PositionWeighting(int totalHeight, int totalWidth, int currentHeight, int currentWidth) {
+    private double positionWeighting(int totalHeight, int totalWidth, int currentHeight, int currentWidth) {
         System.out.println("total Height: " + totalHeight + " Current Height: " + currentHeight);
         System.out.println("total Width: " + totalWidth + " Current Width: " + currentWidth);
         double widthModifier;
@@ -169,9 +178,9 @@ public abstract class SImage extends Image {
 
     }
 
-    public static double Modifier(int red, int green, int blue, int totalHeight, int totalWidth, int currentHeight, int currentWidth) {
-        double PositionWeighting = PositionWeighting(totalHeight, totalWidth, currentHeight, currentWidth);
-        double SignificanceWeighting = SignificanceWeighting(red, green, blue);
+    private double modifier(int red, int green, int blue, int totalHeight, int totalWidth, int currentHeight, int currentWidth) {
+        double PositionWeighting = positionWeighting(totalHeight, totalWidth, currentHeight, currentWidth);
+        double SignificanceWeighting = significanceWeighting(red, green, blue);
         System.out.println("Overall Modifer: " + (PositionWeighting * SignificanceWeighting));
         return (PositionWeighting * SignificanceWeighting);
     }
