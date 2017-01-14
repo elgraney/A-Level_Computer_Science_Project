@@ -15,12 +15,17 @@ import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Controller extends BorderPane {
 
     @FXML private MenuBar menuBar;
     @FXML private Button importButton;
     @FXML public Label boom;
+    @FXML private Button importTemplate;
+
+    ArrayList<SImage> imagePool = new ArrayList<SImage>();
+
 
     public Controller() {
     }
@@ -31,9 +36,19 @@ public class Controller extends BorderPane {
         System.out.println(selectedFile);
 
         SImage currentImage = new SImage(selectedFile);
-
+        imagePool.add(currentImage);
         //open single and multi image from windows using filechooser
         //then kick off SImage.analyse with on that item.
+    }
+    public void importTemplate(){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif", "*.tif"));
+        File selectedFile = fileChooser.showOpenDialog(null);
+        System.out.println(selectedFile);
+
+        SImage templateImage = new SImage(selectedFile);
+
+
     }
     }
 

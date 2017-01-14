@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static java.lang.Math.*;
@@ -19,7 +20,7 @@ public class SImage {
     int width;
     int[] modeRGB = new int[3];
     long[] meanRGB = new long[3];
-    int[] MeanOfModesRGB = new int[3];
+    double[] meanOfModesRGB = new double[3];
 
     File file;
 
@@ -44,7 +45,7 @@ public class SImage {
         double greenAverage = 0;
         Color RGB = null;
 
-        HashMap<Color, Double> existing = new HashMap<>();
+        HashMap<Color, Double> RGBFrequencyMap = new HashMap<>();
 
         for (int ix = 0; ix < x; ix++) {
             for (int iy = 0; iy < y; iy++) {
@@ -63,64 +64,33 @@ public class SImage {
                 greenAverage += pow(green, 2.2);
                 RGB = new Color(red, green, blue);
 
-                modeRGB(existing, RGB, modifier);
+                modeRGB(RGBFrequencyMap, RGB, modifier);
             }
         }
 
-        meanRGB[1] = round(pow((redAverage / pixels), (1 / 2.2)));
-        meanRGB[2] = round(pow((blueAverage / pixels), (1 / 2.2)));
-        meanRGB[3] =round(pow((greenAverage / pixels), (1 / 2.2)));
-
+        meanRGB[0] = round(pow((redAverage / pixels), (1 / 2.2)));
+        meanRGB[1] = round(pow((blueAverage / pixels), (1 / 2.2)));
+        meanRGB[2] = round(pow((greenAverage / pixels), (1 / 2.2)));
 
         System.out.println("Red Average: " + redAverage);
         System.out.println("Green Average: " + greenAverage);
         System.out.println("Blue Average: " + blueAverage);
 
-        double highest = 0;
-        Color item = new Color(0, 0, 0);
-        for (Color StoredRGB : existing.keySet()) {
-            if (existing.get(StoredRGB) > highest) {
-                item = StoredRGB;
-                highest = existing.get(StoredRGB);
-            }
-        }
-
-        double[] SigmaXF = new double[3];
-        double SigmaF = 0;
-
-        for (Color StoredRGB : existing.keySet()) {
-            if (existing.get(StoredRGB) > (highest * 0.75)) {
-                SigmaXF[0] += existing.get(StoredRGB) * StoredRGB.getRed();
-                SigmaXF[1] += existing.get(StoredRGB) * StoredRGB.getGreen();
-                SigmaXF[2] += existing.get(StoredRGB) * StoredRGB.getBlue();
-                SigmaF += existing.get(StoredRGB);
-            }
-
-        }
-        System.out.println("Single Red Mode: " + item.getRed());
-        System.out.println("Single Green Mode: " + item.getGreen());
-        System.out.println("Single Blue Mode: " + item.getBlue());
-
-        System.out.println("averaged Red Mode: " + (SigmaXF[0] / SigmaF));
-        System.out.println("averaged Green Mode: " + (SigmaXF[1] / SigmaF));
-        System.out.println("averaged Blue Mode: " + (SigmaXF[2] / SigmaF));
+        calcModes(RGBFrequencyMap);
     }
 
-    private boolean isBetween(int x, int lower, int upper) {
-        return lower <= x && x <= upper;
-    }
 
-    private HashMap modeRGB(HashMap<Color, Double> existing, Color RGB, double modifier) {
-        for (Color StoredRGB : existing.keySet()) {
+    private HashMap modeRGB(HashMap<Color, Double> RGBFrequencyMap, Color RGB, double modifier) {
+        for (Color StoredRGB : RGBFrequencyMap.keySet()) {
             if ((RGB.getRed() < StoredRGB.getRed() + 5) && (RGB.getRed() > StoredRGB.getRed() - 5) && (RGB.getGreen() < StoredRGB.getGreen() + 5) && (RGB.getGreen() > StoredRGB.getGreen() - 5) && (RGB.getBlue() < StoredRGB.getBlue() + 5) && (RGB.getBlue() > StoredRGB.getBlue() - 5)) {
-                double count = existing.get(StoredRGB);
-                existing.put(StoredRGB, count + 1 * modifier);
-                return existing;
+                double count = RGBFrequencyMap.get(StoredRGB);
+                RGBFrequencyMap.put(StoredRGB, count + 1 * modifier);
+                return RGBFrequencyMap;
             }
 
         }
-        existing.put(RGB, 1 * modifier);
-        return existing;
+        RGBFrequencyMap.put(RGB, 1 * modifier);
+        return RGBFrequencyMap;
     }
 
     private double greatestDifferenceModifier(int red, int green, int blue) {
@@ -185,5 +155,45 @@ public class SImage {
         return (PositionWeighting * SignificanceWeighting);
     }
 
+    private void calcModes(HashMap<Color, Double> RGBFrequencyMap) {
+        double highest = 0;
+        Color item = new Color(0, 0, 0);
+        for (Color StoredRGB : RGBFrequencyMap.keySet()) {
+            if (RGBFrequencyMap.get(StoredRGB) > highest) {
+                item = StoredRGB;
+                highest = RGBFrequencyMap.get(StoredRGB);
+            }
+        }
 
-}
+        modeRGB[0] = item.getRed();
+        modeRGB[1] = item.getGreen();
+        modeRGB[2] = item.getBlue();
+        System.out.println("Single Red Mode: " + item.getRed());
+        System.out.println("Single Green Mode: " + item.getGreen());
+        System.out.println("Single Blue Mode: " + item.getBlue());
+
+        double[] SigmaXF = new double[3];
+        double SigmaF = 0;
+
+
+        for (Color StoredRGB : RGBFrequencyMap.keySet()) {
+            if (RGBFrequencyMap.get(StoredRGB) > (highest * 0.75)) {
+                SigmaXF[0] += RGBFrequencyMap.get(StoredRGB) * StoredRGB.getRed();
+                SigmaXF[1] += RGBFrequencyMap.get(StoredRGB) * StoredRGB.getGreen();
+                SigmaXF[2] += RGBFrequencyMap.get(StoredRGB) * StoredRGB.getBlue();
+                SigmaF += RGBFrequencyMap.get(StoredRGB);
+
+            }
+        }
+            meanOfModesRGB[0] = (SigmaXF[0] / SigmaF);
+            meanOfModesRGB[1] = (SigmaXF[1] / SigmaF);
+            meanOfModesRGB[2] = (SigmaXF[2] / SigmaF);
+
+            System.out.println("averaged Red Mode: " + (SigmaXF[0] / SigmaF));
+            System.out.println("averaged Green Mode: " + (SigmaXF[1] / SigmaF));
+            System.out.println("averaged Blue Mode: " + (SigmaXF[2] / SigmaF));
+        }
+
+    }
+
+
