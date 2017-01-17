@@ -21,6 +21,7 @@ public class SImage {
     int[] modeRGB = new int[3];
     long[] meanRGB = new long[3];
     double[] meanOfModesRGB = new double[3];
+    String path;
 
     File file;
 

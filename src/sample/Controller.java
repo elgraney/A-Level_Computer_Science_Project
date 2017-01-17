@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
+import java.util.List;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,21 +25,26 @@ public class Controller extends BorderPane {
     @FXML public Label boom;
     @FXML private Button importTemplate;
 
-    ArrayList<SImage> imagePool = new ArrayList<SImage>();
+    List<SImage> imagePool = new ArrayList<SImage>();
 
 
     public Controller() {
     }
     public void importImage(){
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif", "*.tif"));
-        File selectedFile = fileChooser.showOpenDialog(null);
-        System.out.println(selectedFile);
+        fileChooser.setTitle("Select Image files");
 
-        SImage currentImage = new SImage(selectedFile);
-        imagePool.add(currentImage);
-        //open single and multi image from windows using filechooser
-        //then kick off SImage.analyse with on that item.
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif", "*.tif"));
+        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(null);
+        System.out.println(selectedFiles);
+        for (File selectedFile : selectedFiles) {
+            SImage currentImage = new SImage(selectedFile);
+            imagePool.add(currentImage);
+        }
+        for (SImage image : imagePool){
+            System.out.println("image");
+
+        }
     }
     public void importTemplate(){
         FileChooser fileChooser = new FileChooser();
