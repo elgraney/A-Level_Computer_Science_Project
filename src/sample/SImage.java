@@ -113,7 +113,7 @@ public class SImage {
             }
         }
         double modifier = 0.1 + (maxDifference * 2) / 255;
-        System.out.println("difference Modifer: " + (modifier));
+        //System.out.println("difference Modifer: " + (modifier));
         return (modifier);
     }
 
@@ -122,13 +122,13 @@ public class SImage {
         double brighnessModifier = (5 / sqrt(2 * PI)) * pow(E, (-(pow((((1 / (46.9574))) * averageRGB) - 2.71523, 2) / 2)) - 0.05);
         double differenceModifier = greatestDifferenceModifier(red, green, blue);
         double overallModifier = brighnessModifier * differenceModifier;
-        System.out.println("Significance Modifer: " + (overallModifier));
+        //System.out.println("Significance Modifer: " + (overallModifier));
         return overallModifier;
     }
 
     private double positionWeighting(int totalHeight, int totalWidth, int currentHeight, int currentWidth) {
-        System.out.println("total Height: " + totalHeight + " Current Height: " + currentHeight);
-        System.out.println("total Width: " + totalWidth + " Current Width: " + currentWidth);
+        //System.out.println("total Height: " + totalHeight + " Current Height: " + currentHeight);
+        //System.out.println("total Width: " + totalWidth + " Current Width: " + currentWidth);
         double widthModifier;
         double heightModifier;
         double currentWidth2 = (double) currentWidth;
@@ -142,9 +142,9 @@ public class SImage {
         widthModifier = ((5 / sqrt(2 * PI)) * pow(E, (-(((pow((5 * ((currentWidth2 / totalWidth2) + 0.0034) - 2.5), 2)) / 2))))) - 0.08867;
         heightModifier = ((5 / sqrt(2 * PI)) * pow(E, (-(((pow((5 * ((currentHeight2 / totalHeight2) + 0.0034) - 2.5), 2)) / 2))))) - 0.08867;
 
-        System.out.println("positionWeightingWidth Modifer: " + (widthModifier));
+        //System.out.println("positionWeightingWidth Modifer: " + (widthModifier));
         double overallModifier = (widthModifier + heightModifier) / 2;
-        System.out.println("positionWeighting Modifer: " + (overallModifier));
+        //System.out.println("positionWeighting Modifer: " + (overallModifier));
         return (overallModifier);
 
     }
@@ -152,7 +152,7 @@ public class SImage {
     private double modifier(int red, int green, int blue, int totalHeight, int totalWidth, int currentHeight, int currentWidth) {
         double PositionWeighting = positionWeighting(totalHeight, totalWidth, currentHeight, currentWidth);
         double SignificanceWeighting = significanceWeighting(red, green, blue);
-        System.out.println("Overall Modifer: " + (PositionWeighting * SignificanceWeighting));
+        //System.out.println("Overall Modifer: " + (PositionWeighting * SignificanceWeighting));
         return (PositionWeighting * SignificanceWeighting);
     }
 
