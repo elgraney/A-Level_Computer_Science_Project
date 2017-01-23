@@ -61,12 +61,16 @@ public class Controller extends BorderPane {
 
     private List<SImage> SImagePool = new ArrayList<SImage>();
     private List<Image> imagePool = new ArrayList<Image>();
+    private SImage templateImage;
 
     private Integer page = 0;
 
 
 
     public Controller() {
+    }
+    public void beginGenerationPhase(){
+        ImageFactory.generate( templateImage, SImagePool);
     }
     public void importImage(){
         FileChooser fileChooser = new FileChooser();

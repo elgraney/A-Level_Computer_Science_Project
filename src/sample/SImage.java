@@ -38,9 +38,9 @@ public class SImage {
     private void analyse() throws IOException {
 
         BufferedImage image = ImageIO.read(file);
-        int x = image.getWidth();
-        int y = image.getHeight();
-        int pixels = x * y;
+        width = image.getWidth();
+        height = image.getHeight();
+        int pixels = width * height;
         double redAverage = 0;
         double blueAverage = 0;
         double greenAverage = 0;
@@ -48,13 +48,13 @@ public class SImage {
 
         HashMap<Color, Double> RGBFrequencyMap = new HashMap<>();
 
-        for (int ix = 0; ix < x; ix++) {
-            for (int iy = 0; iy < y; iy++) {
+        for (int ix = 0; ix < width; ix++) {
+            for (int iy = 0; iy < height; iy++) {
                 int clr = image.getRGB(ix, iy);
                 int red = (clr & 0x00ff0000) >> 16;
                 int green = (clr & 0x0000ff00) >> 8;
                 int blue = clr & 0x000000ff;
-                double modifier = modifier(red, green, blue, y, x, iy, ix);
+                double modifier = modifier(red, green, blue, height, width, iy, ix);
 
                 red = (int) round(red);
                 blue = (int) round(blue);
@@ -195,6 +195,13 @@ public class SImage {
             System.out.println("averaged Blue Mode: " + (SigmaXF[2] / SigmaF));
         }
 
+    public int getHeight(){
+        return height;
     }
+    public int getWidth(){
+        return width;
+    }
+    }
+
 
 
