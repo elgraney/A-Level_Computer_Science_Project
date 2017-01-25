@@ -28,13 +28,21 @@ public class ImageFactory {
 
     }
     private static void defineSections(double mostCommonRatio){
-
-        for (int potentialWidth =1; potentialWidth < 1000; potentialWidth++){
-            //potentialHeight = potentialWidth*mostCommonRatio
+        for (int potentialHeight =1; potentialHeight < 100; potentialHeight++){
+            double potentialWidth = potentialHeight*mostCommonRatio;
+            System.out.println("Before before Width: "+ potentialWidth);
+            //potentialWidth = (Math.round(potentialWidth*100)/100);
+            System.out.println("Before Width: "+ potentialWidth);
+            System.out.println("mod "+ potentialWidth%1) ;
+            if ((potentialWidth%1)==0);
+                if (potentialWidth>=30);
+                    System.out.println("After Width: "+ potentialWidth);
 
         }
 
+
     }
+
 
     private static double getMostCommonRatio(List<SImage> imagePool) {
         HashMap<Double, Integer> ratioFrequencyMap = new HashMap();
