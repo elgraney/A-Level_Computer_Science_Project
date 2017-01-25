@@ -46,7 +46,8 @@ public class SImage {
         double greenAverage = 0;
         Color RGB = null;
 
-        HashMap<Color, Double> RGBFrequencyMap = new HashMap<>();
+        HashMap<Color, Double> RGBFrequencyMap = new HashMap<>(255*255);
+        //RGBFrequencyMap.
 
         for (int ix = 0; ix < width; ix++) {
             for (int iy = 0; iy < height; iy++) {

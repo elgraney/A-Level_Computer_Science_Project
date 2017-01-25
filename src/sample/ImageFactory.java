@@ -20,28 +20,32 @@ public class ImageFactory {
 
     public static void createSections(SImage template,List<SImage> imagePool ) {
         System.out.println("CreateScetion");
-        float mostCommonRatio;
+        double mostCommonRatio;
         mostCommonRatio = getMostCommonRatio(imagePool);
         defineSections(mostCommonRatio);
         int[][] SectionList = new int[template.getWidth()][template.getHeight()];
 
 
     }
-    private static void defineSections(float mostCommonRatio){
-        int sectionWidth = 30/
+    private static void defineSections(double mostCommonRatio){
+
+        for (int potentialWidth =1; potentialWidth < 1000; potentialWidth++){
+            //potentialHeight = potentialWidth*mostCommonRatio
+
+        }
 
     }
 
-    private static float getMostCommonRatio(List<SImage> imagePool) {
-        HashMap<Float, Integer> ratioFrequencyMap = new HashMap();
-        float selectedImageRatio = 0;
-        float targetImageRatio = 0;
+    private static double getMostCommonRatio(List<SImage> imagePool) {
+        HashMap<Double, Integer> ratioFrequencyMap = new HashMap();
+        double selectedImageRatio = 0;
+        double targetImageRatio = 0;
         System.out.println("Yo");
 
         //doesn't work, logic error
         for (SImage selectedImage : imagePool) {
-            float width = selectedImage.getWidth();
-            float height = selectedImage.getHeight();
+            double width = selectedImage.getWidth();
+            double height = selectedImage.getHeight();
 
             selectedImageRatio = (width/height);
 
@@ -61,9 +65,9 @@ public class ImageFactory {
         }
 
 
-        float highestRatio = 0;
+        double highestRatio = 0;
         int highest = 0;
-        for (float ratio : ratioFrequencyMap.keySet()) {
+        for (double ratio : ratioFrequencyMap.keySet()) {
             if (ratioFrequencyMap.get(ratio) > highest) {
                 highestRatio = ratio;
                 highest = ratioFrequencyMap.get(ratio);
