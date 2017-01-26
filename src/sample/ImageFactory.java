@@ -4,6 +4,11 @@ import java.awt.*;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 /**
  * Created by Matthew on 08/01/2017.
@@ -11,27 +16,40 @@ import java.util.List;
 public class ImageFactory {
     private static int sectionWidth;
     private static int sectionHeight;
+    private static SImage workingTemplate;
+    private static BufferedImage templateFile;
 
-    public static void generate(SImage template,List<SImage> imagePool){
+
+    public static void generate(SImage template,List<SImage> imagePool, BufferedImage templateImage){
         System.out.println("generate");
-
-        createSections(template, imagePool);
+        workingTemplate = template;
+        templateFile = templateImage;
+        createSections(imagePool);
     }
 
-    public static void createSections(SImage template,List<SImage> imagePool ) {
+    public static void createSections(List<SImage> imagePool ) {
         System.out.println("CreateScetion");
         double mostCommonRatio;
         mostCommonRatio = getMostCommonRatio(imagePool);
         defineSections(mostCommonRatio);
 
-        int width = template.getWidth();
-        int height = template.getHeight();
+        int width = workingTemplate.getWidth();
+        int height = workingTemplate.getHeight();
 
         int[][] SectionList = new int[width/sectionWidth][height/sectionHeight];
         for (int ix = 0; ix < width; ix += sectionWidth) {
             for (int iy = 0; iy < height; iy +=sectionHeight) {
                 System.out.println("hey!");
+                Image sectionImage = createSectionImage(ix, iy);
+                //section image is buffered image, but section does not take that type.
+                Section currentSection = new Section(sectionImage, ix, iy, sectionWidth, sectionHeight);
             }}
+
+    }
+    private static Image createSectionImage(int x ,int y){
+        templateFile.getSubimage(x, y, sectionWidth, sectionHeight);
+
+
 
     }
     private static void defineSections(double mostCommonRatio) {

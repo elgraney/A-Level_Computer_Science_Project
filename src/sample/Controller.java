@@ -61,7 +61,9 @@ public class Controller extends BorderPane {
 
     private List<SImage> SImagePool = new ArrayList<SImage>();
     private List<Image> imagePool = new ArrayList<Image>();
-    private SImage templateImage;
+    private SImage templateSImage;
+    private BufferedImage templateImage;
+
 
     private Integer page = 0;
 
@@ -70,7 +72,7 @@ public class Controller extends BorderPane {
     public Controller() {
     }
     public void beginGenerationPhase(){
-        ImageFactory.generate( templateImage, SImagePool);
+        ImageFactory.generate( templateSImage, SImagePool, templateImage);
     }
     public void importImage(){
         FileChooser fileChooser = new FileChooser();
@@ -151,8 +153,13 @@ public class Controller extends BorderPane {
         File selectedFile = fileChooser.showOpenDialog(null);
         System.out.println(selectedFile);
 
-        SImage templateImage = new SImage(selectedFile);
+        templateSImage = new SImage(selectedFile);
 
+        try {
+            templateImage = ImageIO.read(selectedFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
     }

@@ -9,13 +9,14 @@ import java.io.File;
 public class Section extends SImage {
 
     private int topLeftX;
-    private int topRightX;
+    private int topLeftY;
     private int centreX;
     private int centreY;
 
-    public Section(File file) {
+    public Section(File file, int x, int y, int width, int height) {
         super(file);
-
+        topLeftX = x;
+        topLeftY = y;
 
 
     }
