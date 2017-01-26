@@ -16,12 +16,11 @@ import static java.lang.Math.pow;
  */
 public class SImage {
 
-    int height;
-    int width;
-    int[] modeRGB = new int[3];
-    long[] meanRGB = new long[3];
-    double[] meanOfModesRGB = new double[3];
-    String path;
+    protected int height;
+    protected int width;
+    protected int[] modeRGB = new int[3];
+    protected long[] meanRGB = new long[3];
+    protected double[] meanOfModesRGB = new double[3];
 
     File file;
 

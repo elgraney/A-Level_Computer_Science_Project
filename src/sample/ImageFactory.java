@@ -9,8 +9,8 @@ import java.util.List;
  * Created by Matthew on 08/01/2017.
  */
 public class ImageFactory {
-    private int sectionWidth;
-    private int sectionHeight;
+    private static int sectionWidth;
+    private static int sectionHeight;
 
     public static void generate(SImage template,List<SImage> imagePool){
         System.out.println("generate");
@@ -23,25 +23,39 @@ public class ImageFactory {
         double mostCommonRatio;
         mostCommonRatio = getMostCommonRatio(imagePool);
         defineSections(mostCommonRatio);
-        int[][] SectionList = new int[template.getWidth()][template.getHeight()];
 
+        int width = template.getWidth();
+        int height = template.getHeight();
+
+        int[][] SectionList = new int[width/sectionWidth][height/sectionHeight];
+        for (int ix = 0; ix < width; ix += sectionWidth) {
+            for (int iy = 0; iy < height; iy +=sectionHeight) {
+                System.out.println("hey!");
+            }}
 
     }
-    private static void defineSections(double mostCommonRatio){
-        for (int potentialHeight =1; potentialHeight < 100; potentialHeight++){
-            double potentialWidth = potentialHeight*mostCommonRatio;
-            System.out.println("Before before Width: "+ potentialWidth);
+    private static void defineSections(double mostCommonRatio) {
+        for (int potentialHeight = 1; potentialHeight < 1000; potentialHeight++) {
+            double potentialWidth = potentialHeight * mostCommonRatio;
             //potentialWidth = (Math.round(potentialWidth*100)/100);
-            System.out.println("Before Width: "+ potentialWidth);
-            System.out.println("mod "+ potentialWidth%1) ;
-            if ((potentialWidth%1)==0);
-                if (potentialWidth>=30);
-                    System.out.println("After Width: "+ potentialWidth);
+            //System.out.println("Before Width: " + potentialWidth);
+            //System.out.println("mod " + potentialWidth % 1);
+            double remainder = potentialWidth % 1;
+            System.out.println(remainder);
+            if ((remainder == 0.0) && (potentialWidth >= 30)) {
+                System.out.println("After Width: " + potentialWidth);
+                sectionWidth = (int) potentialWidth;
+                sectionHeight = potentialHeight;
+                return;
+            }
 
         }
-
-
+        System.out.println("NO RESOLUTION FOUND");
     }
+
+
+
+
 
 
     private static double getMostCommonRatio(List<SImage> imagePool) {
