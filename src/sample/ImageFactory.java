@@ -36,18 +36,23 @@ public class ImageFactory {
         int width = workingTemplate.getWidth();
         int height = workingTemplate.getHeight();
 
-        int[][] SectionList = new int[width/sectionWidth][height/sectionHeight];
+        Section[][] sectionList = new Section[width/sectionWidth][height/sectionHeight];
         for (int ix = 0; ix < width; ix += sectionWidth) {
             for (int iy = 0; iy < height; iy +=sectionHeight) {
                 System.out.println("hey!");
                 Image sectionImage = createSectionImage(ix, iy);
                 //section image is buffered image, but section does not take that type.
+
+                File sectionfile = new File("section.jpg");
+                ImageIO.write(sectionImage, "jpg", sectionfile);
+
                 Section currentSection = new Section(sectionImage, ix, iy, sectionWidth, sectionHeight);
+                sectionList[ix/sectionWidth][iy/sectionHeight] = currentSection;
             }}
 
     }
     private static Image createSectionImage(int x ,int y){
-        templateFile.getSubimage(x, y, sectionWidth, sectionHeight);
+        return templateFile.getSubimage(x, y, sectionWidth, sectionHeight);
 
 
 
@@ -82,14 +87,13 @@ public class ImageFactory {
         double targetImageRatio = 0;
         System.out.println("Yo");
 
-        //doesn't work, logic error
+
         for (SImage selectedImage : imagePool) {
             double width = selectedImage.getWidth();
             double height = selectedImage.getHeight();
 
             selectedImageRatio = (width/height);
 
-            //probelm with selectedImage
 
             System.out.println("selected: "+ selectedImageRatio);
 

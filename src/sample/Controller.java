@@ -59,6 +59,8 @@ public class Controller extends BorderPane {
     @FXML private ImageView imageFrame22;
     @FXML private ImageView imageFrame23;
 
+    @FXML private ImageView templateFrame;
+
     private List<SImage> SImagePool = new ArrayList<SImage>();
     private List<Image> imagePool = new ArrayList<Image>();
     private SImage templateSImage;
@@ -95,6 +97,7 @@ public class Controller extends BorderPane {
 
 
     public void updateImagePool(List SImagePool, List imagePool){
+
         int length =  imagePool.size();
         if(length>=1) {
             imageFrame0.setImage((Image) imagePool.get(0 + page));
@@ -152,6 +155,7 @@ public class Controller extends BorderPane {
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
         File selectedFile = fileChooser.showOpenDialog(null);
         System.out.println(selectedFile);
+
 
         templateSImage = new SImage(selectedFile);
 
