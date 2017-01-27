@@ -119,16 +119,16 @@ public class SImage {
 
     private double significanceWeighting(int red, int green, int blue) {
         double averageRGB = (red + green + blue) / 3;
-        double brighnessModifier = (5 / sqrt(2 * PI)) * pow(E, (-(pow((((1 / (46.9574))) * averageRGB) - 2.71523, 2) / 2)) - 0.05);
+
+        double brighnessModifier = (2.89313 / sqrt(2 * PI)) * (pow(E, -(1/3975f) * pow((averageRGB-(255/2f)),2)/2f))+0.35;
+
         double differenceModifier = greatestDifferenceModifier(red, green, blue);
         double overallModifier = brighnessModifier * differenceModifier;
-        //System.out.println("Significance Modifer: " + (overallModifier));
+
         return overallModifier;
     }
 
     private double positionWeighting(int totalHeight, int totalWidth, int currentHeight, int currentWidth) {
-        //System.out.println("total Height: " + totalHeight + " Current Height: " + currentHeight);
-        //System.out.println("total Width: " + totalWidth + " Current Width: " + currentWidth);
         double widthModifier;
         double heightModifier;
         double currentWidth2 = (double) currentWidth;
@@ -136,15 +136,11 @@ public class SImage {
         double totalWidth2 = (double) totalWidth;
         double totalHeight2 = (double) totalHeight;
 
-        //widthModifier = ((5/ sqrt(2*PI))* pow(E, (-(pow(5*((currentWidth2/totalWidth2)+0.0034)-2.5, 2))/2)))-0.08867;
-        //heightModifier =((5/ sqrt(2*PI))* pow(E, (-(pow(5*((currentHeight2/totalHeight2)+0.0034)-2.5, 2))/2)))-0.08867;
-        //WHYYYYYYYYYYY
-        widthModifier = ((5 / sqrt(2 * PI)) * pow(E, (-(((pow((5 * ((currentWidth2 / totalWidth2) + 0.0034) - 2.5), 2)) / 2))))) - 0.08867;
-        heightModifier = ((5 / sqrt(2 * PI)) * pow(E, (-(((pow((5 * ((currentHeight2 / totalHeight2) + 0.0034) - 2.5), 2)) / 2))))) - 0.08867;
+        widthModifier = (2.89313 / sqrt(2 * PI)) * pow(E, -15*pow(currentWidth2 / totalWidth2-0.5, 2)/ 2f )+0.35;
+        heightModifier = (2.89313 / sqrt(2 * PI)) * pow(E, -15*pow(currentHeight2 / totalHeight2 -0.5, 2) / 2f) +0.35;
 
-        //System.out.println("positionWeightingWidth Modifer: " + (widthModifier));
         double overallModifier = (widthModifier + heightModifier) / 2;
-        //System.out.println("positionWeighting Modifer: " + (overallModifier));
+
         return (overallModifier);
 
     }

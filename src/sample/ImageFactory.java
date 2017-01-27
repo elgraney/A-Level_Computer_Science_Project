@@ -5,7 +5,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -40,18 +39,23 @@ public class ImageFactory {
         for (int ix = 0; ix < width; ix += sectionWidth) {
             for (int iy = 0; iy < height; iy +=sectionHeight) {
                 System.out.println("hey!");
-                Image sectionImage = createSectionImage(ix, iy);
+                BufferedImage sectionImage = createSectionImage(ix, iy);
                 //section image is buffered image, but section does not take that type.
 
                 File sectionfile = new File("section.jpg");
-                ImageIO.write(sectionImage, "jpg", sectionfile);
+                try {
+                    ImageIO.write(sectionImage, "jpg", sectionfile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-                Section currentSection = new Section(sectionImage, ix, iy, sectionWidth, sectionHeight);
+                Section currentSection = new Section(sectionfile, ix, iy, sectionWidth, sectionHeight);
                 sectionList[ix/sectionWidth][iy/sectionHeight] = currentSection;
             }}
+        System.out.println("2D array length: "+  sectionList.length * sectionList[0].length);
 
     }
-    private static Image createSectionImage(int x ,int y){
+    private static BufferedImage createSectionImage(int x ,int y){
         return templateFile.getSubimage(x, y, sectionWidth, sectionHeight);
 
 
@@ -65,7 +69,7 @@ public class ImageFactory {
             //System.out.println("mod " + potentialWidth % 1);
             double remainder = potentialWidth % 1;
             System.out.println(remainder);
-            if ((remainder == 0.0) && (potentialWidth >= 30)) {
+            if ((remainder == 0.0) && (potentialWidth >= 30)&& (potentialHeight >= 30)) {
                 System.out.println("After Width: " + potentialWidth);
                 sectionWidth = (int) potentialWidth;
                 sectionHeight = potentialHeight;
@@ -75,11 +79,6 @@ public class ImageFactory {
         }
         System.out.println("NO RESOLUTION FOUND");
     }
-
-
-
-
-
 
     private static double getMostCommonRatio(List<SImage> imagePool) {
         HashMap<Double, Integer> ratioFrequencyMap = new HashMap();

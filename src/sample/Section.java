@@ -1,3 +1,5 @@
+package sample;
+
 import sample.SImage;
 
 import java.io.File;

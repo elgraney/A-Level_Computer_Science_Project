@@ -64,9 +64,6 @@
          </children>
       </VBox>
    </bottom>
-   <right>
-      <TreeView prefWidth="250.0" BorderPane.alignment="CENTER" />
-   </right>
    <center>
       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
@@ -285,4 +282,18 @@
          </children>
       </VBox>
    </center>
+   <right>
+      <VBox prefHeight="600.0" prefWidth="230.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox>
+               <children>
+                  <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                  <ImageView fx:id="templateFrame" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                  <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+            <TreeView />
+         </children>
+      </VBox>
+   </right>
 </BorderPane>
