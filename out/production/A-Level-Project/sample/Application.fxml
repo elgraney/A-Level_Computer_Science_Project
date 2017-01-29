@@ -5,14 +5,14 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane prefHeight="720.0" prefWidth="1280.0" style="-fx-border-color: grey;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <MenuBar id="menuBar" BorderPane.alignment="CENTER">
         <menus>
@@ -35,7 +35,7 @@
       </MenuBar>
    </top>
    <bottom>
-      <VBox BorderPane.alignment="CENTER">
+      <VBox style="-fx-background-color: #A7C7D2;" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets />
          </BorderPane.margin>
@@ -65,7 +65,7 @@
       </VBox>
    </bottom>
    <center>
-      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: lightgrey; -fx-border-color: grey;" BorderPane.alignment="CENTER">
          <children>
             <HBox prefHeight="200.0" spacing="5.0">
                <children>
@@ -120,7 +120,7 @@
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <HBox prefHeight="200.0">
+            <HBox prefHeight="200.0" spacing="5.0">
                <children>
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                   <VBox>
@@ -150,7 +150,7 @@
                   <VBox>
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame9" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" />
+                        <ImageView fx:id="imageFrame9" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
                   </VBox>
@@ -279,20 +279,35 @@
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-border-color: grey; -fx-background-color: gainsboro;">
+               <children>
+                  <Region prefHeight="200.0" prefWidth="20.0" />
+                  <Button fx:id="previousPageButton" mnemonicParsing="false" onAction="#previousPage" text="Previous Page" />
+                  <Region prefHeight="200.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="nextPageButton" mnemonicParsing="false" onAction="#nextPage" text="Next Page" />
+                  <Region prefHeight="200.0" prefWidth="20.0" />
+               </children>
+            </HBox>
          </children>
       </VBox>
    </center>
    <right>
-      <VBox prefHeight="600.0" prefWidth="230.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="600.0" prefWidth="230.0" style="-fx-border-color: grey;" BorderPane.alignment="CENTER">
          <children>
-            <HBox>
+            <HBox style="-fx-border-color: lightgrey;">
                <children>
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <ImageView fx:id="templateFrame" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                  <VBox>
+                     <children>
+                        <Region prefHeight="50.0" />
+                        <ImageView fx:id="templateFrame" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                        <Region prefHeight="50.0" />
+                     </children>
+                  </VBox>
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <TreeView />
+            <TitledPane animated="false" prefHeight="460.0" prefWidth="230.0" style="-fx-border-color: grey;" text="Image Pool information" />
          </children>
       </VBox>
    </right>

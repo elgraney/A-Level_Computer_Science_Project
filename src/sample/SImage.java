@@ -47,8 +47,8 @@ public class SImage {
 
         HashMap<Color, Double> RGBFrequencyMap = new HashMap<>(255*255);
         //RGBFrequencyMap.
-
-        for (int ix = 0; ix < width; ix++) {
+        int step = calcStep();
+        for (int ix = 0; ix < width; ix= ix+step) {
             for (int iy = 0; iy < height; iy++) {
                 int clr = image.getRGB(ix, iy);
                 int red = (clr & 0x00ff0000) >> 16;
@@ -73,9 +73,9 @@ public class SImage {
         meanRGB[1] = round(pow((blueAverage / pixels), (1 / 2.2)));
         meanRGB[2] = round(pow((greenAverage / pixels), (1 / 2.2)));
 
-        System.out.println("Red Average: " + redAverage);
-        System.out.println("Green Average: " + greenAverage);
-        System.out.println("Blue Average: " + blueAverage);
+        System.out.println("Red Average: " + meanRGB[0]);
+        System.out.println("Green Average: " + meanRGB[1]);
+        System.out.println("Blue Average: " + meanRGB[2]);
 
         calcModes(RGBFrequencyMap);
     }
@@ -93,6 +93,31 @@ public class SImage {
         RGBFrequencyMap.put(RGB, 1 * modifier);
         return RGBFrequencyMap;
     }
+    public int calcStep() {
+        int resolution = width * height;
+        int step;
+        //System.out.println("Resolution"+resolution);
+        if(resolution<250000) {
+            step = 1;
+        }
+        else if(resolution>=250000 && resolution<500000){
+                step = 2;
+            }
+        else if(resolution>=500000 && resolution<1000000){
+            step = 3;
+        }
+        else if(resolution>=1000000 && resolution<2500000){
+            step = 4;
+        }
+        else if(resolution>=2500000 && resolution<5000000){
+            step = 5;
+        }
+        else{
+            step = 6;}
+        //System.out.println("Step: "+step);
+        return step;
+    }
+
 
     private double greatestDifferenceModifier(int red, int green, int blue) {
         int[] RGB = {red, green, blue};
@@ -146,10 +171,13 @@ public class SImage {
     }
 
     private double modifier(int red, int green, int blue, int totalHeight, int totalWidth, int currentHeight, int currentWidth) {
+        double finalModifier;
         double PositionWeighting = positionWeighting(totalHeight, totalWidth, currentHeight, currentWidth);
         double SignificanceWeighting = significanceWeighting(red, green, blue);
         //System.out.println("Overall Modifer: " + (PositionWeighting * SignificanceWeighting));
-        return (PositionWeighting * SignificanceWeighting);
+
+        finalModifier = PositionWeighting * SignificanceWeighting;
+        return (finalModifier);
     }
 
     private void calcModes(HashMap<Color, Double> RGBFrequencyMap) {

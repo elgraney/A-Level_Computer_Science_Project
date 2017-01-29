@@ -61,6 +61,7 @@ public class Controller extends BorderPane {
 
     @FXML private ImageView templateFrame;
 
+    private ImageView[] imageFrameList;
     private List<SImage> SImagePool = new ArrayList<SImage>();
     private List<Image> imagePool = new ArrayList<Image>();
     private SImage templateSImage;
@@ -71,7 +72,10 @@ public class Controller extends BorderPane {
 
 
 
-    public Controller() {
+    public void innit() {
+        imageFrameList = new ImageView[] {imageFrame0, imageFrame1, imageFrame2, imageFrame3, imageFrame4, imageFrame5, imageFrame6, imageFrame7, imageFrame8, imageFrame9, imageFrame10, imageFrame11,imageFrame12, imageFrame13, imageFrame14, imageFrame15, imageFrame16, imageFrame17, imageFrame18, imageFrame19, imageFrame20, imageFrame21,imageFrame22, imageFrame23};
+        System.out.println(imageFrame23);
+
     }
     public void beginGenerationPhase(){
         ImageFactory.generate( templateSImage, SImagePool, templateImage);
@@ -88,71 +92,41 @@ public class Controller extends BorderPane {
             try {
                 SImagePool.add(currentImage);
                 imagePool.add(new Image(new FileInputStream(currentImage.file)));
-                updateImagePool(SImagePool, imagePool);
+
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         }
-        }
+        updateImagePool(SImagePool, imagePool);
+    }
+
 
 
     public void updateImagePool(List SImagePool, List imagePool){
 
         int length =  imagePool.size();
-        if(length>=1) {
-            imageFrame0.setImage((Image) imagePool.get(0 + page));
-            if(length>=2) {
-                imageFrame1.setImage((Image) imagePool.get(1 + page));
-                if(length>=3) {
-                    imageFrame2.setImage((Image) imagePool.get(2 + page));
-                    if(length>=4) {
-                        imageFrame3.setImage((Image) imagePool.get(3 + page));
-                        if(length>=5) {
-                            imageFrame4.setImage((Image) imagePool.get(4 + page));
-                            if(length>=6) {
-                                imageFrame5.setImage((Image) imagePool.get(5 + page));
-                                if(length>=7) {
-                                    imageFrame6.setImage((Image) imagePool.get(6 + page));
-                                    if(length>=8) {
-                                        imageFrame7.setImage((Image) imagePool.get(7 + page));
-                                        if(length>=9) {
-                                            imageFrame8.setImage((Image) imagePool.get(8 + page));
-                                            if(length>=10) {
-                                                imageFrame9.setImage((Image) imagePool.get(9 + page));
-                                                if(length>=11) {
-                                                    imageFrame10.setImage((Image) imagePool.get(10 + page));
-                                                    if(length>=12) {
-                                                        imageFrame11.setImage((Image) imagePool.get(11 + page));
-                                                        if(length>=13) {
-                                                            imageFrame12.setImage((Image) imagePool.get(12 + page));
-                                                            if(length>=14) {
-                                                                imageFrame13.setImage((Image) imagePool.get(13 + page));
-                                                                if(length>=15) {
-                                                                    imageFrame14.setImage((Image) imagePool.get(14 + page));
-                                                                    if(length>=16) {
-                                                                        imageFrame15.setImage((Image) imagePool.get(15 + page));
-                                                                        if(length>=17) {
-                                                                            imageFrame16.setImage((Image) imagePool.get(16 + page));
-                                                                            if(length>=18) {
-                                                                                imageFrame17.setImage((Image) imagePool.get(17 + page));
-                                                                                if(length>=19) {
-                                                                                    imageFrame18.setImage((Image) imagePool.get(18 + page));
-                                                                                    if(length>=20) {
-                                                                                        imageFrame19.setImage((Image) imagePool.get(19 + page));
-                                                                                        if(length>=21) {
-                                                                                            imageFrame20.setImage((Image) imagePool.get(20 + page));
-                                                                                            if(length>=22) {
-                                                                                                imageFrame21.setImage((Image) imagePool.get(21 + page));
-                                                                                                if(length>=23) {
-                                                                                                    imageFrame22.setImage((Image) imagePool.get(22 + page));
-                                                                                                    if(length>=24) {
-                                                                                                        imageFrame23.setImage((Image) imagePool.get(23 + page));
+        int startIndex = (page * 24);
+        int endIndex;
+        if (length>(page + 1)*24){
+            endIndex = (page+1)*24;
+        }
+        else{
+            endIndex = (page * 24) + (length % 24);
+        }
+        System.out.println(startIndex);
+        System.out.println(endIndex);
+        System.out.println(length);
 
-        }}}}}}}}}}}}}}}}}}}}}}}}}
+        for (int index = startIndex; index <= endIndex; index++){
+            imageFrameList[index].setImage( (Image) imagePool.get(index));
+        }
+        }
+
+
 
     public void importTemplate(){
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.png", "*.jpg", "*.gif"));
         File selectedFile = fileChooser.showOpenDialog(null);
         System.out.println(selectedFile);
 
@@ -160,9 +134,36 @@ public class Controller extends BorderPane {
         templateSImage = new SImage(selectedFile);
 
         try {
+            templateFrame.setImage(new Image(new FileInputStream(templateSImage.file)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
             templateImage = ImageIO.read(selectedFile);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+    }
+
+    public void nextPage(){
+        if ((page+1)*24< imagePool.size()){
+        page = page +1;
+        updateImagePool(SImagePool, imagePool);
+    }
+        else{
+            System.out.print("no next page");
+        }
+    }
+    public void previousPage(){
+        if(page > 1) {
+            page = page - 1;
+
+            updateImagePool(SImagePool, imagePool);
+        }
+        else{
+            System.out.println("No previous page");
         }
 
     }

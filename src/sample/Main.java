@@ -22,5 +22,6 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.setTitle("Title");
         stage.show();
+        controller.innit();
     }
 }
