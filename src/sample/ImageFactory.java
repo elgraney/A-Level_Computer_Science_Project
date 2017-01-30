@@ -18,6 +18,11 @@ public class ImageFactory {
     private static SImage workingTemplate;
     private static BufferedImage templateFile;
 
+    private static BufferedImage processedTemplateFile;
+
+
+
+
 
     public static void generate(SImage SImageTemplate,List<SImage> imagePool, BufferedImage templateImage){
         System.out.println("generate");
@@ -26,12 +31,18 @@ public class ImageFactory {
         createSections(imagePool);
     }
 
+
+
+
     public static void createSections(List<SImage> imagePool ) {
         System.out.println("CreateScetion");
         double mostCommonRatio;
         mostCommonRatio = getMostCommonRatio(imagePool);
         defineSections(mostCommonRatio);
-        //resizeTemplate(SImageTemplate);
+        resizeTemplate(workingTemplate);
+
+        System.out.println("new height "+processedTemplateFile.getWidth());
+        System.out.println("new Width "+processedTemplateFile.getHeight());
 
         int width = workingTemplate.getWidth();
         int height = workingTemplate.getHeight();
@@ -57,11 +68,11 @@ public class ImageFactory {
 
     }
     private static BufferedImage createSectionImage(int x ,int y){
-        return templateFile.getSubimage(x, y, sectionWidth, sectionHeight);
-
-
-
+        return processedTemplateFile.getSubimage(x, y, sectionWidth, sectionHeight);
     }
+
+
+
     private static void defineSections(double mostCommonRatio) {
         for (int potentialHeight = 1; potentialHeight < 1000; potentialHeight++) {
             double potentialWidth = potentialHeight * mostCommonRatio;
@@ -77,18 +88,17 @@ public class ImageFactory {
                 sectionHeight = potentialHeight;
                 return;
             }
-
         }
         System.out.println("NO RESOLUTION FOUND");
     }
+
+
 
     private static double getMostCommonRatio(List<SImage> imagePool) {
         HashMap<Double, Integer> ratioFrequencyMap = new HashMap();
         double selectedImageRatio = 0;
         double targetImageRatio = 0;
         System.out.println("Yo");
-
-
         for (SImage selectedImage : imagePool) {
             double width = selectedImage.getWidth();
             double height = selectedImage.getHeight();
@@ -108,8 +118,6 @@ public class ImageFactory {
                 ratioFrequencyMap.put(selectedImageRatio, 1);
             }
         }
-
-
         double highestRatio = 0;
         int highest = 0;
         for (double ratio : ratioFrequencyMap.keySet()) {
@@ -120,31 +128,64 @@ public class ImageFactory {
         }
         //testing
         for (double ratio : ratioFrequencyMap.keySet()) {
-            System.out.println(ratio);
-            System.out.println(highest);
+            System.out.println("ratio " +ratio);
+            System.out.println("highest "+ highest);
         }
-        System.out.println(highestRatio);
-
+        System.out.println("Highest Ratio "+highestRatio);
         return highestRatio;
     }
-    private void resizeTemplate(SImage template){
+
+
+
+    private static void resizeTemplate(SImage template){
+        int templateWidth=0;
+        int templateHeight=0;
+        int enlargementFactor = 0;
+
+        int enlargedTemplateWidth =0;
+        int enlargedTemplateHeight=0;
+
         for (int multiplier = 1; multiplier < 25000; multiplier++) {
             int potentialWidth = multiplier * sectionWidth;
             int potentialHeight = multiplier * sectionHeight;
 
             if ((potentialWidth >= 6000) && (potentialHeight >= 6000)) {
-                System.out.println("After Width: " + potentialWidth);
-                int templateWidth = potentialWidth;
-                int templateHeight = potentialHeight;
+                System.out.println("crop to After Width: " + potentialWidth);
+                System.out.println("Crop to after height "+potentialHeight);
+                templateWidth = potentialWidth;
+                templateHeight = potentialHeight;
+                enlargementFactor = multiplier;
                 break;
             }
         }
-        //HERE
 
-        System.out.println("NO RESOLUTION FOUND");
+        for (int multiplier = 1; multiplier < 25000; multiplier++) {
+            int potentialWidth = multiplier * template.getWidth();
+            int potentialHeight = multiplier * template.getHeight();
+
+            if ((potentialWidth >= templateWidth) && (potentialHeight >= templateHeight)) {
+                System.out.println("enlarged After Width: " + potentialWidth);
+                System.out.println("enlarged After Height: " + potentialHeight);
+                enlargedTemplateWidth = potentialWidth;
+                enlargedTemplateHeight = potentialHeight;
+                break;
+            }
+        }
+
+        BufferedImage enlargedTemplate = new BufferedImage(templateWidth, templateHeight, templateFile.getType());
+        for (int x=0; x< templateWidth; x++) {
+            for (int y=0; y < templateHeight; y++) {
+                enlargedTemplate.setRGB(x, y, templateFile.getRGB( x/enlargementFactor , y/enlargementFactor));
+            }
+        }
+        int cropTopLeftYCoord = ((enlargedTemplateHeight - templateHeight)/2);
+        int cropTopLeftXCoord = ((enlargedTemplateWidth - templateWidth)/2);
+        System.out.println("new template");
+        System.out.println(2*cropTopLeftXCoord+templateWidth);
+        System.out.println(2*cropTopLeftYCoord+templateHeight);
+
+        //PROBLEM WITH CENTERING
+        processedTemplateFile = enlargedTemplate.getSubimage(0, 0, templateWidth, templateHeight);
+        System.out.println("new template image generated");
     }
-
-
-
-
 }
