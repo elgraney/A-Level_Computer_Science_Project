@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -12,7 +13,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="720.0" prefWidth="1280.0" style="-fx-border-color: grey;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane prefHeight="720.0" prefWidth="1280.0" style="-fx-border-color: grey;" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <MenuBar id="menuBar" BorderPane.alignment="CENTER">
         <menus>
@@ -65,9 +66,9 @@
       </VBox>
    </bottom>
    <center>
-      <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: lightgrey; -fx-border-color: grey;" BorderPane.alignment="CENTER">
+      <VBox prefWidth="100.0" style="-fx-background-color: lightgrey; -fx-border-color: grey;" BorderPane.alignment="CENTER">
          <children>
-            <HBox prefHeight="200.0" spacing="5.0">
+            <HBox prefHeight="200.0" spacing="5.0" VBox.vgrow="ALWAYS">
                <children>
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                   <VBox HBox.hgrow="ALWAYS">
@@ -120,7 +121,7 @@
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <HBox prefHeight="200.0" spacing="5.0">
+            <HBox prefHeight="200.0" spacing="5.0" VBox.vgrow="ALWAYS">
                <children>
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                   <VBox>
@@ -173,7 +174,7 @@
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <HBox prefHeight="200.0" spacing="5.0">
+            <HBox prefHeight="200.0" spacing="5.0" VBox.vgrow="ALWAYS">
                <children>
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                   <VBox HBox.hgrow="ALWAYS">
@@ -226,7 +227,7 @@
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <HBox prefHeight="200.0" spacing="5.0">
+            <HBox prefHeight="200.0" spacing="5.0" VBox.vgrow="ALWAYS">
                <children>
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                   <VBox HBox.hgrow="ALWAYS">
@@ -279,13 +280,15 @@
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-border-color: grey; -fx-background-color: gainsboro;">
+            <HBox prefHeight="0.0" prefWidth="200.0" style="-fx-border-color: grey; -fx-background-color: gainsboro;">
                <children>
-                  <Region prefHeight="200.0" prefWidth="20.0" />
+                  <Region prefHeight="0.0" prefWidth="20.0" />
                   <Button fx:id="previousPageButton" mnemonicParsing="false" onAction="#previousPage" text="Previous Page" />
-                  <Region prefHeight="200.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                  <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                  <Label prefHeight="25.0" prefWidth="34.0" text="Page:" />
+                  <Label fx:id="pageLabel" prefHeight="33.0" prefWidth="31.0" text="Label" />
                   <Button fx:id="nextPageButton" mnemonicParsing="false" onAction="#nextPage" text="Next Page" />
-                  <Region prefHeight="200.0" prefWidth="20.0" />
+                  <Region prefHeight="0.0" prefWidth="20.0" />
                </children>
             </HBox>
          </children>
@@ -307,7 +310,7 @@
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <TitledPane animated="false" prefHeight="460.0" prefWidth="230.0" style="-fx-border-color: grey;" text="Image Pool information" />
+            <TitledPane animated="false" prefHeight="10000.0" prefWidth="230.0" style="-fx-border-color: grey;" text="Image Pool information" />
          </children>
       </VBox>
    </right>

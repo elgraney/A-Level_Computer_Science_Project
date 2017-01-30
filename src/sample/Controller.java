@@ -61,6 +61,8 @@ public class Controller extends BorderPane {
 
     @FXML private ImageView templateFrame;
 
+    @FXML private  Label pageLabel;
+
     private ImageView[] imageFrameList;
     private List<SImage> SImagePool = new ArrayList<SImage>();
     private List<Image> imagePool = new ArrayList<Image>();
@@ -75,6 +77,7 @@ public class Controller extends BorderPane {
     public void innit() {
         imageFrameList = new ImageView[] {imageFrame0, imageFrame1, imageFrame2, imageFrame3, imageFrame4, imageFrame5, imageFrame6, imageFrame7, imageFrame8, imageFrame9, imageFrame10, imageFrame11,imageFrame12, imageFrame13, imageFrame14, imageFrame15, imageFrame16, imageFrame17, imageFrame18, imageFrame19, imageFrame20, imageFrame21,imageFrame22, imageFrame23};
         System.out.println(imageFrame23);
+        pageLabel.setText(Integer.toString(page+1));
 
     }
     public void beginGenerationPhase(){
@@ -103,22 +106,24 @@ public class Controller extends BorderPane {
 
 
     public void updateImagePool(List SImagePool, List imagePool){
-
+        clearPool();
+        pageLabel.setText(Integer.toString(page+1));
         int length =  imagePool.size();
         int startIndex = (page * 24);
         int endIndex;
-        if (length>(page + 1)*24){
-            endIndex = (page+1)*24;
+
+        if (length>(page + 1)*24-1){
+            endIndex = (page+1)*24 -1;
         }
         else{
-            endIndex = (page * 24) + (length % 24);
+            endIndex = (page * 24) + (length % 24) - 1;
         }
-        System.out.println(startIndex);
-        System.out.println(endIndex);
-        System.out.println(length);
-
+        //System.out.println("start "+ startIndex);
+        //System.out.println("end "+endIndex);
+        //System.out.println("Lenght "+length);
         for (int index = startIndex; index <= endIndex; index++){
-            imageFrameList[index].setImage( (Image) imagePool.get(index));
+            //System.out.println("Mod: " + (index % 24));
+            imageFrameList[(index % 24)].setImage( (Image) imagePool.get(index));
         }
         }
 
@@ -126,7 +131,7 @@ public class Controller extends BorderPane {
 
     public void importTemplate(){
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.png", "*.jpg", "*.gif"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files","*.png", "*.jpg", "*.gif"));
         File selectedFile = fileChooser.showOpenDialog(null);
         System.out.println(selectedFile);
 
@@ -148,16 +153,16 @@ public class Controller extends BorderPane {
     }
 
     public void nextPage(){
-        if ((page+1)*24< imagePool.size()){
-        page = page +1;
-        updateImagePool(SImagePool, imagePool);
-    }
+        if (((page+1)*24)<= imagePool.size()){
+            page = page +1;
+            updateImagePool(SImagePool, imagePool);
+        }
         else{
             System.out.print("no next page");
         }
     }
     public void previousPage(){
-        if(page > 1) {
+        if(page > 0) {
             page = page - 1;
 
             updateImagePool(SImagePool, imagePool);
@@ -167,5 +172,10 @@ public class Controller extends BorderPane {
         }
 
     }
+    private void clearPool(){
+        for (ImageView frame: imageFrameList){
+            frame.setImage(null);
+        }
     }
+}
 

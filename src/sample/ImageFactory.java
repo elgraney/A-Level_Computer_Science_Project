@@ -19,9 +19,9 @@ public class ImageFactory {
     private static BufferedImage templateFile;
 
 
-    public static void generate(SImage template,List<SImage> imagePool, BufferedImage templateImage){
+    public static void generate(SImage SImageTemplate,List<SImage> imagePool, BufferedImage templateImage){
         System.out.println("generate");
-        workingTemplate = template;
+        workingTemplate = SImageTemplate;
         templateFile = templateImage;
         createSections(imagePool);
     }
@@ -31,6 +31,7 @@ public class ImageFactory {
         double mostCommonRatio;
         mostCommonRatio = getMostCommonRatio(imagePool);
         defineSections(mostCommonRatio);
+        //resizeTemplate(SImageTemplate);
 
         int width = workingTemplate.getWidth();
         int height = workingTemplate.getHeight();
@@ -69,6 +70,7 @@ public class ImageFactory {
             //System.out.println("mod " + potentialWidth % 1);
             double remainder = potentialWidth % 1;
             System.out.println(remainder);
+
             if ((remainder == 0.0) && (potentialWidth >= 30)&& (potentialHeight >= 30)) {
                 System.out.println("After Width: " + potentialWidth);
                 sectionWidth = (int) potentialWidth;
@@ -125,4 +127,24 @@ public class ImageFactory {
 
         return highestRatio;
     }
+    private void resizeTemplate(SImage template){
+        for (int multiplier = 1; multiplier < 25000; multiplier++) {
+            int potentialWidth = multiplier * sectionWidth;
+            int potentialHeight = multiplier * sectionHeight;
+
+            if ((potentialWidth >= 6000) && (potentialHeight >= 6000)) {
+                System.out.println("After Width: " + potentialWidth);
+                int templateWidth = potentialWidth;
+                int templateHeight = potentialHeight;
+                break;
+            }
+        }
+        //HERE
+
+        System.out.println("NO RESOLUTION FOUND");
+    }
+
+
+
+
 }
