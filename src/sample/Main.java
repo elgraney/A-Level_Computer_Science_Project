@@ -17,11 +17,12 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Application.fxml"));
         Controller controller = new Controller();
         loader.setController(controller);
+
         pane = loader.load();
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         stage.setTitle("Title");
         stage.show();
-        controller.innit();
+        controller.innit(stage);
     }
 }

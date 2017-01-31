@@ -15,18 +15,18 @@ import javax.imageio.ImageIO;
 public class ImageFactory {
     private static int sectionWidth;
     private static int sectionHeight;
-    private static SImage workingTemplate;
+    private static SImage unalteredTemplate;
     private static BufferedImage templateFile;
+    private static int analysisLevel;
 
     private static BufferedImage processedTemplateFile;
 
+    public static void generate(SImage SImageTemplate,List<SImage> imagePool, BufferedImage templateImage, int analysisLvl){
 
 
-
-
-    public static void generate(SImage SImageTemplate,List<SImage> imagePool, BufferedImage templateImage){
         System.out.println("generate");
-        workingTemplate = SImageTemplate;
+        analysisLevel = analysisLvl;
+        unalteredTemplate = SImageTemplate;
         templateFile = templateImage;
         createSections(imagePool);
     }
@@ -39,29 +39,33 @@ public class ImageFactory {
         double mostCommonRatio;
         mostCommonRatio = getMostCommonRatio(imagePool);
         defineSections(mostCommonRatio);
-        resizeTemplate(workingTemplate);
+        resizeTemplate(unalteredTemplate);
 
         System.out.println("new height "+processedTemplateFile.getWidth());
         System.out.println("new Width "+processedTemplateFile.getHeight());
+        File outputfile = new File("2ndimage.jpg");
+        try {
+            ImageIO.write(processedTemplateFile, "jpg", outputfile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        int width = workingTemplate.getWidth();
-        int height = workingTemplate.getHeight();
+        int width = processedTemplateFile.getWidth();
+        int height = processedTemplateFile.getHeight();
 
         Section[][] sectionList = new Section[width/sectionWidth][height/sectionHeight];
         for (int ix = 0; ix < width; ix += sectionWidth) {
             for (int iy = 0; iy < height; iy +=sectionHeight) {
-                System.out.println("hey!");
+                //System.out.println("hey!");
                 BufferedImage sectionImage = createSectionImage(ix, iy);
                 //section image is buffered image, but section does not take that type.
-
-                File sectionfile = new File("section.jpg");
-                try {
-                    ImageIO.write(sectionImage, "jpg", sectionfile);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                Section currentSection = new Section(sectionfile, ix, iy, sectionWidth, sectionHeight);
+               File sectionfile = new File("section.jpg");
+                //try {
+                  //  ImageIO.write(sectionImage, "jpg", sectionfile);
+               // } catch (IOException e) {
+               //     e.printStackTrace();
+               // }
+                Section currentSection = new Section(sectionfile, ix, iy, sectionWidth, sectionHeight, analysisLevel);
                 sectionList[ix/sectionWidth][iy/sectionHeight] = currentSection;
             }}
         System.out.println("2D array length: "+  sectionList.length * sectionList[0].length);
@@ -104,7 +108,6 @@ public class ImageFactory {
             double height = selectedImage.getHeight();
 
             selectedImageRatio = (width/height);
-
 
             System.out.println("selected: "+ selectedImageRatio);
 
@@ -149,43 +152,56 @@ public class ImageFactory {
             int potentialWidth = multiplier * sectionWidth;
             int potentialHeight = multiplier * sectionHeight;
 
-            if ((potentialWidth >= 6000) && (potentialHeight >= 6000)) {
+            //not enough memory space for large images yet.
+            if ((potentialWidth >= 1000) && (potentialHeight >= 1000)) {
                 System.out.println("crop to After Width: " + potentialWidth);
                 System.out.println("Crop to after height "+potentialHeight);
                 templateWidth = potentialWidth;
                 templateHeight = potentialHeight;
-                enlargementFactor = multiplier;
                 break;
             }
         }
 
         for (int multiplier = 1; multiplier < 25000; multiplier++) {
-            int potentialWidth = multiplier * template.getWidth();
-            int potentialHeight = multiplier * template.getHeight();
+            int potentialWidth2 = multiplier * template.getWidth();
+            int potentialHeight2 = multiplier * template.getHeight();
 
-            if ((potentialWidth >= templateWidth) && (potentialHeight >= templateHeight)) {
-                System.out.println("enlarged After Width: " + potentialWidth);
-                System.out.println("enlarged After Height: " + potentialHeight);
-                enlargedTemplateWidth = potentialWidth;
-                enlargedTemplateHeight = potentialHeight;
+            if ((potentialWidth2 >= templateWidth) && (potentialHeight2 >= templateHeight)) {
+                System.out.println("enlarged After Width: " + potentialWidth2);
+                System.out.println("enlarged After Height: " + potentialHeight2);
+                enlargedTemplateWidth = potentialWidth2;
+                enlargedTemplateHeight = potentialHeight2;
+                enlargementFactor = multiplier;
                 break;
             }
         }
 
-        BufferedImage enlargedTemplate = new BufferedImage(templateWidth, templateHeight, templateFile.getType());
-        for (int x=0; x< templateWidth; x++) {
-            for (int y=0; y < templateHeight; y++) {
-                enlargedTemplate.setRGB(x, y, templateFile.getRGB( x/enlargementFactor , y/enlargementFactor));
+        BufferedImage enlargedTemplate = new BufferedImage(enlargedTemplateWidth, enlargedTemplateHeight, templateFile.getType());
+        for (int x=0; x< enlargedTemplateWidth; x++) {
+            for (int y = 0; y < enlargedTemplateHeight; y++) {
+                enlargedTemplate.setRGB(x, y, templateFile.getRGB(x / enlargementFactor, y / enlargementFactor));
             }
         }
+        System.out.println("enlargedTemplate width " + enlargedTemplate.getWidth());
+        System.out.println("enlargedTemplate height " + enlargedTemplate.getHeight());
+
+
         int cropTopLeftYCoord = ((enlargedTemplateHeight - templateHeight)/2);
         int cropTopLeftXCoord = ((enlargedTemplateWidth - templateWidth)/2);
         System.out.println("new template");
         System.out.println(2*cropTopLeftXCoord+templateWidth);
         System.out.println(2*cropTopLeftYCoord+templateHeight);
 
+        File outputfile = new File("image.jpg");
+        try {
+            ImageIO.write(enlargedTemplate, "jpg", outputfile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         //PROBLEM WITH CENTERING
-        processedTemplateFile = enlargedTemplate.getSubimage(0, 0, templateWidth, templateHeight);
+        processedTemplateFile = enlargedTemplate.getSubimage(cropTopLeftXCoord, cropTopLeftYCoord, templateWidth, templateHeight);
         System.out.println("new template image generated");
     }
 }

@@ -15,8 +15,8 @@ public class Section extends SImage {
     private static int centreX;
     private static int centreY;
 
-    public Section(File file, int x, int y, int width, int height) {
-        super(file);
+    public Section(File file, int x, int y, int width, int height, int analysisLevel) {
+        super(file, analysisLevel);
         topLeftX = x;
         topLeftY = y;
 

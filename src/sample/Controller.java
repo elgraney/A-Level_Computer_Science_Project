@@ -1,7 +1,9 @@
 package sample;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -9,7 +11,9 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.FileChooser;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
+import javafx.stage.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -24,6 +28,17 @@ import java.awt.image.ImageProducer;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
+
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.stage.Popup;
 
 public class Controller extends BorderPane {
 
@@ -73,15 +88,32 @@ public class Controller extends BorderPane {
     private Integer page = 0;
 
 
-
-    public void innit() {
-        imageFrameList = new ImageView[] {imageFrame0, imageFrame1, imageFrame2, imageFrame3, imageFrame4, imageFrame5, imageFrame6, imageFrame7, imageFrame8, imageFrame9, imageFrame10, imageFrame11,imageFrame12, imageFrame13, imageFrame14, imageFrame15, imageFrame16, imageFrame17, imageFrame18, imageFrame19, imageFrame20, imageFrame21,imageFrame22, imageFrame23};
+    public void innit(Stage primaryStage) {
+        imageFrameList = new ImageView[]{imageFrame0, imageFrame1, imageFrame2, imageFrame3, imageFrame4, imageFrame5, imageFrame6, imageFrame7, imageFrame8, imageFrame9, imageFrame10, imageFrame11, imageFrame12, imageFrame13, imageFrame14, imageFrame15, imageFrame16, imageFrame17, imageFrame18, imageFrame19, imageFrame20, imageFrame21, imageFrame22, imageFrame23};
         System.out.println(imageFrame23);
-        pageLabel.setText(Integer.toString(page+1));
-
+        pageLabel.setText(Integer.toString(page + 1));
     }
+
     public void beginGenerationPhase(){
-        ImageFactory.generate( templateSImage, SImagePool, templateImage);
+        Pane pane = new Pane();
+        Stage stage = new Stage();
+        Parent root = null;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("GeneratePopUp.fxml"));
+        Controller controller = new Controller();
+        loader.setController(controller);
+        try {
+            pane = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(pane);
+        stage.setScene(scene);
+        stage.setTitle("My modal window");
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+
+        int analysisLevel = 2;
+        ImageFactory.generate( templateSImage, SImagePool, templateImage, analysisLevel);
     }
     public void importImage(){
         FileChooser fileChooser = new FileChooser();
@@ -91,7 +123,7 @@ public class Controller extends BorderPane {
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(null);
         System.out.println(selectedFiles);
         for (File selectedFile : selectedFiles) {
-            SImage currentImage = new SImage(selectedFile);
+            SImage currentImage = new SImage(selectedFile, 3);
             try {
                 SImagePool.add(currentImage);
                 imagePool.add(new Image(new FileInputStream(currentImage.file)));
@@ -136,7 +168,7 @@ public class Controller extends BorderPane {
         System.out.println(selectedFile);
 
 
-        templateSImage = new SImage(selectedFile);
+        templateSImage = new SImage(selectedFile, 2);
 
         try {
             templateFrame.setImage(new Image(new FileInputStream(templateSImage.file)));
