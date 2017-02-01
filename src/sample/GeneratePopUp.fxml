@@ -8,12 +8,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" scaleShape="false" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox prefHeight="345.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
          <children>
-            <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: black;" HBox.hgrow="ALWAYS">
+            <VBox prefHeight="200.0" prefWidth="150.0" style="-fx-border-color: black;" HBox.hgrow="ALWAYS">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Detail" textAlignment="CENTER">
                      <font>
@@ -36,7 +35,7 @@
                   <HBox>
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Medium" />
-                        <Region prefHeight="0.0" prefWidth="200.0" />
+                        <Region prefHeight="0.0" HBox.hgrow="ALWAYS" />
                         <RadioButton mnemonicParsing="false" />
                      </children>
                   </HBox>
@@ -44,16 +43,16 @@
                   <HBox>
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Low" />
-                        <Region prefHeight="0.0" prefWidth="200.0" />
+                        <Region prefHeight="0.0" HBox.hgrow="ALWAYS" />
                         <RadioButton mnemonicParsing="false" />
                      </children>
                   </HBox>
                   <Region prefHeight="53.0" prefWidth="216.0" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: black;">
+            <VBox prefHeight="200.0" prefWidth="150.0" style="-fx-border-color: black;" HBox.hgrow="ALWAYS">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Analysis Algorithm" textAlignment="CENTER">
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Analysis" textAlignment="CENTER">
                      <font>
                         <Font size="24.0" />
                      </font>
@@ -61,8 +60,13 @@
                         <Insets />
                      </VBox.margin>
                   </Text>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="stuff" wrappingWidth="224.642578125" />
-                  <Region prefHeight="53.0" prefWidth="225.0" VBox.vgrow="ALWAYS" />
+                  <Text layoutX="11.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Algorithm" textAlignment="CENTER">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Text>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="stuff" wrappingWidth="34.642578125" />
+                  <Region prefHeight="13.0" prefWidth="225.0" VBox.vgrow="ALWAYS" />
                   <HBox>
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Mean" />
@@ -74,7 +78,7 @@
                   <HBox>
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Mode" />
-                        <Region prefHeight="0.0" prefWidth="200.0" />
+                        <Region prefHeight="0.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                         <RadioButton mnemonicParsing="false" />
                      </children>
                   </HBox>
@@ -82,14 +86,14 @@
                   <HBox>
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Low" />
-                        <Region prefHeight="0.0" prefWidth="200.0" />
+                        <Region prefHeight="0.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                         <RadioButton mnemonicParsing="false" />
                      </children>
                   </HBox>
                   <Region prefHeight="53.0" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: black;">
+            <VBox prefHeight="200.0" prefWidth="150.0" style="-fx-border-color: black;" HBox.hgrow="ALWAYS">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Output Format" textAlignment="CENTER">
                      <font>
@@ -112,7 +116,7 @@
                   <HBox>
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Medium" />
-                        <Region prefHeight="0.0" prefWidth="200.0" />
+                        <Region prefHeight="0.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                         <RadioButton mnemonicParsing="false" />
                      </children>
                   </HBox>
@@ -120,14 +124,17 @@
                   <HBox>
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Low" />
-                        <Region prefHeight="0.0" prefWidth="200.0" />
+                        <Region prefHeight="0.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                         <RadioButton mnemonicParsing="false" />
                      </children>
                   </HBox>
                   <Region prefHeight="53.0" VBox.vgrow="ALWAYS" />
                </children>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
             </VBox>
-            <VBox minWidth="0.0" prefHeight="200.0" prefWidth="400.0" HBox.hgrow="NEVER" />
+            <VBox minWidth="0.0" prefHeight="200.0" prefWidth="150.0" HBox.hgrow="NEVER" />
          </children>
       </HBox>
       <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER" />
