@@ -70,6 +70,8 @@ public class ImageFactory {
             }}
         System.out.println("2D array length: "+  sectionList.length * sectionList[0].length);
 
+        cropRatio();
+
     }
     private static BufferedImage createSectionImage(int x ,int y){
         return processedTemplateFile.getSubimage(x, y, sectionWidth, sectionHeight);
@@ -203,5 +205,44 @@ public class ImageFactory {
         //PROBLEM WITH CENTERING
         processedTemplateFile = enlargedTemplate.getSubimage(cropTopLeftXCoord, cropTopLeftYCoord, templateWidth, templateHeight);
         System.out.println("new template image generated");
+    }
+
+
+    private static void cropRatio(double mostCommonRatio, SImage[] imagePool ){
+        double widthRatio = mostCommonRatio;
+        double heightRatio = 1;
+        for (SImage image: imagePool){
+
+            //store image ratio in SImage?
+            double imageWidthRatio = image.getWidth()/image.getHeight();
+            final double imageHeightRatio =1;
+            if ((widthRatio*0.75)<= imageWidthRatio && imageWidthRatio< (widthRatio*1.5)){
+                image = crop(widthRatio, heightRatio, imageWidthRatio, image);
+            }
+            else if((widthRatio*1.5)<= imageWidthRatio && imageWidthRatio< (widthRatio*2.5)){
+
+            }
+            else if((widthRatio*2.5)<= imageWidthRatio){
+
+            }
+            else if((widthRatio*5/12)<= imageWidthRatio && imageWidthRatio< (widthRatio*0.75)){
+
+            }
+            else if(imageWidthRatio< (widthRatio*5/12)){
+
+            }
+
+        }
+    }
+
+    private static SImage crop( double widthRatio, double heightRatio, double imageRatio, SImage image){
+        int width = image.getWidth();
+        int height = image.getHeight();
+        if ( imageRatio> (widthRatio/heightRatio)){
+            double widthModifier = (height/ width*imageRatio);
+
+            double widthCropValue = width-(width*widthModifier);
+            //here ish
+        }
     }
 }
