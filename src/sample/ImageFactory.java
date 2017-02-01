@@ -233,16 +233,28 @@ public class ImageFactory {
             }
 
         }
+        //return null;
     }
 
-    private static SImage crop( double widthRatio, double heightRatio, double imageRatio, SImage image){
+    // STORE FILE IN SIMAGE?
+    private static SImage crop( double widthRatio, double heightRatio, double imageRatio, SImage image) {
         int width = image.getWidth();
         int height = image.getHeight();
-        if ( imageRatio> (widthRatio/heightRatio)){
-            double widthModifier = (height/ width*imageRatio);
+        if (imageRatio > (widthRatio / heightRatio)) {
+            double widthModifier = (height / width * imageRatio);
 
-            double widthCropValue = width-(width*widthModifier);
-            //here ish
+            int widthCropValue = (int) (width - (width * widthModifier));
+            //CROP IMAGE WITH START COORDS
+            return null;
+        }
+        else if (imageRatio < (widthRatio/heightRatio)){
+            double heightModifier = (width/height)*imageRatio;
+            //CROP IMAGE
+            return null; //for now.
+        }
+        else{
+            //do not crop
+        return null;
         }
     }
 }

@@ -26,8 +26,8 @@ public class SImage {
 
     File file;
 
-    public SImage(File file, int analysisLvl) {
-        analysisLevel = analysisLvl;
+    public SImage(File file, int analysisLevel) {
+        this.analysisLevel = analysisLevel;
         this.file = file;
         try {
             analyse();
