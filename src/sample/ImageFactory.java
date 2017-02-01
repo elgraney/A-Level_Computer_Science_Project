@@ -250,6 +250,8 @@ public class ImageFactory {
         else if (imageRatio < (widthRatio/heightRatio)){
             double heightModifier = (width/height)*imageRatio;
             //CROP IMAGE
+            //update height, width
+            //update file.
             return null; //for now.
         }
         else{
