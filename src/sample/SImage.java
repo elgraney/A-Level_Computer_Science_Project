@@ -240,9 +240,9 @@ public class SImage {
 
 
         BufferedImage croppedImage = new BufferedImage(newWidth, newHeight,ImageIO.read(file).getType());
-        for (int x=((width- newWidth)/2); x< newWidth; x++) {
+        for (int x=((width - newWidth)/2); x< newWidth; x++) {
             for (int y = ((height- newHeight)/2); y < newHeight; y++) {
-                croppedImage.setRGB(x, y, ImageIO.read(file).getRGB(x , y ));
+                croppedImage.setRGB(x, y, ImageIO.read(file).getRGB(x, y));
             }
         }
         System.out.println("croppedImage width " + croppedImage.getWidth());

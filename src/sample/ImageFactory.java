@@ -219,37 +219,55 @@ public class ImageFactory {
             System.out.println("This image ratio: "+imageWidthRatio);
             final double imageHeightRatio =1;
             if ((widthRatio*0.75)<= imageWidthRatio && imageWidthRatio< (widthRatio*1.5)){
-                image = crop(widthRatio, heightRatio, imageWidthRatio, image);
                 System.out.println("standard");
+                crop(widthRatio, heightRatio, imageWidthRatio, image);
             }
             else if((widthRatio*1.5)<= imageWidthRatio && imageWidthRatio< (widthRatio*2.5)){
-                image = crop(2*widthRatio, heightRatio, imageWidthRatio, image);
                 System.out.println("2width");
+                crop(2*widthRatio, heightRatio, imageWidthRatio, image);
+
             }
             else if((widthRatio*2.5)<= imageWidthRatio){
-                image = crop(3*widthRatio, heightRatio, imageWidthRatio, image);
                 System.out.println("3width");
+                crop(3*widthRatio, heightRatio, imageWidthRatio, image);
+
             }
             else if((widthRatio*5/12)<= imageWidthRatio && imageWidthRatio< (widthRatio*0.75)){
-                image = crop(widthRatio, 2*heightRatio, imageWidthRatio, image);
                 System.out.println("2height");
+                crop(widthRatio, 2*heightRatio, imageWidthRatio, image);
+
             }
             else if(imageWidthRatio< (widthRatio*5/12)){
-                image = crop(widthRatio, 3*heightRatio, imageWidthRatio, image);
                 System.out.println("3height");
+                crop(widthRatio, 3*heightRatio, imageWidthRatio, image);
             }
 
         }
         //return null;
     }
 
-    private static SImage crop( double widthRatio, double heightRatio, double imageRatio, SImage image) {
+    private static SImage crop( double mostCommonWidthRatio, double mostCommonHeightRatio, double imageRatio, SImage image) {
         int width = image.getWidth();
         int height = image.getHeight();
-        if (imageRatio > (widthRatio / heightRatio)) {
-            double widthModifier = (height / width * imageRatio);
 
-            int widthCropValue = (int) (width - (width * widthModifier));
+        System.out.println("mostCommonWidthRatio "+mostCommonWidthRatio);
+        System.out.println("mostCommonheightRatio "+mostCommonHeightRatio);
+
+        //checking division
+        System.out.println("To crop Ratios:");
+        System.out.println(mostCommonWidthRatio / (float) mostCommonHeightRatio);
+        System.out.println(mostCommonWidthRatio / mostCommonHeightRatio);
+
+        double toCropRatio = mostCommonWidthRatio / (float) mostCommonHeightRatio;
+
+        System.out.println("imageRatio "+imageRatio);
+
+        if (imageRatio > (mostCommonWidthRatio / (float) mostCommonHeightRatio)) {
+            double widthModifier = ((height /(float) width )* toCropRatio);
+            System.out.println("Width decrease");
+            System.out.println("Width Modifier: "+ widthModifier);
+            int widthCropValue = (int) (width * widthModifier) +1;
+            System.out.println("width crop value " + widthCropValue);
             try {
                 image.crop(widthCropValue, height);
             } catch (IOException e) {
@@ -258,20 +276,38 @@ public class ImageFactory {
             System.out.println("crop, 1st if. widthcropvalue: " + widthCropValue);
             return null;
         }
-        else if (imageRatio < (widthRatio/heightRatio)){
-            double heightModifier = (width/height)*imageRatio;
-            int heightCropValue = (int) (width - (width * heightModifier));
+        else if (imageRatio < (mostCommonWidthRatio/(float) mostCommonHeightRatio)){
+            double heightModifier = (width/(float) (height*toCropRatio));
+            System.out.println("height decrease");
+            int heightCropValue = (int) (height * heightModifier);
+            System.out.println("height crop value " + heightCropValue);
             try {
                 image.crop(width, heightCropValue);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.println("crop, nd if. widthcropvalue: " + heightCropValue);
+            System.out.println("crop, nd if. heightcropvalue: " + heightCropValue);
             return null;
         }
         else{
-            System.out.print("do not crop");
+            System.out.println("do not crop");
         return null;
         }
+
+        //note: due to the necessity to have integers for dimentions, images will allways be resized so that the width is slightly greater than it should be, if an integer cannot be found.
     }
+
+    private static void match(List<SImage> sectionList){
+        for (SImage section: sectionList){
+            if((section.inCompoundSection == False)&&(section.matched = False)){
+                //oh i don't know.... so much to do!
+            }
+
+        }
+
+
+
+    }
+
+
 }
