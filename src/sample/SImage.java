@@ -1,9 +1,12 @@
 package sample;
 
+import javafx.scene.image.*;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -99,27 +102,24 @@ public class SImage {
         RGBFrequencyMap.put(RGB, 1 * modifier);
         return RGBFrequencyMap;
     }
+
     public int calcStep() {
         int resolution = width * height;
         int step;
         //System.out.println("Resolution"+resolution);
-        if(resolution<250000) {
+        if (resolution < 250000) {
             step = 2;
-        }
-        else if(resolution>=250000 && resolution<500000){
-                step = 3;
-            }
-        else if(resolution>=500000 && resolution<1000000){
+        } else if (resolution >= 250000 && resolution < 500000) {
+            step = 3;
+        } else if (resolution >= 500000 && resolution < 1000000) {
             step = 5;
-        }
-        else if(resolution>=1000000 && resolution<2500000){
+        } else if (resolution >= 1000000 && resolution < 2500000) {
             step = 7;
-        }
-        else if(resolution>=2500000 && resolution<5000000){
+        } else if (resolution >= 2500000 && resolution < 5000000) {
             step = 9;
+        } else {
+            step = 10;
         }
-        else{
-            step = 10;}
         //System.out.println("Step: "+step);
         return step;
     }
@@ -151,7 +151,7 @@ public class SImage {
     private double significanceWeighting(int red, int green, int blue) {
         double averageRGB = (red + green + blue) / 3;
 
-        double brightnessModifier = (2.89313 / sqrt(2 * PI)) * (pow(E, -(1/3975f) * pow((averageRGB-(255/2f)),2)/2f))+0.35;
+        double brightnessModifier = (2.89313 / sqrt(2 * PI)) * (pow(E, -(1 / 3975f) * pow((averageRGB - (255 / 2f)), 2) / 2f)) + 0.35;
 
         double differenceModifier = greatestDifferenceModifier(red, green, blue);
         double overallModifier = brightnessModifier * differenceModifier;
@@ -167,8 +167,8 @@ public class SImage {
         double totalWidth2 = (double) totalWidth;
         double totalHeight2 = (double) totalHeight;
 
-        widthModifier = (2.89313 / sqrt(2 * PI)) * pow(E, -15*pow(currentWidth2 / totalWidth2-0.5, 2)/ 2f )+0.35;
-        heightModifier = (2.89313 / sqrt(2 * PI)) * pow(E, -15*pow(currentHeight2 / totalHeight2 -0.5, 2) / 2f) +0.35;
+        widthModifier = (2.89313 / sqrt(2 * PI)) * pow(E, -15 * pow(currentWidth2 / totalWidth2 - 0.5, 2) / 2f) + 0.35;
+        heightModifier = (2.89313 / sqrt(2 * PI)) * pow(E, -15 * pow(currentHeight2 / totalHeight2 - 0.5, 2) / 2f) + 0.35;
 
         double overallModifier = (widthModifier + heightModifier) / 2;
 
@@ -202,36 +202,62 @@ public class SImage {
         //System.out.println("Single Red Mode: " + item.getRed());
         //System.out.println("Single Green Mode: " + item.getGreen());
         //System.out.println("Single Blue Mode: " + item.getBlue());
-            double[] SigmaXF = new double[3];
-            double SigmaF = 0;
+        double[] SigmaXF = new double[3];
+        double SigmaF = 0;
 
 
-            for (Color StoredRGB : RGBFrequencyMap.keySet()) {
-                if (RGBFrequencyMap.get(StoredRGB) > (highest * 0.75)) {
-                    SigmaXF[0] += RGBFrequencyMap.get(StoredRGB) * StoredRGB.getRed();
-                    SigmaXF[1] += RGBFrequencyMap.get(StoredRGB) * StoredRGB.getGreen();
-                    SigmaXF[2] += RGBFrequencyMap.get(StoredRGB) * StoredRGB.getBlue();
-                    SigmaF += RGBFrequencyMap.get(StoredRGB);
+        for (Color StoredRGB : RGBFrequencyMap.keySet()) {
+            if (RGBFrequencyMap.get(StoredRGB) > (highest * 0.75)) {
+                SigmaXF[0] += RGBFrequencyMap.get(StoredRGB) * StoredRGB.getRed();
+                SigmaXF[1] += RGBFrequencyMap.get(StoredRGB) * StoredRGB.getGreen();
+                SigmaXF[2] += RGBFrequencyMap.get(StoredRGB) * StoredRGB.getBlue();
+                SigmaF += RGBFrequencyMap.get(StoredRGB);
 
-                }
             }
-            meanOfModesRGB[0] = (SigmaXF[0] / SigmaF);
-            meanOfModesRGB[1] = (SigmaXF[1] / SigmaF);
-            meanOfModesRGB[2] = (SigmaXF[2] / SigmaF);
-
-            //System.out.println("averaged Red Mode: " + (SigmaXF[0] / SigmaF));
-            //System.out.println("averaged Green Mode: " + (SigmaXF[1] / SigmaF));
-            //System.out.println("averaged Blue Mode: " + (SigmaXF[2] / SigmaF));
         }
+        meanOfModesRGB[0] = (SigmaXF[0] / SigmaF);
+        meanOfModesRGB[1] = (SigmaXF[1] / SigmaF);
+        meanOfModesRGB[2] = (SigmaXF[2] / SigmaF);
+
+        //System.out.println("averaged Red Mode: " + (SigmaXF[0] / SigmaF));
+        //System.out.println("averaged Green Mode: " + (SigmaXF[1] / SigmaF));
+        //System.out.println("averaged Blue Mode: " + (SigmaXF[2] / SigmaF));
+    }
 
 
-    public int getHeight(){
+    public int getHeight() {
         return height;
     }
-    public int getWidth(){
+
+    public int getWidth() {
         return width;
     }
+
+
+    public void crop(int newWidth, int newHeight) throws IOException {
+        width = newWidth;
+        height = newHeight;
+
+
+        BufferedImage croppedImage = new BufferedImage(newWidth, newHeight,ImageIO.read(file).getType());
+        for (int x=((width- newWidth)/2)+1; x< newWidth; x++) {
+            for (int y = ((height- newHeight)/2)+1; y < newHeight; y++) {
+                croppedImage.setRGB(x, y, ImageIO.read(file).getRGB(x , y ));
+            }
+        }
+        System.out.println("croppedImage width " + croppedImage.getWidth());
+        System.out.println("croppedImage height " + croppedImage.getHeight());
+
+        //FILLING IN THE BLANKS
+
+        File outputfile = new File("croppedImage.jpg");
+        try {
+            ImageIO.write(croppedImage, "jpg", outputfile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        file= outputfile;
+
     }
 
-
-
+}

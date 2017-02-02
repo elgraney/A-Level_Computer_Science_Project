@@ -236,7 +236,6 @@ public class ImageFactory {
         //return null;
     }
 
-    // STORE FILE IN SIMAGE?
     private static SImage crop( double widthRatio, double heightRatio, double imageRatio, SImage image) {
         int width = image.getWidth();
         int height = image.getHeight();
@@ -244,11 +243,17 @@ public class ImageFactory {
             double widthModifier = (height / width * imageRatio);
 
             int widthCropValue = (int) (width - (width * widthModifier));
+            image.crop(widthCropValue, height);
+
+
             //CROP IMAGE WITH START COORDS
             return null;
         }
         else if (imageRatio < (widthRatio/heightRatio)){
             double heightModifier = (width/height)*imageRatio;
+            int heightCropValue = (int) (width - (width * heightModifier));
+            image.crop(width, heightCropValue);
+
             //CROP IMAGE
             //update height, width
             //update file.
