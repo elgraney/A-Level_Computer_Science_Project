@@ -112,7 +112,7 @@ public class Controller extends BorderPane {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
 
-        int analysisLevel = 2;
+        int analysisLevel = 1;
         ImageFactory.generate( templateSImage, SImagePool, templateImage, analysisLevel);
     }
     public void importImage(){

@@ -240,15 +240,13 @@ public class SImage {
 
 
         BufferedImage croppedImage = new BufferedImage(newWidth, newHeight,ImageIO.read(file).getType());
-        for (int x=((width- newWidth)/2)+1; x< newWidth; x++) {
-            for (int y = ((height- newHeight)/2)+1; y < newHeight; y++) {
+        for (int x=((width- newWidth)/2); x< newWidth; x++) {
+            for (int y = ((height- newHeight)/2); y < newHeight; y++) {
                 croppedImage.setRGB(x, y, ImageIO.read(file).getRGB(x , y ));
             }
         }
         System.out.println("croppedImage width " + croppedImage.getWidth());
         System.out.println("croppedImage height " + croppedImage.getHeight());
-
-        //FILLING IN THE BLANKS
 
         File outputfile = new File("croppedImage.jpg");
         try {
@@ -256,7 +254,7 @@ public class SImage {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        file= outputfile;
+        file = outputfile;
 
     }
 

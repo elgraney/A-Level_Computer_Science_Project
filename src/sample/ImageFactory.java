@@ -70,7 +70,8 @@ public class ImageFactory {
             }}
         System.out.println("2D array length: "+  sectionList.length * sectionList[0].length);
 
-        cropRatio();
+        cropRatio(mostCommonRatio, imagePool);
+        System.out.println("Done.");
 
     }
     private static BufferedImage createSectionImage(int x ,int y){
@@ -208,28 +209,34 @@ public class ImageFactory {
     }
 
 
-    private static void cropRatio(double mostCommonRatio, SImage[] imagePool ){
+    private static void cropRatio(double mostCommonRatio, List<SImage> imagePool ){
         double widthRatio = mostCommonRatio;
         double heightRatio = 1;
         for (SImage image: imagePool){
 
             //store image ratio in SImage?
-            double imageWidthRatio = image.getWidth()/image.getHeight();
+            double imageWidthRatio = image.getWidth()/(float) image.getHeight();
+            System.out.println("This image ratio: "+imageWidthRatio);
             final double imageHeightRatio =1;
             if ((widthRatio*0.75)<= imageWidthRatio && imageWidthRatio< (widthRatio*1.5)){
                 image = crop(widthRatio, heightRatio, imageWidthRatio, image);
+                System.out.println("standard");
             }
             else if((widthRatio*1.5)<= imageWidthRatio && imageWidthRatio< (widthRatio*2.5)){
-
+                image = crop(2*widthRatio, heightRatio, imageWidthRatio, image);
+                System.out.println("2width");
             }
             else if((widthRatio*2.5)<= imageWidthRatio){
-
+                image = crop(3*widthRatio, heightRatio, imageWidthRatio, image);
+                System.out.println("3width");
             }
             else if((widthRatio*5/12)<= imageWidthRatio && imageWidthRatio< (widthRatio*0.75)){
-
+                image = crop(widthRatio, 2*heightRatio, imageWidthRatio, image);
+                System.out.println("2height");
             }
             else if(imageWidthRatio< (widthRatio*5/12)){
-
+                image = crop(widthRatio, 3*heightRatio, imageWidthRatio, image);
+                System.out.println("3height");
             }
 
         }
@@ -243,24 +250,27 @@ public class ImageFactory {
             double widthModifier = (height / width * imageRatio);
 
             int widthCropValue = (int) (width - (width * widthModifier));
-            image.crop(widthCropValue, height);
-
-
-            //CROP IMAGE WITH START COORDS
+            try {
+                image.crop(widthCropValue, height);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("crop, 1st if. widthcropvalue: " + widthCropValue);
             return null;
         }
         else if (imageRatio < (widthRatio/heightRatio)){
             double heightModifier = (width/height)*imageRatio;
             int heightCropValue = (int) (width - (width * heightModifier));
-            image.crop(width, heightCropValue);
-
-            //CROP IMAGE
-            //update height, width
-            //update file.
-            return null; //for now.
+            try {
+                image.crop(width, heightCropValue);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("crop, nd if. widthcropvalue: " + heightCropValue);
+            return null;
         }
         else{
-            //do not crop
+            System.out.print("do not crop");
         return null;
         }
     }
