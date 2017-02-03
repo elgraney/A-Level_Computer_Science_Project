@@ -24,6 +24,7 @@ public class SImage {
     protected int[] modeRGB = new int[3];
     protected long[] meanRGB = new long[3];
     protected double[] meanOfModesRGB = new double[3];
+    protected double ratioMultiple;
 
     private int analysisLevel;
 
@@ -240,6 +241,10 @@ public class SImage {
 
 
         BufferedImage croppedImage = new BufferedImage(newWidth, newHeight,ImageIO.read(file).getType());
+
+        //This section can return false colours
+        //also really slow
+        //look into function to do it for you.
         for (int x=((width - newWidth)/2); x< newWidth; x++) {
             for (int y = ((height- newHeight)/2); y < newHeight; y++) {
                 croppedImage.setRGB(x, y, ImageIO.read(file).getRGB(x, y));
@@ -256,6 +261,13 @@ public class SImage {
         }
         file = outputfile;
 
+    }
+
+    public void setRatioMultiple(double multiple){
+        ratioMultiple = multiple;
+    }
+    public double getRatio(){
+        return ratioMultiple;
     }
 
 }

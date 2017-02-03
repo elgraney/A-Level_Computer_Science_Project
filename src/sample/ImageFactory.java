@@ -2,6 +2,7 @@ package sample;
 
 import java.awt.*;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.awt.image.BufferedImage;
@@ -21,28 +22,28 @@ public class ImageFactory {
 
     private static BufferedImage processedTemplateFile;
 
-    public static void generate(SImage SImageTemplate,List<SImage> imagePool, BufferedImage templateImage, int analysisLvl){
+    public static void generate(SImage SImageTemplate, List<SImage> imagePool, BufferedImage templateImage, int analysisLvl) {
 
 
         System.out.println("generate");
         analysisLevel = analysisLvl;
         unalteredTemplate = SImageTemplate;
         templateFile = templateImage;
-        createSections(imagePool);
+        Section[][] sectionList = formatAllImages(imagePool);
+        matchController(imagePool, sectionList);
+
     }
 
 
-
-
-    public static void createSections(List<SImage> imagePool ) {
+    public static Section[][] formatAllImages(List<SImage> imagePool) {
         System.out.println("CreateScetion");
         double mostCommonRatio;
         mostCommonRatio = getMostCommonRatio(imagePool);
         defineSections(mostCommonRatio);
         resizeTemplate(unalteredTemplate);
 
-        System.out.println("new height "+processedTemplateFile.getWidth());
-        System.out.println("new Width "+processedTemplateFile.getHeight());
+        System.out.println("new height " + processedTemplateFile.getWidth());
+        System.out.println("new Width " + processedTemplateFile.getHeight());
         File outputfile = new File("2ndimage.jpg");
         try {
             ImageIO.write(processedTemplateFile, "jpg", outputfile);
@@ -53,31 +54,33 @@ public class ImageFactory {
         int width = processedTemplateFile.getWidth();
         int height = processedTemplateFile.getHeight();
 
-        Section[][] sectionList = new Section[width/sectionWidth][height/sectionHeight];
+        Section[][] sectionList = new Section[width / sectionWidth][height / sectionHeight];
         for (int ix = 0; ix < width; ix += sectionWidth) {
-            for (int iy = 0; iy < height; iy +=sectionHeight) {
+            for (int iy = 0; iy < height; iy += sectionHeight) {
                 //System.out.println("hey!");
                 BufferedImage sectionImage = createSectionImage(ix, iy);
                 //section image is buffered image, but section does not take that type.
-               File sectionfile = new File("section.jpg");
+                File sectionfile = new File("section.jpg");
                 //try {
-                  //  ImageIO.write(sectionImage, "jpg", sectionfile);
-               // } catch (IOException e) {
-               //     e.printStackTrace();
-               // }
+                //  ImageIO.write(sectionImage, "jpg", sectionfile);
+                // } catch (IOException e) {
+                //     e.printStackTrace();
+                // }
                 Section currentSection = new Section(sectionfile, ix, iy, sectionWidth, sectionHeight, analysisLevel);
-                sectionList[ix/sectionWidth][iy/sectionHeight] = currentSection;
-            }}
-        System.out.println("2D array length: "+  sectionList.length * sectionList[0].length);
+                sectionList[ix / sectionWidth][iy / sectionHeight] = currentSection;
+            }
+        }
+        System.out.println("2D array length: " + sectionList.length * sectionList[0].length);
 
         cropRatio(mostCommonRatio, imagePool);
         System.out.println("Done.");
+        return sectionList;
 
     }
-    private static BufferedImage createSectionImage(int x ,int y){
+
+    private static BufferedImage createSectionImage(int x, int y) {
         return processedTemplateFile.getSubimage(x, y, sectionWidth, sectionHeight);
     }
-
 
 
     private static void defineSections(double mostCommonRatio) {
@@ -89,7 +92,7 @@ public class ImageFactory {
             double remainder = potentialWidth % 1;
             System.out.println(remainder);
 
-            if ((remainder == 0.0) && (potentialWidth >= 30)&& (potentialHeight >= 30)) {
+            if ((remainder == 0.0) && (potentialWidth >= 30) && (potentialHeight >= 30)) {
                 System.out.println("After Width: " + potentialWidth);
                 sectionWidth = (int) potentialWidth;
                 sectionHeight = potentialHeight;
@@ -98,7 +101,6 @@ public class ImageFactory {
         }
         System.out.println("NO RESOLUTION FOUND");
     }
-
 
 
     private static double getMostCommonRatio(List<SImage> imagePool) {
@@ -110,16 +112,15 @@ public class ImageFactory {
             double width = selectedImage.getWidth();
             double height = selectedImage.getHeight();
 
-            selectedImageRatio = (width/height);
+            selectedImageRatio = (width / height);
 
-            System.out.println("selected: "+ selectedImageRatio);
+            System.out.println("selected: " + selectedImageRatio);
 
             try {
                 int count = ratioFrequencyMap.get(selectedImageRatio);
                 System.out.println(count);
                 ratioFrequencyMap.put(selectedImageRatio, count + 1);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 System.out.println("Error detected");
                 ratioFrequencyMap.put(selectedImageRatio, 1);
             }
@@ -134,22 +135,21 @@ public class ImageFactory {
         }
         //testing
         for (double ratio : ratioFrequencyMap.keySet()) {
-            System.out.println("ratio " +ratio);
-            System.out.println("highest "+ highest);
+            System.out.println("ratio " + ratio);
+            System.out.println("highest " + highest);
         }
-        System.out.println("Highest Ratio "+highestRatio);
+        System.out.println("Highest Ratio " + highestRatio);
         return highestRatio;
     }
 
 
-
-    private static void resizeTemplate(SImage template){
-        int templateWidth=0;
-        int templateHeight=0;
+    private static void resizeTemplate(SImage template) {
+        int templateWidth = 0;
+        int templateHeight = 0;
         int enlargementFactor = 0;
 
-        int enlargedTemplateWidth =0;
-        int enlargedTemplateHeight=0;
+        int enlargedTemplateWidth = 0;
+        int enlargedTemplateHeight = 0;
 
         for (int multiplier = 1; multiplier < 25000; multiplier++) {
             int potentialWidth = multiplier * sectionWidth;
@@ -158,7 +158,7 @@ public class ImageFactory {
             //not enough memory space for large images yet.
             if ((potentialWidth >= 1000) && (potentialHeight >= 1000)) {
                 System.out.println("crop to After Width: " + potentialWidth);
-                System.out.println("Crop to after height "+potentialHeight);
+                System.out.println("Crop to after height " + potentialHeight);
                 templateWidth = potentialWidth;
                 templateHeight = potentialHeight;
                 break;
@@ -180,7 +180,7 @@ public class ImageFactory {
         }
 
         BufferedImage enlargedTemplate = new BufferedImage(enlargedTemplateWidth, enlargedTemplateHeight, templateFile.getType());
-        for (int x=0; x< enlargedTemplateWidth; x++) {
+        for (int x = 0; x < enlargedTemplateWidth; x++) {
             for (int y = 0; y < enlargedTemplateHeight; y++) {
                 enlargedTemplate.setRGB(x, y, templateFile.getRGB(x / enlargementFactor, y / enlargementFactor));
             }
@@ -189,11 +189,11 @@ public class ImageFactory {
         System.out.println("enlargedTemplate height " + enlargedTemplate.getHeight());
 
 
-        int cropTopLeftYCoord = ((enlargedTemplateHeight - templateHeight)/2);
-        int cropTopLeftXCoord = ((enlargedTemplateWidth - templateWidth)/2);
+        int cropTopLeftYCoord = ((enlargedTemplateHeight - templateHeight) / 2);
+        int cropTopLeftXCoord = ((enlargedTemplateWidth - templateWidth) / 2);
         System.out.println("new template");
-        System.out.println(2*cropTopLeftXCoord+templateWidth);
-        System.out.println(2*cropTopLeftYCoord+templateHeight);
+        System.out.println(2 * cropTopLeftXCoord + templateWidth);
+        System.out.println(2 * cropTopLeftYCoord + templateHeight);
 
         File outputfile = new File("image.jpg");
         try {
@@ -209,49 +209,50 @@ public class ImageFactory {
     }
 
 
-    private static void cropRatio(double mostCommonRatio, List<SImage> imagePool ){
+    private static void cropRatio(double mostCommonRatio, List<SImage> imagePool) {
         double widthRatio = mostCommonRatio;
         double heightRatio = 1;
-        for (SImage image: imagePool){
+        for (SImage image : imagePool) {
 
             //store image ratio in SImage?
-            double imageWidthRatio = image.getWidth()/(float) image.getHeight();
-            System.out.println("This image ratio: "+imageWidthRatio);
-            final double imageHeightRatio =1;
-            if ((widthRatio*0.75)<= imageWidthRatio && imageWidthRatio< (widthRatio*1.5)){
+            double imageWidthRatio = image.getWidth() / (float) image.getHeight();
+            System.out.println("This image ratio: " + imageWidthRatio);
+            final double imageHeightRatio = 1;
+            if ((widthRatio * 0.75) <= imageWidthRatio && imageWidthRatio < (widthRatio * 1.5)) {
                 System.out.println("standard");
+                image.setRatioMultiple(1);
                 crop(widthRatio, heightRatio, imageWidthRatio, image);
-            }
-            else if((widthRatio*1.5)<= imageWidthRatio && imageWidthRatio< (widthRatio*2.5)){
+            } else if ((widthRatio * 1.5) <= imageWidthRatio && imageWidthRatio < (widthRatio * 2.5)) {
                 System.out.println("2width");
-                crop(2*widthRatio, heightRatio, imageWidthRatio, image);
+                image.setRatioMultiple(2);
+                crop(2 * widthRatio, heightRatio, imageWidthRatio, image);
 
-            }
-            else if((widthRatio*2.5)<= imageWidthRatio){
+            } else if ((widthRatio * 2.5) <= imageWidthRatio) {
                 System.out.println("3width");
-                crop(3*widthRatio, heightRatio, imageWidthRatio, image);
+                image.setRatioMultiple(3);
+                crop(3 * widthRatio, heightRatio, imageWidthRatio, image);
 
-            }
-            else if((widthRatio*5/12)<= imageWidthRatio && imageWidthRatio< (widthRatio*0.75)){
+            } else if ((widthRatio * 5 / 12) <= imageWidthRatio && imageWidthRatio < (widthRatio * 0.75)) {
                 System.out.println("2height");
-                crop(widthRatio, 2*heightRatio, imageWidthRatio, image);
+                image.setRatioMultiple(0.5);
+                crop(widthRatio, 2 * heightRatio, imageWidthRatio, image);
 
-            }
-            else if(imageWidthRatio< (widthRatio*5/12)){
+            } else if (imageWidthRatio < (widthRatio * 5 / 12)) {
                 System.out.println("3height");
-                crop(widthRatio, 3*heightRatio, imageWidthRatio, image);
+                image.setRatioMultiple(1 / 3);
+                crop(widthRatio, 3 * heightRatio, imageWidthRatio, image);
             }
 
         }
         //return null;
     }
 
-    private static SImage crop( double mostCommonWidthRatio, double mostCommonHeightRatio, double imageRatio, SImage image) {
+    private static SImage crop(double mostCommonWidthRatio, double mostCommonHeightRatio, double imageRatio, SImage image) {
         int width = image.getWidth();
         int height = image.getHeight();
 
-        System.out.println("mostCommonWidthRatio "+mostCommonWidthRatio);
-        System.out.println("mostCommonheightRatio "+mostCommonHeightRatio);
+        System.out.println("mostCommonWidthRatio " + mostCommonWidthRatio);
+        System.out.println("mostCommonheightRatio " + mostCommonHeightRatio);
 
         //checking division
         System.out.println("To crop Ratios:");
@@ -260,13 +261,13 @@ public class ImageFactory {
 
         double toCropRatio = mostCommonWidthRatio / (float) mostCommonHeightRatio;
 
-        System.out.println("imageRatio "+imageRatio);
+        System.out.println("imageRatio " + imageRatio);
 
         if (imageRatio > (mostCommonWidthRatio / (float) mostCommonHeightRatio)) {
-            double widthModifier = ((height /(float) width )* toCropRatio);
+            double widthModifier = ((height / (float) width) * toCropRatio);
             System.out.println("Width decrease");
-            System.out.println("Width Modifier: "+ widthModifier);
-            int widthCropValue = (int) (width * widthModifier) +1;
+            System.out.println("Width Modifier: " + widthModifier);
+            int widthCropValue = (int) (width * widthModifier) + 1;
             System.out.println("width crop value " + widthCropValue);
             try {
                 image.crop(widthCropValue, height);
@@ -275,9 +276,8 @@ public class ImageFactory {
             }
             System.out.println("crop, 1st if. widthcropvalue: " + widthCropValue);
             return null;
-        }
-        else if (imageRatio < (mostCommonWidthRatio/(float) mostCommonHeightRatio)){
-            double heightModifier = (width/(float) (height*toCropRatio));
+        } else if (imageRatio < (mostCommonWidthRatio / (float) mostCommonHeightRatio)) {
+            double heightModifier = (width / (float) (height * toCropRatio));
             System.out.println("height decrease");
             int heightCropValue = (int) (height * heightModifier);
             System.out.println("height crop value " + heightCropValue);
@@ -286,28 +286,81 @@ public class ImageFactory {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.println("crop, nd if. heightcropvalue: " + heightCropValue);
+            System.out.println("crop, 2nd if. heightcropvalue: " + heightCropValue);
             return null;
-        }
-        else{
+        } else {
             System.out.println("do not crop");
-        return null;
+            return null;
         }
 
         //note: due to the necessity to have integers for dimentions, images will allways be resized so that the width is slightly greater than it should be, if an integer cannot be found.
     }
 
-    private static void match(List<SImage> sectionList){
-        for (SImage section: sectionList){
-            if((section.inCompoundSection == False)&&(section.matched = False)){
-                //oh i don't know.... so much to do!
-            }
+    //pass SImage pool
+    private static void matchController(List<SImage> imagePool, Section[][] sectionList) {
 
-        }
+        //start with largest ratios, then move to standard ratio
+        //since compund sections aren't in yet, just standard
+        List<SImage> ratio1Pool = populateList(1, imagePool);
+        List<Section> ratio1Sections = reformatAndPopulateSectionArray(sectionList, 1);
+        System.out.println("ratio refined pool length " + ratio1Pool.size());
+
+        //great, so ratio is sorted, now for the splitting into colour arrays.
+        //will have to do in new function.
+        //create 3 colour lists, sort them
+        //start checking sections
+        //filter 3 lists
+        //recombine 3 lists
+        //use recombined list to find closest section.
+
+
 
 
 
     }
+
+
+    private static List<SImage> populateList(double ratio, List<SImage> imagePool) {
+        List<SImage> newList = new ArrayList<SImage>();
+        ;
+        for (SImage image : imagePool) {
+            if (image.getRatio() == ratio) {
+                newList.add(image);
+            }
+            //for each image in image pool
+            //if image.getratio = ratio
+            //add to this new array.
+        }
+        return newList;
+    }
+
+
+    private static List<Section> reformatAndPopulateSectionArray(Section[][] sectionList, double ratio){
+        List<Section> formattedSectionList = new ArrayList<Section>();
+        for ( int y=0; y<= sectionList[0].length; y++){
+            for ( int x=0; x<= sectionList.length; x++){
+                formattedSectionList.add(sectionList[x][y]);
+            }
+        }
+        List<Section> newSectionList = new ArrayList<Section>();
+        ;
+        for (Section image : formattedSectionList) {
+            if (image.getRatio() == ratio) {
+                newSectionList.add(image);
+            }
+            //for each image in image pool
+            //if image.getratio = ratio
+            //add to this new array.
+        }
+        return newSectionList;
+
+
+}
+
+//private static void matchSections(double ratio, List<SImage> sectionList){
+
+}
+
 
 
 }
