@@ -479,8 +479,9 @@ public class ImageFactory {
                         //System.out.println("X: "+x);
                         //System.out.println("Y: "+y);
                         //System.out.println("enlargement factor: "+enlargementFactor);
-                        outputBufferedImage.setRGB(startX +x, startY+y, linkedImage.getRGB((int) (x / enlargementFactor), (int) (y / enlargementFactor)));
 
+                        //this is the bit to fix!
+                        outputBufferedImage.setRGB(startX +x, startY+y, linkedImage.getRGB((int) Math.round(x / enlargementFactor), (int) Math.round(y / enlargementFactor)));
 
                     }
 
