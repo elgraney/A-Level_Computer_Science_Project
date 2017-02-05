@@ -79,8 +79,8 @@ public class Controller extends BorderPane {
     @FXML private  Label pageLabel;
 
     private ImageView[] imageFrameList;
-    private List<SImage> SImagePool = new ArrayList<SImage>();
-    private List<Image> imagePool = new ArrayList<Image>();
+    private ArrayList<SImage> SImagePool = new ArrayList<SImage>();
+    private ArrayList<Image> imagePool = new ArrayList<Image>();
     private SImage templateSImage;
     private BufferedImage templateImage;
 

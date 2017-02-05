@@ -10,10 +10,11 @@ import java.io.File;
 
 public class Section extends SImage {
 
-    private static int topLeftX;
-    private static int topLeftY;
-    private static int centreX;
-    private static int centreY;
+    private int topLeftX;
+    private int topLeftY;
+    private int centreX;
+    private int centreY;
+    private SImage linkedImage;
 
     public Section(File file, int x, int y, int width, int height, int analysisLevel) {
         super(file, analysisLevel);
@@ -23,11 +24,21 @@ public class Section extends SImage {
         findCentreXY(width, height);
 
     }
-    private static void findCentreXY(int width, int height){
+    private void findCentreXY(int width, int height){
         centreX = topLeftX + Math.round(width/2);
         centreY = topLeftY + Math.round(height/2);
-
-
-
     }
+    public void setLinkedImage(SImage image){
+        linkedImage = image;
+    }
+    public SImage getLinkedImage(){
+        return linkedImage;
+    }
+    public int getTopLeftX(){
+        return topLeftX;
+    }
+    public int getTopLeftY(){
+        return topLeftY;
+    }
+
 }

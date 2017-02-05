@@ -22,7 +22,7 @@ public class SImage {
     protected int height;
     protected int width;
     protected int[] modeRGB = new int[3];
-    protected long[] meanRGB = new long[3];
+    protected double[] meanRGB = new double[3];
     protected double[] meanOfModesRGB = new double[3];
     protected double ratioMultiple;
 
@@ -268,6 +268,9 @@ public class SImage {
     }
     public double getRatio(){
         return ratioMultiple;
+    }
+    public Double getMeanRGB(int index){
+        return meanRGB[index];
     }
 
 }
