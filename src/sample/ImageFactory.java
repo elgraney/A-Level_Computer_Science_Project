@@ -158,7 +158,7 @@ public class ImageFactory {
             int potentialHeight = multiplier * sectionHeight;
 
             //not enough memory space for large images yet.
-            if ((potentialWidth >= 3000) && (potentialHeight >= 3000)) {
+            if ((potentialWidth >= 6000) && (potentialHeight >= 6000)) {
                 System.out.println("crop to After Width: " + potentialWidth);
                 System.out.println("Crop to after height " + potentialHeight);
                 templateWidth = potentialWidth;
@@ -479,14 +479,14 @@ public class ImageFactory {
                         //System.out.println("X: "+x);
                         //System.out.println("Y: "+y);
                         //System.out.println("enlargement factor: "+enlargementFactor);
-                        outputBufferedImage.setRGB(startX +x, startY+y, linkedImage.getRGB((int) Math.round(x / enlargementFactor), (int) Math.round(y / enlargementFactor)));
+                        outputBufferedImage.setRGB(startX +x, startY+y, linkedImage.getRGB((int) (x / enlargementFactor), (int) (y / enlargementFactor)));
 
 
                     }
 
                 }
-                //System.out.println("+1 section drawn.");
             }
+            System.out.println("+1 section lot drawn.");
 
         }
         File outputfile = new File("outputImage.jpg");
