@@ -161,7 +161,7 @@ public class ImageFactory {
             int potentialHeight = multiplier * sectionHeight;
 
             //not enough memory space for large images yet.
-            if ((potentialWidth >= 6000) && (potentialHeight >= 6000)) {
+            if ((potentialWidth >= 3000) && (potentialHeight >= 3000)) {
                 System.out.println("crop to After Width: " + potentialWidth);
                 System.out.println("Crop to after height " + potentialHeight);
                 templateWidth = potentialWidth;
@@ -496,6 +496,8 @@ public class ImageFactory {
                         //System.out.println("X: "+x);
                         //System.out.println("Y: "+y);
                         //System.out.println("enlargement factor: "+enlargementFactor);
+<<<<<<< HEAD
+=======
                         int imageX = (int) (Math.round(x / enlargementFactor));
                         int imageY = (int) (Math.round(y / enlargementFactor));
                         if (imageX > linkedImage.getWidth()){
@@ -513,7 +515,7 @@ public class ImageFactory {
                         }
 
                         outputBufferedImage.setRGB(startX +x, startY+y, linkedImage.getRGB(imageX, imageY));
-
+>>>>>>> origin/master
 
                         //this is the bit to fix!
                         outputBufferedImage.setRGB(startX +x, startY+y, linkedImage.getRGB((int) Math.round(x / enlargementFactor), (int) Math.round(y / enlargementFactor)));
