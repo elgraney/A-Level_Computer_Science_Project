@@ -21,6 +21,8 @@ public class ImageFactory {
 
     private static BufferedImage processedTemplateFile;
 
+    //SET CONSTANTS FOR OUTPUT RESOLUTION AND SECTION SIZE
+
     public static void generate(SImage SImageTemplate, ArrayList<SImage> imagePool, BufferedImage templateImage, int analysisLvl) {
 
 
@@ -30,6 +32,7 @@ public class ImageFactory {
         templateFile = templateImage;
         Section[][] sectionList = formatAllImages(imagePool);
         matchController(imagePool, sectionList);
+
 
     }
 
@@ -158,7 +161,7 @@ public class ImageFactory {
             int potentialHeight = multiplier * sectionHeight;
 
             //not enough memory space for large images yet.
-            if ((potentialWidth >= 6000) && (potentialHeight >= 6000)) {
+            if ((potentialWidth >= 3000) && (potentialHeight >= 3000)) {
                 System.out.println("crop to After Width: " + potentialWidth);
                 System.out.println("Crop to after height " + potentialHeight);
                 templateWidth = potentialWidth;
@@ -329,53 +332,67 @@ public class ImageFactory {
         System.out.println("Merge complete");
         System.out.println("SectionList size: " + sectionList.size());
 
+
         for (Section section : sectionList) {
             System.out.println("Entered for?");
             double sectionRed = section.getMeanRGB(0);
             double sectionGreen = section.getMeanRGB(1);
             double sectionBlue = section.getMeanRGB(2);
 
-            if (redSortedImages.size() > 25) {
-                redSortedImages = binarySearch(redSortedImages, 0, sectionRed);
-            }
-            if (greenSortedImages.size() > 25) {
-                greenSortedImages = binarySearch(greenSortedImages, 1, sectionGreen);
-            }
-            if (blueSortedImages.size() > 25) {
-                blueSortedImages = binarySearch(blueSortedImages, 2, sectionBlue);
-            }
-            System.out.println("Binary Search complete or skipped.");
-            Set<SImage> recombinedList = new HashSet<SImage>();
-            recombinedList.addAll(redSortedImages);
-            recombinedList.addAll(greenSortedImages);
-            recombinedList.addAll(blueSortedImages);
-            System.out.println("recombined.");
-
+            int sortedListMaxSize = 25;
             int difference = 0;
-            do {
-            for (SImage image : recombinedList) {
-                    if ((image.getMeanRGB(0) - difference) <= sectionRed && (image.getMeanRGB(0) + difference) >= sectionRed &&
-                            (image.getMeanRGB(1) - difference) <= sectionGreen && (image.getMeanRGB(1) + difference) >= sectionGreen &&
-                            (image.getMeanRGB(2) - difference) <= sectionBlue && (image.getMeanRGB(2) + difference) >= sectionBlue
-                            ) {
-                        section.setLinkedImage(image);
-                        System.out.println(section.file);
-                        System.out.println(image.file);
-                        difference = 100;
-                        break;
-                    } else {
-                        //System.out.println("Incrementing difference");
-                        difference++;
+
+            while ((difference != 999)) {
+                System.out.println("While loop " + difference);
+                if (redSortedImages.size() > sortedListMaxSize) {
+                    redSortedImages = binarySearch(redSortedImages, 0, sectionRed);
+                }
+                if (greenSortedImages.size() > sortedListMaxSize) {
+                    greenSortedImages = binarySearch(greenSortedImages, 1, sectionGreen);
+                }
+                if (blueSortedImages.size() > sortedListMaxSize) {
+                    blueSortedImages = binarySearch(blueSortedImages, 2, sectionBlue);
+                }
+                //System.out.println("Binary Search complete or skipped.");
+                Set<SImage> recombinedList = new HashSet<SImage>();
+                recombinedList.addAll(redSortedImages);
+                recombinedList.addAll(greenSortedImages);
+                recombinedList.addAll(blueSortedImages);
+                //System.out.println("recombined.");
+
+                difference = 0;
+                do {
+
+                    for (SImage image : recombinedList) {
+                        if ((image.getMeanRGB(0) - difference) <= sectionRed && (image.getMeanRGB(0) + difference) >= sectionRed &&
+                                (image.getMeanRGB(1) - difference) <= sectionGreen && (image.getMeanRGB(1) + difference) >= sectionGreen &&
+                                (image.getMeanRGB(2) - difference) <= sectionBlue && (image.getMeanRGB(2) + difference) >= sectionBlue
+                                ) {
+                            section.setLinkedImage(image);
+                            System.out.println(section.file);
+                            System.out.println(image.file);
+                            difference = 998;
+                            break;
+                        }
                     }
+                    difference++;
                 }
                 //now match them
                 //follow design algorithm.
+
+                while (difference < 200);
+
+                if (difference != 999) {
+                    System.out.println("Match Failed");
+                    sortedListMaxSize += 5;
+                }
+
+                //System.out.println("Match section complete");
+                //System.out.println("For skipped.");
+
             }
-            while (difference < 100);
-            System.out.println("Match section complete");
-            System.out.println("For skipped.");
+            System.out.println("every section covered.");
         }
-        System.out.println("every section covered.");
     }
 
     private static ArrayList<SImage> binarySearch(ArrayList<SImage> imageList, int colour, double targetColour) {
@@ -390,7 +407,7 @@ public class ImageFactory {
             middle = (low + high) / 2;
             if (imageList.get(middle).getMeanRGB(colour) == targetColour) {
                 for (int index = (middle - 5 < 0 ? 0 : middle-5); index <= (middle + 5 > size -1  ? size -1  : middle+ 5); index++) {
-                    //Possible array boundary error
+
                     reducedImageArray.add(imageList.get(index));
                     return reducedImageArray;
                 }
@@ -412,7 +429,7 @@ public class ImageFactory {
 
     private static ArrayList<SImage> populateList(double ratio, ArrayList<SImage> imagePool) {
         ArrayList<SImage> newList = new ArrayList<SImage>();
-        ;
+
         for (SImage image : imagePool) {
             if (image.getRatio() == ratio) {
                 newList.add(image);
@@ -479,6 +496,26 @@ public class ImageFactory {
                         //System.out.println("X: "+x);
                         //System.out.println("Y: "+y);
                         //System.out.println("enlargement factor: "+enlargementFactor);
+<<<<<<< HEAD
+=======
+                        int imageX = (int) (Math.round(x / enlargementFactor));
+                        int imageY = (int) (Math.round(y / enlargementFactor));
+                        if (imageX > linkedImage.getWidth()){
+                            imageX = linkedImage.getWidth();
+                        }
+                        else if (imageX <0){
+                            imageX = 0;
+                        }
+
+                        if (imageY > linkedImage.getHeight()){
+                            imageY = linkedImage.getHeight();
+                        }
+                        else if (imageY <0){
+                            imageY = 0;
+                        }
+
+                        outputBufferedImage.setRGB(startX +x, startY+y, linkedImage.getRGB(imageX, imageY));
+>>>>>>> origin/master
 
                         //this is the bit to fix!
                         outputBufferedImage.setRGB(startX +x, startY+y, linkedImage.getRGB((int) Math.round(x / enlargementFactor), (int) Math.round(y / enlargementFactor)));

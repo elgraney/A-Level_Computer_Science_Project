@@ -50,6 +50,9 @@ public class SImage {
         double redAverage = 0;
         double blueAverage = 0;
         double greenAverage = 0;
+
+        double modifierCount = 0;
+
         Color RGB = null;
 
         HashMap<Color, Double> RGBFrequencyMap = new HashMap<>(255 * 255);
@@ -62,10 +65,12 @@ public class SImage {
                 int green = (clr & 0x0000ff00) >> 8;
                 int blue = clr & 0x000000ff;
                 double modifier = modifier(red, green, blue, height, width, iy, ix);
+                modifierCount += modifier;
 
                 red = (int) round(red);
                 blue = (int) round(blue);
                 green = (int) round(green);
+
 
                 redAverage += pow(red, 2.2);
                 blueAverage += pow(blue, 2.2);
@@ -78,9 +83,9 @@ public class SImage {
             }
         }
 
-        meanRGB[0] = round(pow((redAverage / pixels), (1 / 2.2)));
-        meanRGB[1] = round(pow((blueAverage / pixels), (1 / 2.2)));
-        meanRGB[2] = round(pow((greenAverage / pixels), (1 / 2.2)));
+        meanRGB[0] = round(pow((redAverage /modifierCount), (1 / 2.2)));
+        meanRGB[1] = round(pow((blueAverage / modifierCount), (1 / 2.2)));
+        meanRGB[2] = round(pow((greenAverage / modifierCount), (1 / 2.2)));
 
 
         //System.out.println("Red Average: " + meanRGB[0]);
@@ -96,11 +101,11 @@ public class SImage {
         for (Color StoredRGB : RGBFrequencyMap.keySet()) {
             if ((RGB.getRed() < StoredRGB.getRed() + 5) && (RGB.getRed() > StoredRGB.getRed() - 5) && (RGB.getGreen() < StoredRGB.getGreen() + 5) && (RGB.getGreen() > StoredRGB.getGreen() - 5) && (RGB.getBlue() < StoredRGB.getBlue() + 5) && (RGB.getBlue() > StoredRGB.getBlue() - 5)) {
                 double count = RGBFrequencyMap.get(StoredRGB);
-                RGBFrequencyMap.put(StoredRGB, count + 1 * modifier);
+                RGBFrequencyMap.put(StoredRGB, count + modifier);
                 return RGBFrequencyMap;
             }
         }
-        RGBFrequencyMap.put(RGB, 1 * modifier);
+        RGBFrequencyMap.put(RGB, modifier);
         return RGBFrequencyMap;
     }
 
