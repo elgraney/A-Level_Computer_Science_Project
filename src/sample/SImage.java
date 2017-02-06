@@ -71,10 +71,10 @@ public class SImage {
                 blue = (int) round(blue);
                 green = (int) round(green);
 
-
                 redAverage += pow(red, 2.2);
                 blueAverage += pow(blue, 2.2);
                 greenAverage += pow(green, 2.2);
+
 
                 RGB = new Color(red, green, blue);
                 if (analysisLevel > 1) {
@@ -83,9 +83,9 @@ public class SImage {
             }
         }
 
-        meanRGB[0] = round(pow((redAverage /modifierCount), (1 / 2.2)));
-        meanRGB[1] = round(pow((blueAverage / modifierCount), (1 / 2.2)));
-        meanRGB[2] = round(pow((greenAverage / modifierCount), (1 / 2.2)));
+        meanRGB[0] = round(pow((redAverage / pixels), (1 / 2.2)));
+        meanRGB[1] = round(pow((blueAverage / pixels), (1 / 2.2)));
+        meanRGB[2] = round(pow((greenAverage / pixels), (1 / 2.2)));
 
 
         //System.out.println("Red Average: " + meanRGB[0]);

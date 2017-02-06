@@ -385,6 +385,11 @@ public class ImageFactory {
                 if (difference != 999) {
                     System.out.println("Match Failed");
                     sortedListMaxSize += 5;
+                    if (sortedListMaxSize > 50){
+                        System.out.println("This image has failed.");
+                        System.out.println("section RGB: "+section.getMeanRGB(0)+", "+section.getMeanRGB(1)+ ", "+section.getMeanRGB(2));
+                        break;
+                    }
                 }
 
                 //System.out.println("Match section complete");
@@ -468,7 +473,7 @@ public class ImageFactory {
 }
 
     private static void generateOutput(Section[][] sectionArray) {
-
+        System.out.println("generateOutput");
         BufferedImage outputBufferedImage = processedTemplateFile;
 
 
@@ -498,15 +503,16 @@ public class ImageFactory {
                         //System.out.println("enlargement factor: "+enlargementFactor);
                         int imageX = (int) (Math.round(x / enlargementFactor));
                         int imageY = (int) (Math.round(y / enlargementFactor));
+
                         if (imageX > linkedImage.getWidth()){
-                            imageX = linkedImage.getWidth();
+                            imageX = linkedImage.getWidth()-1;
                         }
                         else if (imageX <0){
                             imageX = 0;
                         }
 
                         if (imageY > linkedImage.getHeight()){
-                            imageY = linkedImage.getHeight();
+                            imageY = linkedImage.getHeight()-1;
                         }
                         else if (imageY <0){
                             imageY = 0;
