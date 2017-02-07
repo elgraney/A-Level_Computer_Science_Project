@@ -285,5 +285,7 @@ public class SImage {
     public Double getMeanRGB(int index){
         return meanRGB[index];
     }
-
+    public Double getMeanOfModesRGB(int index){
+        return meanOfModesRGB[index];
+    }
 }

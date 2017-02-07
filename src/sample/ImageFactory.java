@@ -329,37 +329,32 @@ public class ImageFactory {
     private static void matchSections(ArrayList<Section> sectionList, ArrayList<SImage> imageList) {
         System.out.println("Match sections");
         ArrayList<SImage> redSortedImages = MergeSort.mergeSort(imageList, 0);
+        System.out.println("original red length: " + redSortedImages.size());
         ArrayList<SImage> greenSortedImages = MergeSort.mergeSort(imageList, 1);
         ArrayList<SImage> blueSortedImages = MergeSort.mergeSort(imageList, 2);
         System.out.println("Merge complete");
         System.out.println("SectionList size: " + sectionList.size());
 
-
         for (Section section : sectionList) {
             System.out.println("Entered for?");
-            double sectionRed = section.getMeanRGB(0);
-            double sectionGreen = section.getMeanRGB(1);
-            double sectionBlue = section.getMeanRGB(2);
+            double sectionRed = section.getMeanOfModesRGB(0);
+            double sectionGreen = section.getMeanOfModesRGB(1);
+            double sectionBlue = section.getMeanOfModesRGB(2);
 
             int sortedListMaxRange = 5;
             int difference = 0;
 
             while ((difference != 999)) {
                 System.out.println("While loop " + difference);
-                if (redSortedImages.size() > 30) {
-                    redSortedImages = binarySearch(redSortedImages, 0, sectionRed, sortedListMaxRange);
-                }
-                if (greenSortedImages.size() > 30) {
-                    greenSortedImages = binarySearch(greenSortedImages, 1, sectionGreen, sortedListMaxRange);
-                }
-                if (blueSortedImages.size() > 30) {
-                    blueSortedImages = binarySearch(blueSortedImages, 2, sectionBlue, sortedListMaxRange);
-                }
+                ArrayList<SImage> newRedSortedImages = binarySearch(redSortedImages, 0, sectionRed, sortedListMaxRange);
+                System.out.println("binary search red output size "+redSortedImages.size());
+                ArrayList<SImage> newGreenSortedImages = binarySearch(greenSortedImages, 1, sectionGreen, sortedListMaxRange);
+                ArrayList<SImage> newBlueSortedImages = binarySearch(blueSortedImages, 2, sectionBlue, sortedListMaxRange);
                 //System.out.println("Binary Search complete or skipped.");
                 Set<SImage> recombinedList = new HashSet<SImage>();
-                recombinedList.addAll(redSortedImages);
-                recombinedList.addAll(greenSortedImages);
-                recombinedList.addAll(blueSortedImages);
+                recombinedList.addAll(newRedSortedImages);
+                recombinedList.addAll(newGreenSortedImages);
+                recombinedList.addAll(newBlueSortedImages);
                 //System.out.println("recombined.");
 
                 difference = 0;
@@ -389,6 +384,11 @@ public class ImageFactory {
                     sortedListMaxRange += 5;
                     if (sortedListMaxRange > 50){
                         System.out.println("This image has failed.");
+                        System.out.println("Red length: " + redSortedImages.size());
+                        System.out.println("Green length: " + greenSortedImages.size());
+                        System.out.println("Blue length: " + blueSortedImages.size());
+                        System.out.println("Recombined list length: "+ recombinedList.size());
+                        System.out.println("sortedListMaxRange " + sortedListMaxRange);
                         System.out.println("section RGB: "+section.getMeanRGB(0)+", "+section.getMeanRGB(1)+ ", "+section.getMeanRGB(2));
                         break;
                     }
