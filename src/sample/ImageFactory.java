@@ -56,6 +56,8 @@ public class ImageFactory {
         int width = processedTemplateFile.getWidth();
         int height = processedTemplateFile.getHeight();
 
+        //THIS SECTION TAKES A LONG TIME, LOOK INTO OPTIMISING.
+
         Section[][] sectionList = new Section[width / sectionWidth][height / sectionHeight];
         for (int ix = 0; ix < width; ix += sectionWidth) {
             for (int iy = 0; iy < height; iy += sectionHeight) {
@@ -339,19 +341,19 @@ public class ImageFactory {
             double sectionGreen = section.getMeanRGB(1);
             double sectionBlue = section.getMeanRGB(2);
 
-            int sortedListMaxSize = 25;
+            int sortedListMaxRange = 5;
             int difference = 0;
 
             while ((difference != 999)) {
                 System.out.println("While loop " + difference);
-                if (redSortedImages.size() > sortedListMaxSize) {
-                    redSortedImages = binarySearch(redSortedImages, 0, sectionRed);
+                if (redSortedImages.size() > 30) {
+                    redSortedImages = binarySearch(redSortedImages, 0, sectionRed, sortedListMaxRange);
                 }
-                if (greenSortedImages.size() > sortedListMaxSize) {
-                    greenSortedImages = binarySearch(greenSortedImages, 1, sectionGreen);
+                if (greenSortedImages.size() > 30) {
+                    greenSortedImages = binarySearch(greenSortedImages, 1, sectionGreen, sortedListMaxRange);
                 }
-                if (blueSortedImages.size() > sortedListMaxSize) {
-                    blueSortedImages = binarySearch(blueSortedImages, 2, sectionBlue);
+                if (blueSortedImages.size() > 30) {
+                    blueSortedImages = binarySearch(blueSortedImages, 2, sectionBlue, sortedListMaxRange);
                 }
                 //System.out.println("Binary Search complete or skipped.");
                 Set<SImage> recombinedList = new HashSet<SImage>();
@@ -384,8 +386,8 @@ public class ImageFactory {
 
                 if (difference != 999) {
                     System.out.println("Match Failed");
-                    sortedListMaxSize += 5;
-                    if (sortedListMaxSize > 50){
+                    sortedListMaxRange += 5;
+                    if (sortedListMaxRange > 50){
                         System.out.println("This image has failed.");
                         System.out.println("section RGB: "+section.getMeanRGB(0)+", "+section.getMeanRGB(1)+ ", "+section.getMeanRGB(2));
                         break;
@@ -400,7 +402,7 @@ public class ImageFactory {
         }
     }
 
-    private static ArrayList<SImage> binarySearch(ArrayList<SImage> imageList, int colour, double targetColour) {
+    private static ArrayList<SImage> binarySearch(ArrayList<SImage> imageList, int colour, double targetColour, int sortedListMaxRange) {
 
         ArrayList<SImage> reducedImageArray = new ArrayList<SImage>();
         int size = imageList.size();
@@ -411,7 +413,7 @@ public class ImageFactory {
         while (high > low) {
             middle = (low + high) / 2;
             if (imageList.get(middle).getMeanRGB(colour) == targetColour) {
-                for (int index = (middle - 5 < 0 ? 0 : middle-5); index <= (middle + 5 > size -1  ? size -1  : middle+ 5); index++) {
+                for (int index = (middle - sortedListMaxRange < 0 ? 0 : middle-sortedListMaxRange); index <= (middle + sortedListMaxRange > size -1  ? size -1  : middle+ sortedListMaxRange); index++) {
 
                     reducedImageArray.add(imageList.get(index));
                     return reducedImageArray;
@@ -424,7 +426,7 @@ public class ImageFactory {
                 high = middle - 1;
             }
         }
-        for (int index = (middle - 5 < 0 ? 0 : middle-5); index <= (middle + 5 > size -1  ? size -1  : middle+ 5); index++) {
+        for (int index = (middle - sortedListMaxRange < 0 ? 0 : middle-sortedListMaxRange); index <= (middle + sortedListMaxRange > size -1  ? size -1  : middle+ sortedListMaxRange); index++) {
             reducedImageArray.add(imageList.get(index));
         }
         return reducedImageArray;
@@ -519,10 +521,7 @@ public class ImageFactory {
                         }
 
                         outputBufferedImage.setRGB(startX +x, startY+y, linkedImage.getRGB(imageX, imageY));
-
-
                     }
-
                 }
             }
             System.out.println("+1 section lot drawn.");

@@ -1,15 +1,10 @@
 package sample;
 
-import javafx.scene.image.*;
-
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import static java.lang.Math.*;
 import static java.lang.Math.pow;
@@ -53,9 +48,9 @@ public class SImage {
 
         double modifierCount = 0;
 
-        Color RGB = null;
+        //HashMap<Color, Double> RGBFrequencyMap = new HashMap<>(255 * 255);
+        ArrayList<colourRange> RGBFrequencyArray = new ArrayList<colourRange>();
 
-        HashMap<Color, Double> RGBFrequencyMap = new HashMap<>(255 * 255);
         //RGBFrequencyMap.
         int step = calcStep();
         for (int ix = 0; ix < width; ix = ix + step) {
@@ -68,45 +63,51 @@ public class SImage {
                 modifierCount += modifier;
 
                 red = (int) round(red);
-                blue = (int) round(blue);
                 green = (int) round(green);
+                blue = (int) round(blue);
 
                 redAverage += pow(red, 2.2);
-                blueAverage += pow(blue, 2.2);
                 greenAverage += pow(green, 2.2);
+                blueAverage += pow(blue, 2.2);
 
 
-                RGB = new Color(red, green, blue);
+                int[] RGB = {red, green, blue};
                 if (analysisLevel > 1) {
-                    modeRGB(RGBFrequencyMap, RGB, modifier);
+                    RGBFrequencyArray = modeRGB(RGBFrequencyArray, RGB, modifier);
+                    //System.out.println("RGBFrequencyArray size "+RGBFrequencyArray.size());
                 }
             }
         }
 
-        meanRGB[0] = round(pow((redAverage / pixels), (1 / 2.2)));
-        meanRGB[1] = round(pow((blueAverage / pixels), (1 / 2.2)));
-        meanRGB[2] = round(pow((greenAverage / pixels), (1 / 2.2)));
+        meanRGB[0] = round(pow((redAverage / (pixels/step)), (1 / 2.2)));
+        meanRGB[1] = round(pow((greenAverage / (pixels/step)), (1 / 2.2)));
+        meanRGB[2] = round(pow((blueAverage /(pixels/step)), (1 / 2.2)));
 
 
         //System.out.println("Red Average: " + meanRGB[0]);
         //System.out.println("Green Average: " + meanRGB[1]);
         //System.out.println("Blue Average: " + meanRGB[2]);
+
         if (analysisLevel > 1) {
-            calcModes(RGBFrequencyMap);
+            calcModes(RGBFrequencyArray);
         }
     }
 
 
-    private HashMap modeRGB(HashMap<Color, Double> RGBFrequencyMap, Color RGB, double modifier) {
-        for (Color StoredRGB : RGBFrequencyMap.keySet()) {
-            if ((RGB.getRed() < StoredRGB.getRed() + 5) && (RGB.getRed() > StoredRGB.getRed() - 5) && (RGB.getGreen() < StoredRGB.getGreen() + 5) && (RGB.getGreen() > StoredRGB.getGreen() - 5) && (RGB.getBlue() < StoredRGB.getBlue() + 5) && (RGB.getBlue() > StoredRGB.getBlue() - 5)) {
-                double count = RGBFrequencyMap.get(StoredRGB);
-                RGBFrequencyMap.put(StoredRGB, count + modifier);
-                return RGBFrequencyMap;
-            }
+    private ArrayList<colourRange> modeRGB( ArrayList<colourRange> RGBFrequencyArray, int[] RGB, double modifier) {
+        for (colourRange item : RGBFrequencyArray) {
+            if ((RGB[0] < item.getRGB(0) + 5) && (RGB[0] > item.getRGB(0) - 5)
+                    && (RGB[1] < item.getRGB(1) + 5) && (RGB[1] > item.getRGB(1) - 5)
+                    && (RGB[2] < item.getRGB(2) + 5) && (RGB[2] > item.getRGB(2) - 5)
+                    ) {
+                    //System.out.println("modeRGB past if");
+                    item.incrementFrequency(modifier);
+                    return RGBFrequencyArray;
+                }
         }
-        RGBFrequencyMap.put(RGB, modifier);
-        return RGBFrequencyMap;
+        colourRange newColourRange = new colourRange(RGB);
+        RGBFrequencyArray.add(newColourRange);
+        return RGBFrequencyArray;
     }
 
     public int calcStep() {
@@ -192,35 +193,42 @@ public class SImage {
         return (finalModifier);
     }
 
-    private void calcModes(HashMap<Color, Double> RGBFrequencyMap) {
+    private void calcModes(ArrayList<colourRange> RGBFrequencyArray) {
         double highest = 0;
-        Color item = new Color(0, 0, 0);
-        for (Color StoredRGB : RGBFrequencyMap.keySet()) {
-            if (RGBFrequencyMap.get(StoredRGB) > highest) {
-                item = StoredRGB;
-                highest = RGBFrequencyMap.get(StoredRGB);
+        int[] singleColour = new int[3];
+
+        for (colourRange colourRange : RGBFrequencyArray) {
+            if (colourRange.getFrequency() > highest) {
+                singleColour[0] = colourRange.getRGB(0);
+                singleColour[1] = colourRange.getRGB(1);
+                singleColour[2] = colourRange.getRGB(2);
+
+                highest = colourRange.getFrequency();
             }
         }
-        modeRGB[0] = item.getRed();
-        modeRGB[1] = item.getGreen();
-        modeRGB[2] = item.getBlue();
+        modeRGB = singleColour;
+        //finished pure mode.
 
-        //System.out.println("Single Red Mode: " + item.getRed());
-        //System.out.println("Single Green Mode: " + item.getGreen());
-        //System.out.println("Single Blue Mode: " + item.getBlue());
+
+        //System.out.println("Single Red Mode: " + singleColour[0]);
+        //System.out.println("Single Green Mode: " + singleColour[1]);
+        //System.out.println("Single Blue Mode: " + singleColour[2]);
+
         double[] SigmaXF = new double[3];
         double SigmaF = 0;
 
 
-        for (Color StoredRGB : RGBFrequencyMap.keySet()) {
-            if (RGBFrequencyMap.get(StoredRGB) > (highest * 0.75)) {
-                SigmaXF[0] += RGBFrequencyMap.get(StoredRGB) * StoredRGB.getRed();
-                SigmaXF[1] += RGBFrequencyMap.get(StoredRGB) * StoredRGB.getGreen();
-                SigmaXF[2] += RGBFrequencyMap.get(StoredRGB) * StoredRGB.getBlue();
-                SigmaF += RGBFrequencyMap.get(StoredRGB);
+        for (colourRange colourRange : RGBFrequencyArray) {
+            if (colourRange.getFrequency() > highest * 0.75) {
+                SigmaXF[0] += colourRange.getFrequency() * colourRange.getRGB(0);
+                SigmaXF[1] += colourRange.getFrequency() * colourRange.getRGB(1);
+                SigmaXF[2] += colourRange.getFrequency() * colourRange.getRGB(2);
+
+                SigmaF += colourRange.getFrequency();
 
             }
         }
+        //i'm not sure this is how weighted mean works
         meanOfModesRGB[0] = (SigmaXF[0] / SigmaF);
         meanOfModesRGB[1] = (SigmaXF[1] / SigmaF);
         meanOfModesRGB[2] = (SigmaXF[2] / SigmaF);

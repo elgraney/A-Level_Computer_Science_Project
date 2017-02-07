@@ -115,7 +115,8 @@ public class Controller extends BorderPane {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
 
-        int analysisLevel = 1;
+        //make editable.
+        int analysisLevel = 3;
         ImageFactory.generate( templateSImage, SImagePool, templateImage, analysisLevel);
     }
     public void importImage(){
