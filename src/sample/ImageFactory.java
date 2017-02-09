@@ -163,7 +163,7 @@ public class ImageFactory {
             int potentialHeight = multiplier * sectionHeight;
 
             //not enough memory space for large images yet.
-            if ((potentialWidth >= 3000) && (potentialHeight >= 3000)) {
+            if ((potentialWidth >= 6000) && (potentialHeight >= 6000)) {
                 System.out.println("crop to After Width: " + potentialWidth);
                 System.out.println("Crop to after height " + potentialHeight);
                 templateWidth = potentialWidth;
@@ -336,7 +336,7 @@ public class ImageFactory {
         System.out.println("SectionList size: " + sectionList.size());
 
         for (Section section : sectionList) {
-            System.out.println("Entered for?");
+            //System.out.println("Entered for?");
             double sectionRed = section.getMeanOfModesRGB(0);
             double sectionGreen = section.getMeanOfModesRGB(1);
             double sectionBlue = section.getMeanOfModesRGB(2);
@@ -345,9 +345,9 @@ public class ImageFactory {
             int difference = 0;
 
             while ((difference != 999)) {
-                System.out.println("While loop " + difference);
+                //System.out.println("While loop " + difference);
                 ArrayList<SImage> newRedSortedImages = binarySearch(redSortedImages, 0, sectionRed, sortedListMaxRange);
-                System.out.println("binary search red output size "+redSortedImages.size());
+                //System.out.println("binary search red output size "+redSortedImages.size());
                 ArrayList<SImage> newGreenSortedImages = binarySearch(greenSortedImages, 1, sectionGreen, sortedListMaxRange);
                 ArrayList<SImage> newBlueSortedImages = binarySearch(blueSortedImages, 2, sectionBlue, sortedListMaxRange);
                 //System.out.println("Binary Search complete or skipped.");
@@ -366,8 +366,8 @@ public class ImageFactory {
                                 (image.getMeanRGB(2) - difference) <= sectionBlue && (image.getMeanRGB(2) + difference) >= sectionBlue
                                 ) {
                             section.setLinkedImage(image);
-                            System.out.println(section.file);
-                            System.out.println(image.file);
+                            //System.out.println(section.file);
+                            //System.out.println(image.file);
                             difference = 998;
                             break;
                         }
@@ -506,19 +506,21 @@ public class ImageFactory {
                         int imageX = (int) (Math.round(x / enlargementFactor));
                         int imageY = (int) (Math.round(y / enlargementFactor));
 
-                        if (imageX > linkedImage.getWidth()){
+                        if (imageX >= linkedImage.getWidth()){
                             imageX = linkedImage.getWidth()-1;
                         }
                         else if (imageX <0){
                             imageX = 0;
                         }
 
-                        if (imageY > linkedImage.getHeight()){
+                        if (imageY >= linkedImage.getHeight()){
                             imageY = linkedImage.getHeight()-1;
                         }
                         else if (imageY <0){
                             imageY = 0;
                         }
+                        //System.out.println("Image X: "+imageX + ", Image Y: "+imageY);
+                        //System.out.println("Image width: "+linkedImage.getWidth()+", Image height: "+linkedImage.getHeight());
 
                         outputBufferedImage.setRGB(startX +x, startY+y, linkedImage.getRGB(imageX, imageY));
                     }
