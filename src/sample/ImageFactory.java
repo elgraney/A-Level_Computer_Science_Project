@@ -1,6 +1,9 @@
 package sample;
 
+import javafx.scene.image.*;
+
 import java.awt.*;
+import java.awt.Image;
 import java.io.File;
 import java.util.*;
 import java.awt.image.BufferedImage;
@@ -23,7 +26,7 @@ public class ImageFactory {
 
     //SET CONSTANTS FOR OUTPUT RESOLUTION AND SECTION SIZE
 
-    public static void generate(SImage SImageTemplate, ArrayList<SImage> imagePool, BufferedImage templateImage, int analysisLvl) {
+    public static File generate(SImage SImageTemplate, ArrayList<SImage> imagePool, BufferedImage templateImage, int analysisLvl) {
 
 
         System.out.println("generate");
@@ -31,8 +34,8 @@ public class ImageFactory {
         unalteredTemplate = SImageTemplate;
         templateFile = templateImage;
         Section[][] sectionList = formatAllImages(imagePool);
-        matchController(imagePool, sectionList);
-
+        File outputImage = matchController(imagePool, sectionList);
+        return outputImage;
 
     }
 
@@ -163,7 +166,7 @@ public class ImageFactory {
             int potentialHeight = multiplier * sectionHeight;
 
             //not enough memory space for large images yet.
-            if ((potentialWidth >= 1000) && (potentialHeight >= 1000)) {
+            if ((potentialWidth >= 6000) && (potentialHeight >= 6000)) {
                 System.out.println("crop to After Width: " + potentialWidth);
                 System.out.println("Crop to after height " + potentialHeight);
                 templateWidth = potentialWidth;
@@ -306,7 +309,7 @@ public class ImageFactory {
     }
 
     //pass SImage pool
-    private static void matchController(ArrayList<SImage> imagePool, Section[][] sectionList) {
+    private static File matchController(ArrayList<SImage> imagePool, Section[][] sectionList) {
 
         //start with largest ratios, then move to standard ratio
         //since compund sections aren't in yet, just standard
@@ -324,8 +327,8 @@ public class ImageFactory {
         //filter 3 lists
         //recombine 3 lists
         //use recombined list to find closest section.
-        generateOutput(sectionList);
-
+        File outputImage = generateOutput(sectionList);
+        return outputImage;
     }
 
     private static void matchSections(ArrayList<Section> sectionList, ArrayList<SImage> imageList) {
@@ -476,7 +479,7 @@ public class ImageFactory {
 
 }
 
-    private static void generateOutput(Section[][] sectionArray) {
+    private static File generateOutput(Section[][] sectionArray) {
         System.out.println("generateOutput");
         BufferedImage outputBufferedImage = processedTemplateFile;
 
@@ -538,7 +541,7 @@ public class ImageFactory {
         } catch (IOException e) {
             System.out.print("eh?!");
         }
-
+        return outputfile;
     }
 }
 

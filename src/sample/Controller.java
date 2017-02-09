@@ -117,7 +117,7 @@ public class Controller extends BorderPane {
 
         //make editable.
         int analysisLevel = 3;
-        ImageFactory.generate( templateSImage, SImagePool, templateImage, analysisLevel);
+        File outputFile = ImageFactory.generate( templateSImage, SImagePool, templateImage, analysisLevel);
 
         Pane outputPane = new Pane();
         Stage outputStage = new Stage();
@@ -132,9 +132,16 @@ public class Controller extends BorderPane {
         }
         Scene outputScene = new Scene(outputPane);
         outputStage.setScene(outputScene);
-        outputStage.setTitle("My modal window");
+        outputStage.setTitle("Something or something...");
         outputStage.initModality(Modality.APPLICATION_MODAL);
         outputStage.showAndWait();
+
+        try {
+            outputFrame.setImage(new Image(new FileInputStream(outputFile)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
     public void importImage(){
         FileChooser fileChooser = new FileChooser();
