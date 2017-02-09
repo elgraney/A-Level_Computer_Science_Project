@@ -98,18 +98,18 @@ public class Controller extends BorderPane {
     }
 
     public void beginGenerationPhase(){
-        Pane pane = new Pane();
+        Pane popupPane = new Pane();
         Stage stage = new Stage();
-        Parent root = null;
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("GeneratePopUp.fxml"));
         Controller controller = new Controller();
         loader.setController(controller);
         try {
-            pane = loader.load();
+            popupPane = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Scene scene = new Scene(pane);
+        Scene scene = new Scene(popupPane);
         stage.setScene(scene);
         stage.setTitle("My modal window");
         stage.initModality(Modality.APPLICATION_MODAL);
@@ -118,6 +118,23 @@ public class Controller extends BorderPane {
         //make editable.
         int analysisLevel = 3;
         ImageFactory.generate( templateSImage, SImagePool, templateImage, analysisLevel);
+
+        Pane outputPane = new Pane();
+        Stage outputStage = new Stage();
+        FXMLLoader outputLoader = new FXMLLoader(getClass().getResource("outputWindow.fxml"));
+        Controller outputController = new Controller();
+        loader.setController(outputController);
+
+        try {
+            outputPane = outputLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene outputScene = new Scene(outputPane);
+        outputStage.setScene(outputScene);
+        outputStage.setTitle("My modal window");
+        outputStage.initModality(Modality.APPLICATION_MODAL);
+        outputStage.showAndWait();
     }
     public void importImage(){
         FileChooser fileChooser = new FileChooser();
@@ -138,8 +155,6 @@ public class Controller extends BorderPane {
         }
         updateImagePool(SImagePool, imagePool);
     }
-
-
 
     public void updateImagePool(List SImagePool, List imagePool){
         clearPool();

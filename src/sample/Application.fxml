@@ -45,7 +45,7 @@
             <HBox minHeight="0.0" spacing="20.0">
                <children>
                   <Region prefWidth="50.0" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="importButton" mnemonicParsing="false" onAction="#importImage" text="Import Images" HBox.hgrow="ALWAYS">
+                  <Button fx:id="importButton" mnemonicParsing="false" onAction="#importImage" text="Select New Images" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
@@ -53,7 +53,7 @@
                   <Region prefWidth="50.0" HBox.hgrow="NEVER" />
                   <Button fx:id="generateButton" mnemonicParsing="false" onAction="#beginGenerationPhase" text="Generate" />
                   <Region prefWidth="50.0" HBox.hgrow="NEVER" />
-                  <Button fx:id="templateButton" mnemonicParsing="false" onAction="#importTemplate" text="Import Template">
+                  <Button fx:id="templateButton" mnemonicParsing="false" onAction="#importTemplate" text="Select New Template">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>

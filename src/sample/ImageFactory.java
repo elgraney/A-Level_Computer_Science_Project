@@ -163,7 +163,7 @@ public class ImageFactory {
             int potentialHeight = multiplier * sectionHeight;
 
             //not enough memory space for large images yet.
-            if ((potentialWidth >= 6000) && (potentialHeight >= 6000)) {
+            if ((potentialWidth >= 1000) && (potentialHeight >= 1000)) {
                 System.out.println("crop to After Width: " + potentialWidth);
                 System.out.println("Crop to after height " + potentialHeight);
                 templateWidth = potentialWidth;
@@ -279,6 +279,7 @@ public class ImageFactory {
             try {
                 image.crop(widthCropValue, height);
             } catch (IOException e) {
+                System.out.println("broken here");
                 e.printStackTrace();
             }
             System.out.println("crop, 1st if. widthcropvalue: " + widthCropValue);
@@ -291,6 +292,7 @@ public class ImageFactory {
             try {
                 image.crop(width, heightCropValue);
             } catch (IOException e) {
+                System.out.println("broken here");
                 e.printStackTrace();
             }
             System.out.println("crop, 2nd if. heightcropvalue: " + heightCropValue);
