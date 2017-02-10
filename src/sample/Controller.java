@@ -154,8 +154,12 @@ public class Controller extends BorderPane {
             SImage currentImage = new SImage(selectedFile, 3);
             try {
                 SImagePool.add(currentImage);
-                imagePool.add(new Image(new FileInputStream(currentImage.file)));
-
+                if (currentImage.getWidth()>500 || currentImage.getHeight()> 500) {
+                    imagePool.add(new Image(new FileInputStream(currentImage.file), currentImage.getWidth() / 10, currentImage.getHeight() / 10, false, false));
+                }
+                else{
+                    imagePool.add(new Image(new FileInputStream(currentImage.file)));
+                }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

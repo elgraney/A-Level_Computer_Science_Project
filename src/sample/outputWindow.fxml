@@ -45,17 +45,17 @@
             <HBox minHeight="0.0" spacing="20.0">
                <children>
                   <Region prefWidth="50.0" HBox.hgrow="ALWAYS" />
-                  <Button mnemonicParsing="false" text="Discard" HBox.hgrow="ALWAYS">
+                  <Button fx:id="discardButton" mnemonicParsing="false" onAction="#discard" text="Discard" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
                   </Button>
                   <Region prefWidth="50.0" HBox.hgrow="NEVER" />
-                  <Button mnemonicParsing="false" text="Save" />
+                  <Button fx:id="saveButton" mnemonicParsing="false" onAction="#save" text="Save" />
                   <Region prefWidth="50.0" HBox.hgrow="NEVER" />
-                  <Button mnemonicParsing="false" text="Send" />
+                  <Button fx:id="sendButton" mnemonicParsing="false" onAction="#send" text="Send" />
                   <Region prefWidth="50.0" />
-                  <Button mnemonicParsing="false" text="Print">
+                  <Button fx:id="printButton" mnemonicParsing="false" onAction="#print" text="Print">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
@@ -70,14 +70,14 @@
    <right>
       <VBox prefHeight="600.0" prefWidth="230.0" style="-fx-border-color: grey;" BorderPane.alignment="CENTER">
          <children>
-            <TitledPane animated="false" prefHeight="10000.0" prefWidth="230.0" style="-fx-border-color: grey;" text="Image Pool information" />
+            <TitledPane fx:id="imagePoolInfo" animated="false" prefHeight="10000.0" prefWidth="230.0" style="-fx-border-color: grey;" text="Image Pool information" />
          </children>
       </VBox>
    </right>
    <center>
       <ScrollPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <content>
-            <ImageView fitHeight="740.0" fitWidth="1272.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="outputImageFrame" fitHeight="740.0" fitWidth="1272.0" pickOnBounds="true" preserveRatio="true" />
          </content>
          <BorderPane.margin>
             <Insets />
