@@ -81,6 +81,8 @@ public class Controller extends BorderPane {
     //outputwindow
     @FXML private ImageView outputFrame;
 
+
+    //generation Details
     private ImageView[] imageFrameList;
     private ArrayList<SImage> SImagePool = new ArrayList<SImage>();
     private ArrayList<Image> imagePool = new ArrayList<Image>();
@@ -121,12 +123,9 @@ public class Controller extends BorderPane {
 
         Pane outputPane = new Pane();
         Stage outputStage = new Stage();
-        FXMLLoader outputLoader = new FXMLLoader(getClass().getResource("outputWindow.fxml"));
-        Controller outputController = new Controller();
-        loader.setController(outputController);
-
+        loader = new FXMLLoader(getClass().getResource("outputWindow.fxml"));
         try {
-            outputPane = outputLoader.load();
+            outputPane = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
