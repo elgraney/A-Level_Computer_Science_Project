@@ -66,7 +66,6 @@ public class ImageFactory {
             for (int iy = 0; iy < height; iy += sectionHeight) {
                 //System.out.println("hey!");
                 BufferedImage sectionImage = createSectionImage(ix, iy);
-                //section image is buffered image, but section does not take that type.
                 File sectionfile = new File("section");
                 try {
                  ImageIO.write(sectionImage, "jpg", sectionfile);
@@ -80,6 +79,7 @@ public class ImageFactory {
                 currentSection.setRatioMultiple(1);
             }
         }
+        defineCompoundSections(sectionList);
         System.out.println("section 1 top left X (should be 0): "+sectionList[0][0].getTopLeftX());
         System.out.println("2D array length: " + sectionList.length * sectionList[0].length);
         cropRatio(mostCommonRatio, imagePool);
@@ -112,6 +112,89 @@ public class ImageFactory {
         System.out.println("NO RESOLUTION FOUND");
     }
 
+    private static void defineCompoundSections(Section[][] sectionList){
+        String sectionSimilarity ="";
+        for (int column = 0; column <= sectionList.length - 1; column++){
+            for(int row = 0; row <= sectionList[0].length - 1; row++ ) {
+                if (sectionList[column][row].isInCompoundSection() == false) {
+                    for (int x = column; x <= (column + 3 > sectionList.length -1 ? sectionList.length -1 : column +3); x++){
+                        for (int y = row; y <= (row + 3 > sectionList[0].length -1 ? sectionList[0].length -1 : row +3); y++){
+                            if ((sectionList[column][row].getMeanOfModesRGB(0) - 5 < sectionList[x][y].getMeanOfModesRGB(0)) &&
+                                    (sectionList[x][y].getMeanOfModesRGB(0) < (sectionList[column][row].getMeanOfModesRGB(0) +5)) &&
+                                    (sectionList[column][row].getMeanOfModesRGB(1) - 5 < sectionList[x][y].getMeanOfModesRGB(1)) &&
+                                    (sectionList[x][y].getMeanOfModesRGB(1) < (sectionList[column][row].getMeanOfModesRGB(1) +5)) &&
+                                    (sectionList[column][row].getMeanOfModesRGB(2) - 5 < sectionList[x][y].getMeanOfModesRGB(2)) &&
+                                    (sectionList[x][y].getMeanOfModesRGB(2) < (sectionList[column][row].getMeanOfModesRGB(2) +5))) {
+                                //System.out.println("adjacent section match");
+                                sectionSimilarity = sectionSimilarity + "1";
+                            }
+                            else{
+                                sectionSimilarity = sectionSimilarity + "0";
+                            }
+                        }
+                    }
+                    switch (sectionSimilarity){
+                        case "110000000":
+                            System.out.println("2x1");
+                            sectionList[column][row].setCompound(sectionWidth*2,sectionHeight);
+                            for (int x = column; x < column + 2; x++){
+                                int y = row;
+                                sectionList[x][y].setInCompound();
+                                sectionList[x][y].setRatioMultiple(2);
+                                }
+                            break;
+                        case "111000000":
+                            System.out.println("3x1");
+                            sectionList[column][row].setCompound(sectionWidth*3,sectionHeight);
+                            for (int x = column; x < column + 3; x++){
+                                int y = row;
+                                sectionList[x][y].setInCompound();
+                                sectionList[x][y].setRatioMultiple(3);
+                            }
+                            break;
+                        case "100100000":
+                            System.out.println("1x2");
+                            sectionList[column][row].setCompound(sectionWidth,sectionHeight*2);
+                            for (int y  = row; y < row + 2; y++){
+                                int x = column;
+                                sectionList[x][y].setInCompound();
+                                sectionList[x][y].setRatioMultiple(0.5);
+                            }
+                            break;
+                        case "100100100":
+                            System.out.println("1x3");
+                            sectionList[column][row].setCompound(sectionWidth,sectionHeight*3);
+                            for (int y  = row; y < row + 3; y++){
+                                int x = column;
+                                sectionList[x][y].setInCompound();
+                                sectionList[x][y].setRatioMultiple(1/3);
+                            }
+                            break;
+                        case "110110000":
+                            System.out.println("2x2");
+                            sectionList[column][row].setCompound(sectionWidth*2,sectionHeight*2);
+                            for (int y  = row; y < row + 2; y++) {
+                                for (int x = column; x < column + 2; x++) {
+                                    sectionList[x][y].setInCompound();
+                                }
+                            }
+                            break;
+                        case "111111111":
+                            System.out.println("3x3");
+                            sectionList[column][row].setCompound(sectionWidth*3,sectionHeight*3);
+                            for (int y  = row; y < row + 2; y++) {
+                                for (int x = column; x < column + 2; x++) {
+                                    sectionList[x][y].setInCompound();
+
+                                }
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+
+    }
 
     private static double getMostCommonRatio(ArrayList<SImage> imagePool) {
         HashMap<Double, Integer> ratioFrequencyMap = new HashMap();
@@ -313,6 +396,24 @@ public class ImageFactory {
 
         //start with largest ratios, then move to standard ratio
         //since compund sections aren't in yet, just standard
+        //ratio
+        ArrayList<SImage> ratio3Pool = populateList(3, imagePool);
+        ArrayList<Section> ratio3Sections = reformatAndPopulateSectionArray(sectionList, 3);
+        System.out.println("ratio 3 refined pool length " + ratio3Pool.size());
+        System.out.println("ratio 3 refined section list length " + ratio3Sections.size());
+
+        matchSections(ratio3Sections, ratio3Pool);
+
+
+        ArrayList<SImage> ratio2Pool = populateList(2, imagePool);
+        ArrayList<Section> ratio2Sections = reformatAndPopulateSectionArray(sectionList, 2);
+        System.out.println("ratio 2 refined pool length " + ratio2Pool.size());
+        System.out.println("ratio 2 refined section list length " + ratio2Sections.size());
+
+        matchSections(ratio2Sections, ratio2Pool);
+
+
+        //ratio 1
         ArrayList<SImage> ratio1Pool = populateList(1, imagePool);
         ArrayList<Section> ratio1Sections = reformatAndPopulateSectionArray(sectionList, 1);
         System.out.println("ratio refined pool length " + ratio1Pool.size());
@@ -320,91 +421,109 @@ public class ImageFactory {
 
         matchSections(ratio1Sections, ratio1Pool);
 
-        //great, so ratio is sorted, now for the splitting into colour arrays.
-        //will have to do in new function.
-        //create 3 colour lists, sort them
-        //start checking sections
-        //filter 3 lists
-        //recombine 3 lists
-        //use recombined list to find closest section.
+        ArrayList<SImage> ratioHalfPool = populateList(1/2, imagePool);
+        ArrayList<Section> ratioHalfSections = reformatAndPopulateSectionArray(sectionList, 1/2);
+        System.out.println("ratio .5 refined pool length " + ratioHalfPool.size());
+        System.out.println("ratio .5 refined section list length " + ratioHalfSections.size());
+
+        matchSections(ratioHalfSections, ratioHalfPool);
+
+        ArrayList<SImage> ratioThirdPool = populateList(1/3, imagePool);
+        ArrayList<Section> ratioThirdSections = reformatAndPopulateSectionArray(sectionList, 1/3);
+        System.out.println("ratio 1/3 refined pool length " + ratioThirdPool.size());
+        System.out.println("ratio 1/3 refined section list length " + ratioThirdSections.size());
+
+        matchSections(ratioThirdSections, ratioThirdPool);
+
         File outputImage = generateOutput(sectionList);
         return outputImage;
     }
 
     private static void matchSections(ArrayList<Section> sectionList, ArrayList<SImage> imageList) {
         System.out.println("Match sections");
-        ArrayList<SImage> redSortedImages = MergeSort.mergeSort(imageList, 0);
-        System.out.println("original red length: " + redSortedImages.size());
-        ArrayList<SImage> greenSortedImages = MergeSort.mergeSort(imageList, 1);
-        ArrayList<SImage> blueSortedImages = MergeSort.mergeSort(imageList, 2);
-        System.out.println("Merge complete");
-        System.out.println("SectionList size: " + sectionList.size());
+        ArrayList<SImage> redSortedImages;
+        ArrayList<SImage> greenSortedImages;
+        ArrayList<SImage> blueSortedImages;
 
+        if(imageList.size() != 0) {
+            redSortedImages = MergeSort.mergeSort(imageList, 0);
+            System.out.println("original red length: " + redSortedImages.size());
+            greenSortedImages = MergeSort.mergeSort(imageList, 1);
+            blueSortedImages = MergeSort.mergeSort(imageList, 2);
+            System.out.println("Merge complete");
+            System.out.println("SectionList size: " + sectionList.size());
+        }
+        else{
+            return;
+        }
         for (Section section : sectionList) {
-            //System.out.println("Entered for?");
-            double sectionRed = section.getMeanOfModesRGB(0);
-            double sectionGreen = section.getMeanOfModesRGB(1);
-            double sectionBlue = section.getMeanOfModesRGB(2);
+            if ((section.isInCompoundSection() == false) || (section.isCompoundSectionMarker()== true)) {
+                //System.out.println("Entered for?");
+                double sectionRed = section.getMeanOfModesRGB(0);
+                double sectionGreen = section.getMeanOfModesRGB(1);
+                double sectionBlue = section.getMeanOfModesRGB(2);
 
-            int sortedListMaxRange = 5;
-            int difference = 0;
+                int sortedListMaxRange = 5;
+                int difference = 0;
 
-            while ((difference != 999)) {
-                //System.out.println("While loop " + difference);
-                ArrayList<SImage> newRedSortedImages = binarySearch(redSortedImages, 0, sectionRed, sortedListMaxRange);
-                //System.out.println("binary search red output size "+redSortedImages.size());
-                ArrayList<SImage> newGreenSortedImages = binarySearch(greenSortedImages, 1, sectionGreen, sortedListMaxRange);
-                ArrayList<SImage> newBlueSortedImages = binarySearch(blueSortedImages, 2, sectionBlue, sortedListMaxRange);
-                //System.out.println("Binary Search complete or skipped.");
-                Set<SImage> recombinedList = new HashSet<SImage>();
-                recombinedList.addAll(newRedSortedImages);
-                recombinedList.addAll(newGreenSortedImages);
-                recombinedList.addAll(newBlueSortedImages);
-                //System.out.println("recombined.");
+                while ((difference != 999)) {
+                    //System.out.println("While loop " + difference);
+                    ArrayList<SImage> newRedSortedImages = binarySearch(redSortedImages, 0, sectionRed, sortedListMaxRange);
+                    //System.out.println("binary search red output size "+redSortedImages.size());
+                    ArrayList<SImage> newGreenSortedImages = binarySearch(greenSortedImages, 1, sectionGreen, sortedListMaxRange);
+                    ArrayList<SImage> newBlueSortedImages = binarySearch(blueSortedImages, 2, sectionBlue, sortedListMaxRange);
+                    //System.out.println("Binary Search complete or skipped.");
+                    Set<SImage> recombinedList = new HashSet<SImage>();
+                    recombinedList.addAll(newRedSortedImages);
+                    recombinedList.addAll(newGreenSortedImages);
+                    recombinedList.addAll(newBlueSortedImages);
+                    //System.out.println("recombined.");
 
-                difference = 0;
-                do {
+                    difference = 0;
+                    do {
 
-                    for (SImage image : recombinedList) {
-                        if ((image.getMeanRGB(0) - difference) <= sectionRed && (image.getMeanRGB(0) + difference) >= sectionRed &&
-                                (image.getMeanRGB(1) - difference) <= sectionGreen && (image.getMeanRGB(1) + difference) >= sectionGreen &&
-                                (image.getMeanRGB(2) - difference) <= sectionBlue && (image.getMeanRGB(2) + difference) >= sectionBlue
-                                ) {
-                            section.setLinkedImage(image);
-                            //System.out.println(section.file);
-                            //System.out.println(image.file);
-                            difference = 998;
+                        for (SImage image : recombinedList) {
+                            if ((image.getMeanRGB(0) - difference) <= sectionRed && (image.getMeanRGB(0) + difference) >= sectionRed &&
+                                    (image.getMeanRGB(1) - difference) <= sectionGreen && (image.getMeanRGB(1) + difference) >= sectionGreen &&
+                                    (image.getMeanRGB(2) - difference) <= sectionBlue && (image.getMeanRGB(2) + difference) >= sectionBlue
+                                    ) {
+                                section.setLinkedImage(image);
+                                //System.out.println(section.file);
+                                //System.out.println(image.file);
+                                difference = 998;
+                                break;
+                            }
+                        }
+                        difference++;
+                    }
+                    //now match them
+                    //follow design algorithm.
+
+                    while (difference < 200);
+
+                    if (difference != 999) {
+                        //System.out.println("Match Failed");
+                        sortedListMaxRange += 5;
+                        if (sortedListMaxRange > 100) {
+                            System.out.println("This image has failed.");
+                            System.out.println("Red length: " + redSortedImages.size());
+                            System.out.println("Green length: " + greenSortedImages.size());
+                            System.out.println("Blue length: " + blueSortedImages.size());
+                            System.out.println("Recombined list length: " + recombinedList.size());
+                            System.out.println("sortedListMaxRange " + sortedListMaxRange);
+                            System.out.println("section RGB: " + section.getMeanRGB(0) + ", " + section.getMeanRGB(1) + ", " + section.getMeanRGB(2));
                             break;
                         }
                     }
-                    difference++;
+
+                    //System.out.println("Match section complete");
+                    //System.out.println("For skipped.");
+
                 }
-                //now match them
-                //follow design algorithm.
-
-                while (difference < 200);
-
-                if (difference != 999) {
-                    System.out.println("Match Failed");
-                    sortedListMaxRange += 5;
-                    if (sortedListMaxRange > 50){
-                        System.out.println("This image has failed.");
-                        System.out.println("Red length: " + redSortedImages.size());
-                        System.out.println("Green length: " + greenSortedImages.size());
-                        System.out.println("Blue length: " + blueSortedImages.size());
-                        System.out.println("Recombined list length: "+ recombinedList.size());
-                        System.out.println("sortedListMaxRange " + sortedListMaxRange);
-                        System.out.println("section RGB: "+section.getMeanRGB(0)+", "+section.getMeanRGB(1)+ ", "+section.getMeanRGB(2));
-                        break;
-                    }
-                }
-
-                //System.out.println("Match section complete");
-                //System.out.println("For skipped.");
-
             }
-            System.out.println("every section covered.");
         }
+
+        System.out.println("every section covered.");
     }
 
     private static ArrayList<SImage> binarySearch(ArrayList<SImage> imageList, int colour, double targetColour, int sortedListMaxRange) {
@@ -438,7 +557,7 @@ public class ImageFactory {
     }
 
 
-
+//This method takes a ratio and every image in the image Pool, then return only those of the specified ratio.
     private static ArrayList<SImage> populateList(double ratio, ArrayList<SImage> imagePool) {
         ArrayList<SImage> newList = new ArrayList<SImage>();
 
@@ -453,7 +572,8 @@ public class ImageFactory {
         return newList;
     }
 
-
+//This method takes an input ratio and the 2D Section Array, reformats the Section array into an Arraylist, then finds all sections in the section pool of that ratio.
+//It then returns these images as a new Section ArrayList.
     private static ArrayList<Section> reformatAndPopulateSectionArray(Section[][] sectionList, double ratio){
         ArrayList<Section> formattedSectionList = new ArrayList<Section>();
 
@@ -465,8 +585,8 @@ public class ImageFactory {
         ArrayList<Section> newSectionList = new ArrayList<Section>();
 
         for (Section image : formattedSectionList) {
-            System.out.println(image.getRatio());
-            if (image.getRatio() == ratio) {
+            //System.out.println(image.getRatio());
+            if ((image.getRatio() == ratio) && (image.isInCompoundSection() == false)) {
                 newSectionList.add(image);
             }
             //for each image in image pool
@@ -483,26 +603,26 @@ public class ImageFactory {
         System.out.println("generateOutput");
         BufferedImage outputBufferedImage = processedTemplateFile;
 
-
         for (Section[] sectionColumn : sectionArray) {
             for (Section section : sectionColumn) {
                 //insert method 1 and 2 branch here
                 int startX = section.getTopLeftX();
                 int startY = section.getTopLeftY();
 
-                for (int x = 0; x < sectionWidth ; x++) {
-                    for (int y = 0; y < sectionHeight; y++) {
-                        SImage linkedSImage = section.getLinkedImage();
+                SImage linkedSImage = section.getLinkedImage();
 
-                        File imagefile = linkedSImage.file;
+                File imagefile = linkedSImage.file;
 
-                        BufferedImage linkedImage = null;
+                BufferedImage linkedImage = null;
 
-                        try {
-                            linkedImage = ImageIO.read(imagefile);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                try {
+                    linkedImage = ImageIO.read(imagefile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                for (int x = 0; x < section.getWidth() ; x++) {
+                    for (int y = 0; y < section.getHeight(); y++) {
 
                         double enlargementFactor = sectionHeight / (float) linkedSImage.getHeight();
                         //System.out.println("X: "+x);

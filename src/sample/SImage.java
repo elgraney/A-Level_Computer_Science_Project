@@ -118,14 +118,18 @@ public class SImage {
             step = 2;
         } else if (resolution >= 250000 && resolution < 500000) {
             step = 3;
-        } else if (resolution >= 500000 && resolution < 1000000) {
+        } else if (resolution >= 500000 && resolution < 750000) {
             step = 5;
-        } else if (resolution >= 1000000 && resolution < 2500000) {
+        } else if (resolution >= 750000 && resolution < 1000000) {
             step = 7;
-        } else if (resolution >= 2500000 && resolution < 5000000) {
+        } else if (resolution >= 1000000 && resolution < 1500000) {
             step = 9;
+        } else if (resolution >= 1500000 && resolution < 2000000) {
+            step = 11;
+        } else if (resolution >= 2000000 && resolution < 2500000) {
+            step = 14;
         } else {
-            step = 10;
+            step = 20;
         }
         //System.out.println("Step: "+step);
         return step;

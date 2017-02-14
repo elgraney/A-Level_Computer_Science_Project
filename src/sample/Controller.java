@@ -123,9 +123,11 @@ public class Controller extends BorderPane {
 
         Pane outputPane = new Pane();
         Stage outputStage = new Stage();
-        loader = new FXMLLoader(getClass().getResource("outputWindow.fxml"));
+        FXMLLoader outputLoader = new FXMLLoader(getClass().getResource("outputWindow.fxml"));
+        controller = new Controller();
+        loader.setController(controller);
         try {
-            outputPane = loader.load();
+            outputPane = outputLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
