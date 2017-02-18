@@ -41,7 +41,7 @@ public class ImageFactory {
 
 
     public static Section[][] formatAllImages(ArrayList<SImage> imagePool) {
-        System.out.println("CreateScetion");
+        System.out.println("CreateSection");
         double mostCommonRatio;
         mostCommonRatio = getMostCommonRatio(imagePool);
         defineSections(mostCommonRatio);
@@ -102,7 +102,7 @@ public class ImageFactory {
             double remainder = potentialWidth % 1;
             //System.out.println(remainder);
 
-            if ((remainder == 0.0) && (potentialWidth >= 30) && (potentialHeight >= 30)) {
+            if ((remainder == 0.0) && (potentialWidth >= 40) && (potentialHeight >= 40)) {
                 System.out.println("After Width: " + potentialWidth);
                 sectionWidth = (int) potentialWidth;
                 sectionHeight = potentialHeight;
@@ -117,8 +117,9 @@ public class ImageFactory {
         for (int column = 0; column <= sectionList.length - 1; column++){
             for(int row = 0; row <= sectionList[0].length - 1; row++ ) {
                 if (sectionList[column][row].isInCompoundSection() == false) {
-                    for (int x = column; x <= (column + 3 > sectionList.length -1 ? sectionList.length -1 : column +3); x++){
-                        for (int y = row; y <= (row + 3 > sectionList[0].length -1 ? sectionList[0].length -1 : row +3); y++){
+                    sectionSimilarity ="";
+                    for (int x = column; x <= (column + 2 > sectionList.length -1 ? sectionList.length -1 : column +2); x++){
+                        for (int y = row; y <= (row + 2 > sectionList[0].length -1 ? sectionList[0].length -1 : row +2); y++){
                             if ((sectionList[column][row].getMeanOfModesRGB(0) - 5 < sectionList[x][y].getMeanOfModesRGB(0)) &&
                                     (sectionList[x][y].getMeanOfModesRGB(0) < (sectionList[column][row].getMeanOfModesRGB(0) +5)) &&
                                     (sectionList[column][row].getMeanOfModesRGB(1) - 5 < sectionList[x][y].getMeanOfModesRGB(1)) &&
@@ -136,43 +137,40 @@ public class ImageFactory {
                     switch (sectionSimilarity){
                         case "110000000":
                             System.out.println("2x1");
-                            sectionList[column][row].setCompound(sectionWidth*2,sectionHeight);
+                            sectionList[column][row].setCompound(sectionWidth*2,sectionHeight, column, row, 2);
                             for (int x = column; x < column + 2; x++){
                                 int y = row;
                                 sectionList[x][y].setInCompound();
-                                sectionList[x][y].setRatioMultiple(2);
                                 }
                             break;
                         case "111000000":
                             System.out.println("3x1");
-                            sectionList[column][row].setCompound(sectionWidth*3,sectionHeight);
+                            sectionList[column][row].setCompound(sectionWidth*3,sectionHeight, column, row, 3);
                             for (int x = column; x < column + 3; x++){
                                 int y = row;
                                 sectionList[x][y].setInCompound();
-                                sectionList[x][y].setRatioMultiple(3);
                             }
                             break;
                         case "100100000":
                             System.out.println("1x2");
-                            sectionList[column][row].setCompound(sectionWidth,sectionHeight*2);
+                            sectionList[column][row].setCompound(sectionWidth,sectionHeight*2, column, row, 0.5);
                             for (int y  = row; y < row + 2; y++){
                                 int x = column;
+                                System.out.println("1x2 x,y: "+x+", "+y);
                                 sectionList[x][y].setInCompound();
-                                sectionList[x][y].setRatioMultiple(0.5);
                             }
                             break;
                         case "100100100":
                             System.out.println("1x3");
-                            sectionList[column][row].setCompound(sectionWidth,sectionHeight*3);
+                            sectionList[column][row].setCompound(sectionWidth,sectionHeight*3, column, row, 1/3);
                             for (int y  = row; y < row + 3; y++){
                                 int x = column;
                                 sectionList[x][y].setInCompound();
-                                sectionList[x][y].setRatioMultiple(1/3);
                             }
                             break;
                         case "110110000":
                             System.out.println("2x2");
-                            sectionList[column][row].setCompound(sectionWidth*2,sectionHeight*2);
+                            sectionList[column][row].setCompound(sectionWidth*2,sectionHeight*2, column, row, 1);
                             for (int y  = row; y < row + 2; y++) {
                                 for (int x = column; x < column + 2; x++) {
                                     sectionList[x][y].setInCompound();
@@ -181,15 +179,18 @@ public class ImageFactory {
                             break;
                         case "111111111":
                             System.out.println("3x3");
-                            sectionList[column][row].setCompound(sectionWidth*3,sectionHeight*3);
-                            for (int y  = row; y < row + 2; y++) {
-                                for (int x = column; x < column + 2; x++) {
+                            sectionList[column][row].setCompound(sectionWidth*3,sectionHeight*3, column, row, 1);
+                            for (int y  = row; y < row + 3; y++) {
+                                for (int x = column; x < column + 3; x++) {
+                                    System.out.println("3x3 x,y: "+x+", "+y);
                                     sectionList[x][y].setInCompound();
 
                                 }
                             }
+                            System.out.println("break");
                             break;
                     }
+                    System.out.println("Section similarity: "+ sectionSimilarity);
                 }
             }
         }
@@ -207,14 +208,14 @@ public class ImageFactory {
 
             selectedImageRatio = (width / height);
 
-            System.out.println("selected: " + selectedImageRatio);
+            //System.out.println("selected: " + selectedImageRatio);
 
             try {
                 int count = ratioFrequencyMap.get(selectedImageRatio);
                 //System.out.println(count);
                 ratioFrequencyMap.put(selectedImageRatio, count + 1);
             } catch (Exception e) {
-                System.out.println("Error detected");
+                //System.out.println("Error detected");
                 ratioFrequencyMap.put(selectedImageRatio, 1);
             }
         }
@@ -228,8 +229,8 @@ public class ImageFactory {
         }
         //testing
         for (double ratio : ratioFrequencyMap.keySet()) {
-            System.out.println("ratio " + ratio);
-            System.out.println("highest " + highest);
+            //System.out.println("ratio " + ratio);
+            //System.out.println("highest " + highest);
         }
         System.out.println("Highest Ratio " + highestRatio);
         return highestRatio;
@@ -250,8 +251,8 @@ public class ImageFactory {
 
             //not enough memory space for large images yet.
             if ((potentialWidth >= 6000) && (potentialHeight >= 6000)) {
-                System.out.println("crop to After Width: " + potentialWidth);
-                System.out.println("Crop to after height " + potentialHeight);
+                //System.out.println("crop to After Width: " + potentialWidth);
+                //System.out.println("Crop to after height " + potentialHeight);
                 templateWidth = potentialWidth;
                 templateHeight = potentialHeight;
                 break;
@@ -263,8 +264,8 @@ public class ImageFactory {
             int potentialHeight2 = multiplier * template.getHeight();
 
             if ((potentialWidth2 >= templateWidth) && (potentialHeight2 >= templateHeight)) {
-                System.out.println("enlarged After Width: " + potentialWidth2);
-                System.out.println("enlarged After Height: " + potentialHeight2);
+                //System.out.println("enlarged After Width: " + potentialWidth2);
+                //System.out.println("enlarged After Height: " + potentialHeight2);
                 enlargedTemplateWidth = potentialWidth2;
                 enlargedTemplateHeight = potentialHeight2;
                 enlargementFactor = multiplier;
@@ -309,29 +310,29 @@ public class ImageFactory {
 
             //store image ratio in SImage?
             double imageWidthRatio = image.getWidth() / (float) image.getHeight();
-            System.out.println("This image ratio: " + imageWidthRatio);
+            //System.out.println("This image ratio: " + imageWidthRatio);
             final double imageHeightRatio = 1;
             if ((widthRatio * 0.75) <= imageWidthRatio && imageWidthRatio < (widthRatio * 1.5)) {
-                System.out.println("standard");
+                //System.out.println("standard");
                 image.setRatioMultiple(1);
                 crop(widthRatio, heightRatio, imageWidthRatio, image);
             } else if ((widthRatio * 1.5) <= imageWidthRatio && imageWidthRatio < (widthRatio * 2.5)) {
-                System.out.println("2width");
+                //System.out.println("2width");
                 image.setRatioMultiple(2);
                 crop(2 * widthRatio, heightRatio, imageWidthRatio, image);
 
             } else if ((widthRatio * 2.5) <= imageWidthRatio) {
-                System.out.println("3width");
+                //System.out.println("3width");
                 image.setRatioMultiple(3);
                 crop(3 * widthRatio, heightRatio, imageWidthRatio, image);
 
             } else if ((widthRatio * 5 / 12) <= imageWidthRatio && imageWidthRatio < (widthRatio * 0.75)) {
-                System.out.println("2height");
+                //System.out.println("2height");
                 image.setRatioMultiple(0.5);
                 crop(widthRatio, 2 * heightRatio, imageWidthRatio, image);
 
             } else if (imageWidthRatio < (widthRatio * 5 / 12)) {
-                System.out.println("3height");
+                //System.out.println("3height");
                 image.setRatioMultiple(1 / 3);
                 crop(widthRatio, 3 * heightRatio, imageWidthRatio, image);
             }
@@ -344,8 +345,8 @@ public class ImageFactory {
         int width = image.getWidth();
         int height = image.getHeight();
 
-        System.out.println("mostCommonWidthRatio " + mostCommonWidthRatio);
-        System.out.println("mostCommonheightRatio " + mostCommonHeightRatio);
+        //System.out.println("mostCommonWidthRatio " + mostCommonWidthRatio);
+        //System.out.println("mostCommonheightRatio " + mostCommonHeightRatio);
 
         //checking division
         System.out.println("To crop Ratios:");
@@ -354,42 +355,49 @@ public class ImageFactory {
 
         double toCropRatio = mostCommonWidthRatio / (float) mostCommonHeightRatio;
 
-        System.out.println("imageRatio " + imageRatio);
+        //System.out.println("imageRatio " + imageRatio);
 
         if (imageRatio > (mostCommonWidthRatio / (float) mostCommonHeightRatio)) {
             double widthModifier = ((height / (float) width) * toCropRatio);
-            System.out.println("Width decrease");
-            System.out.println("Width Modifier: " + widthModifier);
-            int widthCropValue = (int) (width * widthModifier) + 1;
-            System.out.println("width crop value " + widthCropValue);
-            try {
-                image.crop(widthCropValue, height);
-            } catch (IOException e) {
-                System.out.println("broken here");
-                e.printStackTrace();
+            if (widthModifier<1) {
+                //System.out.println("Width decrease");
+                //System.out.println("Width Modifier: " + widthModifier);
+                int widthCropValue = (int) (width * widthModifier) + 1;
+
+                //System.out.println("width crop value " + widthCropValue);
+                try {
+                    image.crop(widthCropValue, height);
+                } catch (IOException e) {
+                    System.out.println("broken here");
+                    e.printStackTrace();
+                }
+                //System.out.println("crop, 1st if. widthcropvalue: " + widthCropValue);
+                return null;
             }
-            System.out.println("crop, 1st if. widthcropvalue: " + widthCropValue);
-            return null;
         } else if (imageRatio < (mostCommonWidthRatio / (float) mostCommonHeightRatio)) {
             double heightModifier = (width / (float) (height * toCropRatio));
-            System.out.println("height decrease");
+            if (heightModifier<1) {
+            //System.out.println("height decrease");
             int heightCropValue = (int) (height * heightModifier);
-            System.out.println("height crop value " + heightCropValue);
+            //System.out.println("height crop value " + heightCropValue);
             try {
                 image.crop(width, heightCropValue);
             } catch (IOException e) {
                 System.out.println("broken here");
                 e.printStackTrace();
             }
-            System.out.println("crop, 2nd if. heightcropvalue: " + heightCropValue);
+            //System.out.println("crop, 2nd if. heightcropvalue: " + heightCropValue);
             return null;
         } else {
-            System.out.println("do not crop");
+            //System.out.println("do not crop");
             return null;
         }
 
-        //note: due to the necessity to have integers for dimentions, images will allways be resized so that the width is slightly greater than it should be, if an integer cannot be found.
+        }
+        return null;
     }
+
+        //note: due to the necessity to have integers for dimentions, images will allways be resized so that the width is slightly greater than it should be, if an integer cannot be found.}
 
     //pass SImage pool
     private static File matchController(ArrayList<SImage> imagePool, Section[][] sectionList) {
@@ -402,7 +410,7 @@ public class ImageFactory {
         System.out.println("ratio 3 refined pool length " + ratio3Pool.size());
         System.out.println("ratio 3 refined section list length " + ratio3Sections.size());
 
-        matchSections(ratio3Sections, ratio3Pool);
+        matchSections(ratio3Sections, ratio3Pool, sectionList);
 
 
         ArrayList<SImage> ratio2Pool = populateList(2, imagePool);
@@ -410,8 +418,24 @@ public class ImageFactory {
         System.out.println("ratio 2 refined pool length " + ratio2Pool.size());
         System.out.println("ratio 2 refined section list length " + ratio2Sections.size());
 
-        matchSections(ratio2Sections, ratio2Pool);
+        matchSections(ratio2Sections, ratio2Pool, sectionList);
 
+
+
+
+        ArrayList<SImage> ratioHalfPool = populateList(1/2, imagePool);
+        ArrayList<Section> ratioHalfSections = reformatAndPopulateSectionArray(sectionList, 1/2);
+        System.out.println("ratio .5 refined pool length " + ratioHalfPool.size());
+        System.out.println("ratio .5 refined section list length " + ratioHalfSections.size());
+
+        matchSections(ratioHalfSections, ratioHalfPool, sectionList);
+
+        ArrayList<SImage> ratioThirdPool = populateList(1/3, imagePool);
+        ArrayList<Section> ratioThirdSections = reformatAndPopulateSectionArray(sectionList, 1/3);
+        System.out.println("ratio 1/3 refined pool length " + ratioThirdPool.size());
+        System.out.println("ratio 1/3 refined section list length " + ratioThirdSections.size());
+
+        matchSections(ratioThirdSections, ratioThirdPool, sectionList);
 
         //ratio 1
         ArrayList<SImage> ratio1Pool = populateList(1, imagePool);
@@ -419,27 +443,13 @@ public class ImageFactory {
         System.out.println("ratio refined pool length " + ratio1Pool.size());
         System.out.println("ratio refined section list length " + ratio1Sections.size());
 
-        matchSections(ratio1Sections, ratio1Pool);
-
-        ArrayList<SImage> ratioHalfPool = populateList(1/2, imagePool);
-        ArrayList<Section> ratioHalfSections = reformatAndPopulateSectionArray(sectionList, 1/2);
-        System.out.println("ratio .5 refined pool length " + ratioHalfPool.size());
-        System.out.println("ratio .5 refined section list length " + ratioHalfSections.size());
-
-        matchSections(ratioHalfSections, ratioHalfPool);
-
-        ArrayList<SImage> ratioThirdPool = populateList(1/3, imagePool);
-        ArrayList<Section> ratioThirdSections = reformatAndPopulateSectionArray(sectionList, 1/3);
-        System.out.println("ratio 1/3 refined pool length " + ratioThirdPool.size());
-        System.out.println("ratio 1/3 refined section list length " + ratioThirdSections.size());
-
-        matchSections(ratioThirdSections, ratioThirdPool);
+        matchSections(ratio1Sections, ratio1Pool, sectionList);
 
         File outputImage = generateOutput(sectionList);
         return outputImage;
     }
 
-    private static void matchSections(ArrayList<Section> sectionList, ArrayList<SImage> imageList) {
+    private static void matchSections(ArrayList<Section> sectionList, ArrayList<SImage> imageList, Section[][] sectionArray) {
         System.out.println("Match sections");
         ArrayList<SImage> redSortedImages;
         ArrayList<SImage> greenSortedImages;
@@ -454,10 +464,14 @@ public class ImageFactory {
             System.out.println("SectionList size: " + sectionList.size());
         }
         else{
+            for (Section section: sectionList) {
+                compoundSectionBreakdown(section, sectionArray);
+            }
             return;
         }
         for (Section section : sectionList) {
             if ((section.isInCompoundSection() == false) || (section.isCompoundSectionMarker()== true)) {
+                System.out.println("Passed ratio "+section.getRatio());
                 //System.out.println("Entered for?");
                 double sectionRed = section.getMeanOfModesRGB(0);
                 double sectionGreen = section.getMeanOfModesRGB(1);
@@ -473,21 +487,29 @@ public class ImageFactory {
                     ArrayList<SImage> newGreenSortedImages = binarySearch(greenSortedImages, 1, sectionGreen, sortedListMaxRange);
                     ArrayList<SImage> newBlueSortedImages = binarySearch(blueSortedImages, 2, sectionBlue, sortedListMaxRange);
                     //System.out.println("Binary Search complete or skipped.");
+
+                    //HashSet is used to remove dupicates. It is a data type that does not allow the entry of an item that already exists.
                     Set<SImage> recombinedList = new HashSet<SImage>();
                     recombinedList.addAll(newRedSortedImages);
                     recombinedList.addAll(newGreenSortedImages);
                     recombinedList.addAll(newBlueSortedImages);
                     //System.out.println("recombined.");
+                    //System.out.println("SetionRatioMultiple: "+section.getRatio());
+                    //System.out.println("recominedList size: "+recombinedList.size());
+
 
                     difference = 0;
                     do {
-
                         for (SImage image : recombinedList) {
                             if ((image.getMeanRGB(0) - difference) <= sectionRed && (image.getMeanRGB(0) + difference) >= sectionRed &&
                                     (image.getMeanRGB(1) - difference) <= sectionGreen && (image.getMeanRGB(1) + difference) >= sectionGreen &&
                                     (image.getMeanRGB(2) - difference) <= sectionBlue && (image.getMeanRGB(2) + difference) >= sectionBlue
                                     ) {
                                 section.setLinkedImage(image);
+                                if(section.getRatio()==0.5){
+                                    System.out.println(".5 Compound section should be matched.");
+                                    System.out.println("section file: "+ image.file);
+                                }
                                 //System.out.println(section.file);
                                 //System.out.println(image.file);
                                 difference = 998;
@@ -499,12 +521,13 @@ public class ImageFactory {
                     //now match them
                     //follow design algorithm.
 
-                    while (difference < 200);
+                    while (difference < 100);
 
                     if (difference != 999) {
                         //System.out.println("Match Failed");
                         sortedListMaxRange += 5;
-                        if (sortedListMaxRange > 100) {
+                        if (sortedListMaxRange > 200) {
+                            compoundSectionBreakdown(section, sectionArray);
                             System.out.println("This image has failed.");
                             System.out.println("Red length: " + redSortedImages.size());
                             System.out.println("Green length: " + greenSortedImages.size());
@@ -521,11 +544,67 @@ public class ImageFactory {
 
                 }
             }
+            if (section.getLinkedImage() == null && section.isCompoundSectionMarker() == true){
+                System.out.println("match fail on compound section.");
+            }
         }
 
         System.out.println("every section covered.");
+        return;
     }
 
+    private static void compoundSectionBreakdown(Section section, Section[][] sectionArray) {
+        if ((section.getWidth() == sectionWidth * 3) && (section.getHeight() == sectionHeight * 3)) {
+            System.out.println("Caught 3x3 to breakdown.");
+            for (int y = section.getY(); y < section.getY() + 3; y++) {
+                for (int x = section.getX(); x < section.getX() + 3; x++) {
+                    sectionArray[x][y].breakdown(sectionWidth, sectionHeight);
+                }
+            }
+        } else if ((section.getWidth() == sectionWidth * 3) && (section.getHeight() == sectionHeight * 1)) {
+            System.out.println("Caught 3x1 to breakdown.");
+            for (int y = section.getY(); y < section.getY() + 1; y++) {
+                for (int x = section.getX(); x < section.getX() + 3; x++) {
+                    sectionArray[x][y].breakdown(sectionWidth, sectionHeight);
+                }
+            }
+        }
+        else if ((section.getWidth() == sectionWidth * 2) && (section.getHeight() == sectionHeight * 2)) {
+            System.out.println("Caught 2x2 to breakdown.");
+            for (int y = section.getY(); y < section.getY() + 2; y++) {
+                for (int x = section.getX(); x < section.getX() + 2; x++) {
+                    sectionArray[x][y].breakdown(sectionWidth, sectionHeight);
+                }
+            }
+        }
+        else if((section.getWidth() == sectionWidth*1) && (section.getHeight() == sectionHeight*3)){
+            System.out.println("Caught 1x3 to breakdown.");
+            for (int y  = section.getY(); y < section.getY() + 3; y++) {
+                for (int x = section.getX(); x < section.getX() + 1; x++) {
+                    sectionArray[x][y].breakdown(sectionWidth, sectionHeight);
+                }
+            }
+        }
+        else if((section.getWidth() == sectionWidth*1) && (section.getHeight() == sectionHeight*2)){
+            System.out.println("Caught 1x2 to breakdown.");
+            for (int y  = section.getY(); y < section.getY() + 2; y++) {
+                for (int x = section.getX(); x < section.getX() + 1; x++) {
+                    sectionArray[x][y].breakdown(sectionWidth, sectionHeight);
+                }
+            }
+        }
+        else if((section.getWidth() == sectionWidth*2) && (section.getHeight() == sectionHeight*1)){
+            System.out.println("Caught 2x1 to breakdown.");
+            for (int y  = section.getY(); y < section.getY() + 1; y++) {
+                for (int x = section.getX(); x < section.getX() + 2; x++) {
+                    sectionArray[x][y].breakdown(sectionWidth, sectionHeight);
+                }
+            }
+        }
+        else{
+            System.out.println("TOTAL MATCHING FAILURE");
+        }
+    }
     private static ArrayList<SImage> binarySearch(ArrayList<SImage> imageList, int colour, double targetColour, int sortedListMaxRange) {
 
         ArrayList<SImage> reducedImageArray = new ArrayList<SImage>();
@@ -557,7 +636,7 @@ public class ImageFactory {
     }
 
 
-//This method takes a ratio and every image in the image Pool, then return only those of the specified ratio.
+//This method takes a ratio and every image in the image Pool, then return only the images of the specified ratio.
     private static ArrayList<SImage> populateList(double ratio, ArrayList<SImage> imagePool) {
         ArrayList<SImage> newList = new ArrayList<SImage>();
 
@@ -586,8 +665,10 @@ public class ImageFactory {
 
         for (Section image : formattedSectionList) {
             //System.out.println(image.getRatio());
-            if ((image.getRatio() == ratio) && (image.isInCompoundSection() == false)) {
-                newSectionList.add(image);
+            if ((image.getRatio() == ratio)) {
+                if (image.isCompoundSectionMarker() == true || image.isInCompoundSection() == false) {
+                    newSectionList.add(image);
+                }
             }
             //for each image in image pool
             //if image.getratio = ratio
@@ -600,70 +681,90 @@ public class ImageFactory {
 }
 
     private static File generateOutput(Section[][] sectionArray) {
-        System.out.println("generateOutput");
-        BufferedImage outputBufferedImage = processedTemplateFile;
-
         for (Section[] sectionColumn : sectionArray) {
             for (Section section : sectionColumn) {
-                //insert method 1 and 2 branch here
-                int startX = section.getTopLeftX();
-                int startY = section.getTopLeftY();
+                if(section.getLinkedImage()==null && section.isCompoundSectionMarker() == true){
+                    System.out.println("no connected image");
 
-                SImage linkedSImage = section.getLinkedImage();
 
-                File imagefile = linkedSImage.file;
-
-                BufferedImage linkedImage = null;
-
-                try {
-                    linkedImage = ImageIO.read(imagefile);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                for (int x = 0; x < section.getWidth() ; x++) {
-                    for (int y = 0; y < section.getHeight(); y++) {
-
-                        double enlargementFactor = sectionHeight / (float) linkedSImage.getHeight();
-                        //System.out.println("X: "+x);
-                        //System.out.println("Y: "+y);
-                        //System.out.println("enlargement factor: "+enlargementFactor);
-                        int imageX = (int) (Math.round(x / enlargementFactor));
-                        int imageY = (int) (Math.round(y / enlargementFactor));
-
-                        if (imageX >= linkedImage.getWidth()){
-                            imageX = linkedImage.getWidth()-1;
-                        }
-                        else if (imageX <0){
-                            imageX = 0;
-                        }
-
-                        if (imageY >= linkedImage.getHeight()){
-                            imageY = linkedImage.getHeight()-1;
-                        }
-                        else if (imageY <0){
-                            imageY = 0;
-                        }
-                        //System.out.println("Image X: "+imageX + ", Image Y: "+imageY);
-                        //System.out.println("Image width: "+linkedImage.getWidth()+", Image height: "+linkedImage.getHeight());
-
-                        outputBufferedImage.setRGB(startX +x, startY+y, linkedImage.getRGB(imageX, imageY));
                     }
+                if (section.isCompoundSectionMarker() == true){
+                    System.out.println("number of compound sections");
+                }
                 }
             }
-            System.out.println("+1 section lot drawn.");
+            System.out.println("generateOutput");
+            BufferedImage outputBufferedImage = processedTemplateFile;
+            System.out.println("generateOutput");
+            for (Section[] sectionColumn : sectionArray) {
+                for (Section section : sectionColumn) {
+                    if(section.isInCompoundSection() == false || section.isCompoundSectionMarker() == true){
+                        System.out.println("isInCompoundSection: "+section.isInCompoundSection());
+                        System.out.println("isComoundSectionMarker: "+section.isCompoundSectionMarker());
+                        //insert method 1 and 2 branch here
+                        int startX = section.getTopLeftX();
+                        int startY = section.getTopLeftY();
 
+                        SImage linkedSImage = section.getLinkedImage();
+                        System.out.println("section height: "+section.getHeight());
+                        System.out.println("section width: "+section.getWidth());
+                        System.out.println("ratio: "+section.getRatio());
+                        System.out.println("linked image file: "+linkedSImage.getHeight());
+                        File imagefile = linkedSImage.file;
+
+                        BufferedImage linkedImage = null;
+
+                        try {
+                            linkedImage = ImageIO.read(imagefile);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        for (int x = 0; x < section.getWidth() ; x++) {
+                            for (int y = 0; y < section.getHeight(); y++) {
+
+                                double enlargementFactor = section.getHeight() / (float) linkedSImage.getHeight();
+                                //System.out.println("X: "+x);
+                                //System.out.println("Y: "+y);
+                                //System.out.println("enlargement factor: "+enlargementFactor);
+                                int imageX = (int) (Math.round(x / enlargementFactor));
+                                int imageY = (int) (Math.round(y / enlargementFactor));
+
+                                if (imageX >= linkedImage.getWidth()){
+                                    imageX = linkedImage.getWidth()-1;
+                                }
+                                else if (imageX <0){
+                                    imageX = 0;
+                                }
+
+                                if (imageY >= linkedImage.getHeight()){
+                                    imageY = linkedImage.getHeight()-1;
+                                }
+                                else if (imageY <0){
+                                    imageY = 0;
+                                }
+                                //System.out.println("Image X: "+imageX + ", Image Y: "+imageY);
+                                //System.out.println("Image width: "+linkedImage.getWidth()+", Image height: "+linkedImage.getHeight());
+
+                                outputBufferedImage.setRGB(startX +x, startY+y, linkedImage.getRGB(imageX, imageY));
+                            }
+                        }
+                    }
+                }
+                System.out.println("+1 section lot drawn.");
+
+            }
+            File outputfile = new File("outputImage.jpg");
+            try {
+                System.out.print("Writing...");
+                ImageIO.write(outputBufferedImage, "jpg", outputfile);
+            } catch (IOException e) {
+                System.out.print("eh?!");
+            }
+            return outputfile;
         }
-        File outputfile = new File("outputImage.jpg");
-        try {
-            System.out.print("Writing...");
-            ImageIO.write(outputBufferedImage, "jpg", outputfile);
-        } catch (IOException e) {
-            System.out.print("eh?!");
-        }
-        return outputfile;
     }
-}
+
 
 
 

@@ -40,12 +40,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Popup;
 
-public class Controller extends BorderPane {
 
+//This class handles all possible actions from the main application interface
+public class Controller extends BorderPane {
+    //these variable are all necessary to reference because they are each individual objects in the interface.
     @FXML private MenuBar menuBar;
     @FXML private Button importButton;
     @FXML public Label boom;
     @FXML private Button importTemplate;
+
+    //here are 24 seperate ImageView items, hence the 24 variables here. Each will display a different image.
     @FXML private ImageView imageFrame0;
     @FXML private ImageView imageFrame1;
     @FXML private ImageView imageFrame2;
@@ -78,11 +82,11 @@ public class Controller extends BorderPane {
 
     @FXML private  Label pageLabel;
 
-    //outputwindow
+    //variables referenced bellow here are part of the outputwindow
     @FXML private ImageView outputFrame;
 
 
-    //generation Details
+    //these variables store vital, frequently used information about images that have been imported.
     private ImageView[] imageFrameList;
     private ArrayList<SImage> SImagePool = new ArrayList<SImage>();
     private ArrayList<Image> imagePool = new ArrayList<Image>();
@@ -92,17 +96,19 @@ public class Controller extends BorderPane {
 
     private Integer page = 0;
 
-
+    //This initialises the interface with a new set of image displays, starting at page 0
     public void innit(Stage primaryStage) {
         imageFrameList = new ImageView[]{imageFrame0, imageFrame1, imageFrame2, imageFrame3, imageFrame4, imageFrame5, imageFrame6, imageFrame7, imageFrame8, imageFrame9, imageFrame10, imageFrame11, imageFrame12, imageFrame13, imageFrame14, imageFrame15, imageFrame16, imageFrame17, imageFrame18, imageFrame19, imageFrame20, imageFrame21, imageFrame22, imageFrame23};
-        System.out.println(imageFrame23);
         pageLabel.setText(Integer.toString(page + 1));
     }
 
+    //This is activated when the "Generate" button is pressed
+    //it takes inputs from a new popup window,then passes them over to imageFactory to begin the main process.
     public void beginGenerationPhase(){
+
+        //this code sets up a new window with a new instance of this controller.
         Pane popupPane = new Pane();
         Stage stage = new Stage();
-
         FXMLLoader loader = new FXMLLoader(getClass().getResource("GeneratePopUp.fxml"));
         Controller controller = new Controller();
         loader.setController(controller);
@@ -117,15 +123,21 @@ public class Controller extends BorderPane {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
 
+
+
         //make editable.
         int analysisLevel = 3;
+
+        //the main process begins
         File outputFile = ImageFactory.generate( templateSImage, SImagePool, templateImage, analysisLevel);
 
+        //now an output image has been returned
+        //a new window is setup to display this output.
         Pane outputPane = new Pane();
         Stage outputStage = new Stage();
         FXMLLoader outputLoader = new FXMLLoader(getClass().getResource("outputWindow.fxml"));
-        controller = new Controller();
-        loader.setController(controller);
+        Controller outputController = new Controller();
+        loader.setController(outputController);
         try {
             outputPane = outputLoader.load();
         } catch (IOException e) {
@@ -144,6 +156,9 @@ public class Controller extends BorderPane {
         }
 
     }
+
+    //This is activated when Select New Images is pressed.
+    //it allows the user to select images from their file directory and import them into the program
     public void importImage(){
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Image files");
@@ -151,23 +166,31 @@ public class Controller extends BorderPane {
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(null);
         System.out.println(selectedFiles);
+        //this loop takes every selected file, creates a new "SImage" from it, then displays it in the interfaces
         for (File selectedFile : selectedFiles) {
             SImage currentImage = new SImage(selectedFile, 3);
             try {
                 SImagePool.add(currentImage);
-                if (currentImage.getWidth()>500 || currentImage.getHeight()> 500) {
+                //SImagePool is the collection of all imported images in SImage form.
+                //ImagePool is the collection of all imported images in FXImage form. This is needed to display them.
+                if (currentImage.getWidth() > 500 || currentImage.getHeight() > 500) {
+                    imagePool.add(new Image(new FileInputStream(currentImage.file), currentImage.getWidth() / 5, currentImage.getHeight() / 5, false, false));
+                } else if (currentImage.getWidth() > 1000 || currentImage.getHeight() > 1000) {
                     imagePool.add(new Image(new FileInputStream(currentImage.file), currentImage.getWidth() / 10, currentImage.getHeight() / 10, false, false));
-                }
-                else{
+                } else {
                     imagePool.add(new Image(new FileInputStream(currentImage.file)));
                 }
+                //This if statement resizes the displayed version of the image so that the program doesn't use too much memory
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
+
+            updateImagePool(SImagePool, imagePool);
         }
-        updateImagePool(SImagePool, imagePool);
     }
 
+
+    //This method updates the display whenever anything related to the interface changes.
     public void updateImagePool(List SImagePool, List imagePool){
         clearPool();
         pageLabel.setText(Integer.toString(page+1));
@@ -175,23 +198,21 @@ public class Controller extends BorderPane {
         int startIndex = (page * 24);
         int endIndex;
 
+        //the page number is used to calculate which images from the array need to be displayed.
+
         if (length>(page + 1)*24-1){
             endIndex = (page+1)*24 -1;
         }
         else{
             endIndex = (page * 24) + (length % 24) - 1;
         }
-        //System.out.println("start "+ startIndex);
-        //System.out.println("end "+endIndex);
-        //System.out.println("Lenght "+length);
         for (int index = startIndex; index <= endIndex; index++){
-            //System.out.println("Mod: " + (index % 24));
             imageFrameList[(index % 24)].setImage( (Image) imagePool.get(index));
         }
         }
 
 
-
+//this method is similar to importImage() except ony one image can be imported at a time and it is stored seperately
     public void importTemplate(){
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files","*.png", "*.jpg", "*.gif"));
@@ -215,6 +236,7 @@ public class Controller extends BorderPane {
 
     }
 
+    //increments the page if it possible to based on the number of imported images. (wont display an empty page)
     public void nextPage(){
         if (((page+1)*24)<= imagePool.size()){
             page = page +1;
@@ -224,6 +246,8 @@ public class Controller extends BorderPane {
             System.out.print("no next page");
         }
     }
+
+    //decrements the page if the page is greater than 0.
     public void previousPage(){
         if(page > 0) {
             page = page - 1;
@@ -235,6 +259,7 @@ public class Controller extends BorderPane {
         }
 
     }
+    //removes the current contents of every frame so that new images can be displayed.
     private void clearPool(){
         for (ImageView frame: imageFrameList){
             frame.setImage(null);

@@ -28,6 +28,7 @@ public class SImage {
     public SImage(File file, int analysisLevel) {
         this.analysisLevel = analysisLevel;
         this.file = file;
+        this.ratioMultiple = 1;
         try {
             analyse();
         } catch (IOException e) {
@@ -256,28 +257,26 @@ public class SImage {
         width = newWidth;
         height = newHeight;
 
-
         BufferedImage croppedImage = new BufferedImage(newWidth, newHeight,ImageIO.read(file).getType());
 
         //This section can return false colours
         //also really slow
         //look into function to do it for you.
+        BufferedImage bufferedImage = ImageIO.read(file);
+
         for (int x=((width - newWidth)/2); x< newWidth; x++) {
             for (int y = ((height- newHeight)/2); y < newHeight; y++) {
-                croppedImage.setRGB(x, y, ImageIO.read(file).getRGB(x, y));
+                croppedImage.setRGB(x, y, bufferedImage.getRGB(x, y));
             }
         }
         System.out.println("croppedImage width " + croppedImage.getWidth());
         System.out.println("croppedImage height " + croppedImage.getHeight());
 
-        File outputfile = new File("croppedImage.jpg");
         try {
-            ImageIO.write(croppedImage, "jpg", outputfile);
+            ImageIO.write(croppedImage, "jpg", file);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        file = outputfile;
-
     }
 
     public void setRatioMultiple(double multiple){

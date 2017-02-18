@@ -17,10 +17,10 @@ public class Section extends SImage {
     private SImage linkedImage;
 
     //compound section only
-    private int compoundWidth;
-    private int compoundHeight;
     private boolean inCompoundSection = false;
     private boolean compoundSectionMarker = false;
+    private int sectionArrayX;
+    private int sectionArrayY;
 
     public Section(File file, int x, int y, int width, int height, int analysisLevel) {
         super(file, analysisLevel);
@@ -56,10 +56,13 @@ public class Section extends SImage {
         return inCompoundSection;
     }
 
-    public void setCompound(int width, int height) {
+    public void setCompound(int width, int height, int X, int Y, double ratioMultiple) {
+        this.ratioMultiple =ratioMultiple;
         compoundSectionMarker = true;
-        compoundWidth = width;
-        compoundHeight = height;
+        this.width = width;
+        this.height = height;
+        sectionArrayX = X;
+        sectionArrayY = Y;
     }
 
     public void setInCompound() {
@@ -68,5 +71,18 @@ public class Section extends SImage {
 
     public boolean isCompoundSectionMarker(){
         return  compoundSectionMarker;
+    }
+
+    public void breakdown(int width, int height){
+        this.width = width;
+        this.height = height;
+        compoundSectionMarker = false;
+        inCompoundSection = false;
+    }
+    public int getX(){
+        return sectionArrayX;
+    }
+    public int getY(){
+        return sectionArrayY;
     }
 }
