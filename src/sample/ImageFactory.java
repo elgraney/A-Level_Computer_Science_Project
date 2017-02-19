@@ -153,7 +153,7 @@ public class ImageFactory {
                             break;
                         case "100100000":
                             System.out.println("1x2");
-                            sectionList[column][row].setCompound(sectionWidth,sectionHeight*2, column, row, 0.5);
+                            sectionList[column][row].setCompound(sectionWidth, sectionHeight*2, column, row, 4);
                             for (int y  = row; y < row + 2; y++){
                                 int x = column;
                                 System.out.println("1x2 x,y: "+x+", "+y);
@@ -162,7 +162,7 @@ public class ImageFactory {
                             break;
                         case "100100100":
                             System.out.println("1x3");
-                            sectionList[column][row].setCompound(sectionWidth,sectionHeight*3, column, row, 1/3);
+                            sectionList[column][row].setCompound(sectionWidth,sectionHeight*3, column, row, 5);
                             for (int y  = row; y < row + 3; y++){
                                 int x = column;
                                 sectionList[x][y].setInCompound();
@@ -328,7 +328,7 @@ public class ImageFactory {
 
             } else if ((widthRatio * 5 / 12) <= imageWidthRatio && imageWidthRatio < (widthRatio * 0.75)) {
                 //System.out.println("2height");
-                image.setRatioMultiple(0.5);
+                image.setRatioMultiple(4);
                 crop(widthRatio, 2 * heightRatio, imageWidthRatio, image);
 
             } else if (imageWidthRatio < (widthRatio * 5 / 12)) {
@@ -421,19 +421,17 @@ public class ImageFactory {
         matchSections(ratio2Sections, ratio2Pool, sectionList);
 
 
-
-
-        ArrayList<SImage> ratioHalfPool = populateList(1/2, imagePool);
-        ArrayList<Section> ratioHalfSections = reformatAndPopulateSectionArray(sectionList, 1/2);
-        System.out.println("ratio .5 refined pool length " + ratioHalfPool.size());
-        System.out.println("ratio .5 refined section list length " + ratioHalfSections.size());
+        ArrayList<SImage> ratioHalfPool = populateList(4, imagePool);
+        ArrayList<Section> ratioHalfSections = reformatAndPopulateSectionArray(sectionList, 4);
+        System.out.println("ratio 4 refined pool length " + ratioHalfPool.size());
+        System.out.println("ratio 4 refined section list length " + ratioHalfSections.size());
 
         matchSections(ratioHalfSections, ratioHalfPool, sectionList);
 
-        ArrayList<SImage> ratioThirdPool = populateList(1/3, imagePool);
-        ArrayList<Section> ratioThirdSections = reformatAndPopulateSectionArray(sectionList, 1/3);
-        System.out.println("ratio 1/3 refined pool length " + ratioThirdPool.size());
-        System.out.println("ratio 1/3 refined section list length " + ratioThirdSections.size());
+        ArrayList<SImage> ratioThirdPool = populateList(5, imagePool);
+        ArrayList<Section> ratioThirdSections = reformatAndPopulateSectionArray(sectionList, 5);
+        System.out.println("ratio 5 refined pool length " + ratioThirdPool.size());
+        System.out.println("ratio 5 refined section list length " + ratioThirdSections.size());
 
         matchSections(ratioThirdSections, ratioThirdPool, sectionList);
 
@@ -506,7 +504,7 @@ public class ImageFactory {
                                     (image.getMeanRGB(2) - difference) <= sectionBlue && (image.getMeanRGB(2) + difference) >= sectionBlue
                                     ) {
                                 section.setLinkedImage(image);
-                                if(section.getRatio()==0.5){
+                                if(section.getRatio()==4){
                                     System.out.println(".5 Compound section should be matched.");
                                     System.out.println("section file: "+ image.file);
                                 }
@@ -521,12 +519,12 @@ public class ImageFactory {
                     //now match them
                     //follow design algorithm.
 
-                    while (difference < 100);
+                    while (difference < 200);
 
                     if (difference != 999) {
                         //System.out.println("Match Failed");
                         sortedListMaxRange += 5;
-                        if (sortedListMaxRange > 200) {
+                        if (sortedListMaxRange > 100) {
                             compoundSectionBreakdown(section, sectionArray);
                             System.out.println("This image has failed.");
                             System.out.println("Red length: " + redSortedImages.size());
@@ -601,8 +599,11 @@ public class ImageFactory {
                 }
             }
         }
-        else{
+        else if((section.getWidth() == sectionWidth*1) && (section.getHeight() == sectionHeight*1)){
             System.out.println("TOTAL MATCHING FAILURE");
+        }
+        else{
+            System.out.println("Well Somethings gone wrong!");
         }
     }
     private static ArrayList<SImage> binarySearch(ArrayList<SImage> imageList, int colour, double targetColour, int sortedListMaxRange) {
@@ -664,7 +665,8 @@ public class ImageFactory {
         ArrayList<Section> newSectionList = new ArrayList<Section>();
 
         for (Section image : formattedSectionList) {
-            //System.out.println(image.getRatio());
+            //System.out.println("ReformatAndPopulateSectionArray: "+image.getRatio());
+
             if ((image.getRatio() == ratio)) {
                 if (image.isCompoundSectionMarker() == true || image.isInCompoundSection() == false) {
                     newSectionList.add(image);
@@ -673,6 +675,9 @@ public class ImageFactory {
             //for each image in image pool
             //if image.getratio = ratio
             //add to this new array.
+        }
+        for (Section section : newSectionList){
+            System.out.println("newSectionList Ratio: "+section.getRatio());
         }
 
         return newSectionList;
@@ -699,17 +704,18 @@ public class ImageFactory {
             for (Section[] sectionColumn : sectionArray) {
                 for (Section section : sectionColumn) {
                     if(section.isInCompoundSection() == false || section.isCompoundSectionMarker() == true){
-                        System.out.println("isInCompoundSection: "+section.isInCompoundSection());
-                        System.out.println("isComoundSectionMarker: "+section.isCompoundSectionMarker());
+                        //System.out.println("isInCompoundSection: "+section.isInCompoundSection());
+                        //System.out.println("isComoundSectionMarker: "+section.isCompoundSectionMarker());
                         //insert method 1 and 2 branch here
                         int startX = section.getTopLeftX();
                         int startY = section.getTopLeftY();
 
                         SImage linkedSImage = section.getLinkedImage();
-                        System.out.println("section height: "+section.getHeight());
-                        System.out.println("section width: "+section.getWidth());
-                        System.out.println("ratio: "+section.getRatio());
-                        System.out.println("linked image file: "+linkedSImage.getHeight());
+                        //System.out.println("section height: "+section.getHeight());
+                        //System.out.println("section width: "+section.getWidth());
+                        //.out.println("ratio: "+section.getRatio());
+
+                        //System.out.println("linked image file: "+linkedSImage.getHeight());
                         File imagefile = linkedSImage.file;
 
                         BufferedImage linkedImage = null;

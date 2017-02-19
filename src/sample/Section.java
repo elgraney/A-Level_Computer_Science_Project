@@ -57,7 +57,7 @@ public class Section extends SImage {
     }
 
     public void setCompound(int width, int height, int X, int Y, double ratioMultiple) {
-        this.ratioMultiple =ratioMultiple;
+        setRatioMultiple(ratioMultiple);
         compoundSectionMarker = true;
         this.width = width;
         this.height = height;
@@ -78,6 +78,7 @@ public class Section extends SImage {
         this.height = height;
         compoundSectionMarker = false;
         inCompoundSection = false;
+        setRatioMultiple(1);
     }
     public int getX(){
         return sectionArrayX;
