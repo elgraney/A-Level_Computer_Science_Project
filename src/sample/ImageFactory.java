@@ -125,7 +125,8 @@ public class ImageFactory {
                                     (sectionList[column][row].getMeanOfModesRGB(1) - 5 < sectionList[x][y].getMeanOfModesRGB(1)) &&
                                     (sectionList[x][y].getMeanOfModesRGB(1) < (sectionList[column][row].getMeanOfModesRGB(1) +5)) &&
                                     (sectionList[column][row].getMeanOfModesRGB(2) - 5 < sectionList[x][y].getMeanOfModesRGB(2)) &&
-                                    (sectionList[x][y].getMeanOfModesRGB(2) < (sectionList[column][row].getMeanOfModesRGB(2) +5))) {
+                                    (sectionList[x][y].getMeanOfModesRGB(2) < (sectionList[column][row].getMeanOfModesRGB(2) +5)) &&
+                                    sectionList[x][y].isInCompoundSection() == false) {
                                 //System.out.println("adjacent section match");
                                 sectionSimilarity = sectionSimilarity + "1";
                             }

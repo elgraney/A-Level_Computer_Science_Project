@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -110,7 +111,7 @@ public class Controller extends BorderPane {
         Pane popupPane = new Pane();
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("GeneratePopUp.fxml"));
-        Controller controller = new Controller();
+        OutputWindowController controller = new OutputWindowController();
         loader.setController(controller);
         try {
             popupPane = loader.load();
@@ -119,9 +120,14 @@ public class Controller extends BorderPane {
         }
         Scene scene = new Scene(popupPane);
         stage.setScene(scene);
-        stage.setTitle("My modal window");
+        stage.setTitle("Output Preferences");
         stage.initModality(Modality.APPLICATION_MODAL);
+        controller.innit(stage);
         stage.showAndWait();
+
+        System.out.println(controller.outputResolutionInt);
+        System.out.println(controller.generationStyleInt);
+        System.out.println(controller.outputFormatInt);
 
 
 

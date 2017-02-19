@@ -9,82 +9,147 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" scaleShape="false" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" scaleShape="false" style="-fx-border-color: black;" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox prefHeight="345.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+      <HBox prefHeight="300.0" prefWidth="600.0">
          <children>
-            <VBox prefHeight="200.0" prefWidth="10.0" style="-fx-background-color: #A7C7D2; -fx-border-color: black;" />
-            <VBox prefHeight="200.0" prefWidth="150.0" style="-fx-border-color: black;" HBox.hgrow="ALWAYS">
+            <VBox prefHeight="50.0" prefWidth="150.0" style="-fx-border-color: black;" HBox.hgrow="ALWAYS">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Detail" textAlignment="CENTER">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
+                  <HBox>
                      <VBox.margin>
-                        <Insets />
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Output Resolution" textAlignment="CENTER">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Text>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <ChoiceBox fx:id="outputResolutionBox" prefWidth="150.0">
+                           <HBox.margin>
+                              <Insets right="11.0" top="3.0" />
+                           </HBox.margin>
+                        </ChoiceBox>
+                     </children>
+                  </HBox>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="This determines how big the output image is.">
+                     <VBox.margin>
+                        <Insets left="5.0" />
                      </VBox.margin>
                   </Text>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="unimplemented." />
-                  <Region prefHeight="200.0" prefWidth="200.0" />
-                  <ChoiceBox prefWidth="150.0" />
-                  <Region prefHeight="200.0" prefWidth="200.0" />
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                  <Region prefHeight="200.0" prefWidth="200.0" />
-               </children>
-            </VBox>
-            <VBox prefHeight="200.0" prefWidth="150.0" style="-fx-border-color: black;" HBox.hgrow="ALWAYS">
-               <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="stuff" wrappingWidth="34.642578125" />
-                  <Region prefHeight="200.0" prefWidth="200.0" />
-                  <ChoiceBox prefWidth="150.0" />
-                  <Region prefHeight="200.0" prefWidth="200.0" />
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                  <Region prefHeight="200.0" prefWidth="200.0" />
-               </children>
-            </VBox>
-            <VBox prefHeight="200.0" prefWidth="150.0" style="-fx-border-color: black;" HBox.hgrow="ALWAYS">
-               <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Output Format" textAlignment="CENTER">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="The higher the resolution the longer the image will take to generate.">
                      <VBox.margin>
-                        <Insets />
+                        <Insets left="5.0" />
                      </VBox.margin>
                   </Text>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" />
-                  <Region prefHeight="200.0" prefWidth="200.0" />
-                  <ChoiceBox prefWidth="150.0" />
-                  <Region prefHeight="200.0" prefWidth="200.0" />
                </children>
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
             </VBox>
-            <VBox minWidth="0.0" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #A7C7D2; -fx-border-color: black;" HBox.hgrow="ALWAYS">
-               <padding>
-                  <Insets right="10.0" />
-               </padding></VBox>
          </children>
       </HBox>
-      <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #A7C7D2; -fx-border-color: black;" VBox.vgrow="NEVER">
+      <HBox prefHeight="300.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
          <children>
-            <VBox HBox.hgrow="ALWAYS">
+            <VBox prefHeight="10.0" prefWidth="150.0" style="-fx-border-color: black;" HBox.hgrow="ALWAYS">
+               <children>
+                  <HBox>
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Output Format" textAlignment="CENTER">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Text>
+                        <Region HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets top="5.0" />
+                           </HBox.margin>
+                        </Region>
+                        <ChoiceBox fx:id="outputFormatBox" prefWidth="150.0">
+                           <HBox.margin>
+                              <Insets right="11.0" top="3.0" />
+                           </HBox.margin>
+                        </ChoiceBox>
+                     </children>
+                  </HBox>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="This determines the file type of the output image.">
+                     <VBox.margin>
+                        <Insets left="5.0" />
+                     </VBox.margin></Text>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <HBox prefHeight="300.0" prefWidth="600.0">
+         <children>
+            <VBox prefHeight="150.0" prefWidth="150.0" style="-fx-border-color: black;" HBox.hgrow="ALWAYS">
+               <children>
+                  <HBox>
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Generation Style" textAlignment="CENTER">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Text>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <ChoiceBox fx:id="generationStyleBox" prefWidth="150.0">
+                           <HBox.margin>
+                              <Insets right="11.0" top="3.0" />
+                           </HBox.margin>
+                        </ChoiceBox>
+                     </children>
+                  </HBox>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="ordered layout means images fit into a sort of grid and do not overlap. ">
+                     <VBox.margin>
+                        <Insets left="5.0" />
+                     </VBox.margin>
+                  </Text>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="This means some images might be cropped slightly. ">
+                     <VBox.margin>
+                        <Insets left="5.0" />
+                     </VBox.margin>
+                  </Text>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Unordered layout means images are not cropped and therefore may overlap each other ">
+                     <VBox.margin>
+                        <Insets left="5.0" top="8.0" />
+                     </VBox.margin>
+                  </Text>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #A7C7D2; -fx-border-color: black;" VBox.vgrow="ALWAYS">
+         <children>
+            <VBox prefHeight="200.0" HBox.hgrow="ALWAYS">
                <children>
                   <Region prefHeight="200.0" prefWidth="200.0" />
-                  <HBox VBox.vgrow="ALWAYS">
+                  <HBox>
                      <children>
-                        <Region HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" text="BEGIN GENERATION" />
+                        <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" text="Begin Generation" />
+                        <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                      </children>
-                     <padding>
-                        <Insets right="10.0" />
-                     </padding>
                   </HBox>
                   <Region prefHeight="200.0" prefWidth="200.0" />
                </children>
+               <HBox.margin>
+                  <Insets bottom="10.0" top="10.0" />
+               </HBox.margin>
             </VBox>
-         </children></HBox>
+         </children>
+      </HBox>
    </children>
 </VBox>
