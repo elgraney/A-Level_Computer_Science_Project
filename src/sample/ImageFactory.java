@@ -26,26 +26,26 @@ public class ImageFactory {
 
     //SET CONSTANTS FOR OUTPUT RESOLUTION AND SECTION SIZE
 
-    public static File generate(SImage SImageTemplate, ArrayList<SImage> imagePool, BufferedImage templateImage, int analysisLvl) {
+    public static File generate(SImage SImageTemplate, ArrayList<SImage> imagePool, BufferedImage templateImage, int analysisLvl, int outputRes, int generationStyle, String outputFormat) {
 
 
         System.out.println("generate");
         analysisLevel = analysisLvl;
         unalteredTemplate = SImageTemplate;
         templateFile = templateImage;
-        Section[][] sectionList = formatAllImages(imagePool);
-        File outputImage = matchController(imagePool, sectionList);
+        Section[][] sectionList = formatAllImages(imagePool, outputRes);
+        File outputImage = matchController(imagePool, sectionList, outputFormat);
         return outputImage;
 
     }
 
 
-    public static Section[][] formatAllImages(ArrayList<SImage> imagePool) {
+    public static Section[][] formatAllImages(ArrayList<SImage> imagePool, int outputRes) {
         System.out.println("CreateSection");
         double mostCommonRatio;
         mostCommonRatio = getMostCommonRatio(imagePool);
         defineSections(mostCommonRatio);
-        resizeTemplate(unalteredTemplate);
+        resizeTemplate(unalteredTemplate, outputRes);
 
         System.out.println("new height " + processedTemplateFile.getWidth());
         System.out.println("new Width " + processedTemplateFile.getHeight());
@@ -191,7 +191,7 @@ public class ImageFactory {
                             System.out.println("break");
                             break;
                     }
-                    System.out.println("Section similarity: "+ sectionSimilarity);
+                    //System.out.println("Section similarity: "+ sectionSimilarity);
                 }
             }
         }
@@ -238,7 +238,7 @@ public class ImageFactory {
     }
 
 
-    private static void resizeTemplate(SImage template) {
+    private static void resizeTemplate(SImage template, int outputRes) {
         int templateWidth = 0;
         int templateHeight = 0;
         int enlargementFactor = 0;
@@ -251,7 +251,7 @@ public class ImageFactory {
             int potentialHeight = multiplier * sectionHeight;
 
             //not enough memory space for large images yet.
-            if ((potentialWidth >= 6000) && (potentialHeight >= 6000)) {
+            if ((potentialWidth >= outputRes) && (potentialHeight >= outputRes)) {
                 //System.out.println("crop to After Width: " + potentialWidth);
                 //System.out.println("Crop to after height " + potentialHeight);
                 templateWidth = potentialWidth;
@@ -401,7 +401,7 @@ public class ImageFactory {
         //note: due to the necessity to have integers for dimentions, images will allways be resized so that the width is slightly greater than it should be, if an integer cannot be found.}
 
     //pass SImage pool
-    private static File matchController(ArrayList<SImage> imagePool, Section[][] sectionList) {
+    private static File matchController(ArrayList<SImage> imagePool, Section[][] sectionList, String outputFormat) {
 
         //start with largest ratios, then move to standard ratio
         //since compund sections aren't in yet, just standard
@@ -444,7 +444,7 @@ public class ImageFactory {
 
         matchSections(ratio1Sections, ratio1Pool, sectionList);
 
-        File outputImage = generateOutput(sectionList);
+        File outputImage = generateOutput(sectionList, outputFormat);
         return outputImage;
     }
 
@@ -470,7 +470,7 @@ public class ImageFactory {
         }
         for (Section section : sectionList) {
             if ((section.isInCompoundSection() == false) || (section.isCompoundSectionMarker()== true)) {
-                System.out.println("Passed ratio "+section.getRatio());
+                //System.out.println("Passed ratio "+section.getRatio());
                 //System.out.println("Entered for?");
                 double sectionRed = section.getMeanOfModesRGB(0);
                 double sectionGreen = section.getMeanOfModesRGB(1);
@@ -500,15 +500,12 @@ public class ImageFactory {
                     difference = 0;
                     do {
                         for (SImage image : recombinedList) {
-                            if ((image.getMeanRGB(0) - difference) <= sectionRed && (image.getMeanRGB(0) + difference) >= sectionRed &&
-                                    (image.getMeanRGB(1) - difference) <= sectionGreen && (image.getMeanRGB(1) + difference) >= sectionGreen &&
-                                    (image.getMeanRGB(2) - difference) <= sectionBlue && (image.getMeanRGB(2) + difference) >= sectionBlue
+                            if (((image.getMeanRGB(0) - difference) <= sectionRed) && ((image.getMeanRGB(0) + difference) >= sectionRed) &&
+                                    ((image.getMeanRGB(1) - difference) <= sectionGreen) && ((image.getMeanRGB(1) + difference)) >= sectionGreen &&
+                                    ((image.getMeanRGB(2) - difference) <= sectionBlue) && ((image.getMeanRGB(2) + difference) >= sectionBlue)
                                     ) {
                                 section.setLinkedImage(image);
-                                if(section.getRatio()==4){
-                                    System.out.println(".5 Compound section should be matched.");
-                                    System.out.println("section file: "+ image.file);
-                                }
+
                                 //System.out.println(section.file);
                                 //System.out.println(image.file);
                                 difference = 998;
@@ -531,6 +528,7 @@ public class ImageFactory {
                             System.out.println("Red length: " + redSortedImages.size());
                             System.out.println("Green length: " + greenSortedImages.size());
                             System.out.println("Blue length: " + blueSortedImages.size());
+                            System.out.println("new Red length" + newRedSortedImages.size());
                             System.out.println("Recombined list length: " + recombinedList.size());
                             System.out.println("sortedListMaxRange " + sortedListMaxRange);
                             System.out.println("section RGB: " + section.getMeanRGB(0) + ", " + section.getMeanRGB(1) + ", " + section.getMeanRGB(2));
@@ -621,8 +619,8 @@ public class ImageFactory {
                 for (int index = (middle - sortedListMaxRange < 0 ? 0 : middle-sortedListMaxRange); index <= (middle + sortedListMaxRange > size -1  ? size -1  : middle+ sortedListMaxRange); index++) {
 
                     reducedImageArray.add(imageList.get(index));
-                    return reducedImageArray;
                 }
+                return reducedImageArray;
             }
             if (imageList.get(middle).getMeanRGB(colour) < targetColour) {
                 low = middle + 1;
@@ -677,16 +675,16 @@ public class ImageFactory {
             //if image.getratio = ratio
             //add to this new array.
         }
-        for (Section section : newSectionList){
-            System.out.println("newSectionList Ratio: "+section.getRatio());
-        }
+        //for (Section section : newSectionList){
+            //System.out.println("newSectionList Ratio: "+section.getRatio());
+        //}
 
         return newSectionList;
 
 
 }
 
-    private static File generateOutput(Section[][] sectionArray) {
+    private static File generateOutput(Section[][] sectionArray, String outputFormat) {
         for (Section[] sectionColumn : sectionArray) {
             for (Section section : sectionColumn) {
                 if(section.getLinkedImage()==null && section.isCompoundSectionMarker() == true){
@@ -695,13 +693,12 @@ public class ImageFactory {
 
                     }
                 if (section.isCompoundSectionMarker() == true){
-                    System.out.println("number of compound sections");
+                    //System.out.println("number of compound sections");
                 }
                 }
             }
             System.out.println("generateOutput");
             BufferedImage outputBufferedImage = processedTemplateFile;
-            System.out.println("generateOutput");
             for (Section[] sectionColumn : sectionArray) {
                 for (Section section : sectionColumn) {
                     if(section.isInCompoundSection() == false || section.isCompoundSectionMarker() == true){
@@ -761,10 +758,10 @@ public class ImageFactory {
                 System.out.println("+1 section lot drawn.");
 
             }
-            File outputfile = new File("outputImage.jpg");
+            File outputfile = new File("outputImage."+outputFormat);
             try {
                 System.out.print("Writing...");
-                ImageIO.write(outputBufferedImage, "jpg", outputfile);
+                ImageIO.write(outputBufferedImage, outputFormat, outputfile);
             } catch (IOException e) {
                 System.out.print("eh?!");
             }

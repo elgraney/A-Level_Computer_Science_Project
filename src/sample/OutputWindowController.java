@@ -4,55 +4,33 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 /**
- * Created by Matthew on 19/02/2017.
+ * Created by ma.crane on 20/02/2017.
  */
+public class OutputWindowController{
 
+    @FXML private ImageView outputFrame = null;
+    @FXML private Button discardButton;
+    @FXML private Button saveButton;
+    @FXML private Button sendButton;
+    @FXML private Button printButton;
 
-
-public class OutputWindowController {
-
-    @FXML
-    private ChoiceBox outputResolutionBox;
-    @FXML
-    private ChoiceBox outputFormatBox;
-    @FXML
-    private ChoiceBox generationStyleBox;
-
-    public int outputResolutionInt;
-    public int generationStyleInt;
-    public int outputFormatInt;
-
-
-    public void innit(Stage primaryStage) {
-
-        outputResolutionBox.setValue("Standard");
-        outputResolutionBox.setItems(FXCollections.observableArrayList("Low", "Standard", "High", "Ultra"));
-
-        outputResolutionBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                outputResolutionInt = newValue.intValue();
-            }
-        });
-
-        outputFormatBox.setValue("JPG");
-        outputFormatBox.setItems(FXCollections.observableArrayList("JPG", "PNG", "GIF"));
-        outputFormatBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                outputFormatInt = newValue.intValue();
-            }
-        });
-
-        generationStyleBox.setValue("Ordered");
-        generationStyleBox.setItems(FXCollections.observableArrayList("Ordered", "Messy"));
-        generationStyleBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                generationStyleInt = newValue.intValue();
-            }
-        });
+    public void showOutputImage(File outputFile){
+        try {
+            outputFrame.setImage(new Image(new FileInputStream(outputFile)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
+

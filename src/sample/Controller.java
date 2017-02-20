@@ -1,11 +1,7 @@
 package sample;
 
-import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
@@ -13,33 +9,20 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
 import javafx.stage.*;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
 import java.util.List;
 
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 
-import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.stage.Popup;
 
 
 //This class handles all possible actions from the main application interface
@@ -83,9 +66,6 @@ public class Controller extends BorderPane {
 
     @FXML private  Label pageLabel;
 
-    //variables referenced bellow here are part of the outputwindow
-    @FXML private ImageView outputFrame;
-
 
     //these variables store vital, frequently used information about images that have been imported.
     private ImageView[] imageFrameList;
@@ -105,13 +85,13 @@ public class Controller extends BorderPane {
 
     //This is activated when the "Generate" button is pressed
     //it takes inputs from a new popup window,then passes them over to imageFactory to begin the main process.
-    public void beginGenerationPhase(){
+    public void beginGenerationPhase() {
 
         //this code sets up a new window with a new instance of this controller.
         Pane popupPane = new Pane();
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("GeneratePopUp.fxml"));
-        OutputWindowController controller = new OutputWindowController();
+        GeneratePopupController controller = new GeneratePopupController();
         loader.setController(controller);
         try {
             popupPane = loader.load();
@@ -125,43 +105,69 @@ public class Controller extends BorderPane {
         controller.innit(stage);
         stage.showAndWait();
 
-        System.out.println(controller.outputResolutionInt);
-        System.out.println(controller.generationStyleInt);
-        System.out.println(controller.outputFormatInt);
+        System.out.println("Output res index: " + controller.outputResolutionInt);
+        System.out.println("Gen style index: " + controller.generationStyleInt);
+        System.out.println("out format index: " + controller.outputFormatInt);
+
+        int outputResolution = 3000;
+        int generationStyle = controller.generationStyleInt + 1;
+        String outputFormat = "jpg";
 
 
+        switch (controller.outputResolutionInt) {
+            case 0:
+                outputResolution = 1500;
+                break;
+            case 1:
+                outputResolution = 3000;
+                break;
+            case 2:
+                outputResolution = 6000;
+                break;
+            case 3:
+                outputResolution = 9000;
+                break;
+        }
+        switch (controller.outputFormatInt) {
+            case 0:
+                outputFormat = "jpg";
+                break;
+            case 1:
+                outputFormat = "png";
+                break;
+            case 2:
+                outputFormat = "gif";
+                break;
+        }
 
+        System.out.println(outputResolution + ", " + outputFormat + ", " + generationStyle);
         //make editable.
         int analysisLevel = 3;
 
         //the main process begins
-        File outputFile = ImageFactory.generate( templateSImage, SImagePool, templateImage, analysisLevel);
+        File outputFile = ImageFactory.generate(templateSImage, SImagePool, templateImage, analysisLevel, outputResolution, generationStyle, outputFormat);
 
         //now an output image has been returned
         //a new window is setup to display this output.
-        Pane outputPane = new Pane();
+        BorderPane outputPane = new BorderPane();
         Stage outputStage = new Stage();
-        FXMLLoader outputLoader = new FXMLLoader(getClass().getResource("outputWindow.fxml"));
-        Controller outputController = new Controller();
-        loader.setController(outputController);
+        FXMLLoader outputLoader = new FXMLLoader(getClass().getResource("OutputWindow.fxml"));
+        OutputWindowController outputController = new OutputWindowController();
+        outputLoader.setController(outputController);
+
         try {
             outputPane = outputLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         Scene outputScene = new Scene(outputPane);
         outputStage.setScene(outputScene);
-        outputStage.setTitle("Something or something...");
-        outputStage.initModality(Modality.APPLICATION_MODAL);
-        outputStage.showAndWait();
-
-        try {
-            outputFrame.setImage(new Image(new FileInputStream(outputFile)));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
+        outputStage.setTitle("Output View");
+        outputStage.show();
+        outputController.showOutputImage(outputFile);
     }
+
 
     //This is activated when Select New Images is pressed.
     //it allows the user to select images from their file directory and import them into the program
@@ -191,13 +197,13 @@ public class Controller extends BorderPane {
                 e.printStackTrace();
             }
 
-            updateImagePool(SImagePool, imagePool);
+            updateImagePool(imagePool);
         }
     }
 
 
     //This method updates the display whenever anything related to the interface changes.
-    public void updateImagePool(List SImagePool, List imagePool){
+    private void updateImagePool(List imagePool){
         clearPool();
         pageLabel.setText(Integer.toString(page+1));
         int length =  imagePool.size();
@@ -246,7 +252,7 @@ public class Controller extends BorderPane {
     public void nextPage(){
         if (((page+1)*24)<= imagePool.size()){
             page = page +1;
-            updateImagePool(SImagePool, imagePool);
+            updateImagePool(imagePool);
         }
         else{
             System.out.print("no next page");
@@ -258,7 +264,7 @@ public class Controller extends BorderPane {
         if(page > 0) {
             page = page - 1;
 
-            updateImagePool(SImagePool, imagePool);
+            updateImagePool(imagePool);
         }
         else{
             System.out.println("No previous page");
