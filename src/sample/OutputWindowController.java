@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -57,8 +58,19 @@ public class OutputWindowController {
     public void save() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Specify a file to save");
-
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files","*"+outputFormat));
         File file = fileChooser.showSaveDialog(stage);
+        System.out.println(file);
+        String fileString = file.toString();
+        System.out.println(fileString);
+        if(fileString.length()>=4) {
+            if (fileString.substring(fileString.length() - 3) != "." + outputFormat) {
+                file = new File(fileString + "." + outputFormat);
+            }
+        }
+        else{
+            file = new File(fileString + "." + outputFormat);
+        }
         if (file != null) {
             try {
                 BufferedImage image = ImageIO.read(outputFile);
