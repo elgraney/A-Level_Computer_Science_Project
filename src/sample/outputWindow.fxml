@@ -51,7 +51,7 @@
                      </HBox.margin>
                   </Button>
                   <Region prefWidth="50.0" HBox.hgrow="NEVER" />
-                  <Button fx:id="saveButton" mnemonicParsing="false" text="Save" />
+                  <Button fx:id="saveButton" mnemonicParsing="false" onAction="#save" text="Save" />
                   <Region prefWidth="50.0" HBox.hgrow="NEVER" />
                   <Button fx:id="sendButton" mnemonicParsing="false" text="Send" />
                   <Region prefWidth="50.0" />

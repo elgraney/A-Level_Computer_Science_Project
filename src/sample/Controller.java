@@ -165,7 +165,8 @@ public class Controller extends BorderPane {
         outputStage.setScene(outputScene);
         outputStage.setTitle("Output View");
         outputStage.show();
-        outputController.showOutputImage(outputFile);
+        outputController.innit(outputFile, outputFormat, stage);
+        outputController.showOutputImage();
     }
 
 
