@@ -71,6 +71,34 @@ public class Controller extends BorderPane {
     @FXML private ImageView imageFrame22;
     @FXML private ImageView imageFrame23;
 
+    @FXML private VBox vbox0;
+    @FXML private VBox vbox1;
+    @FXML private VBox vbox2;
+    @FXML private VBox vbox3;
+    @FXML private VBox vbox4;
+    @FXML private VBox vbox5;
+
+    @FXML private VBox vbox6;
+    @FXML private VBox vbox7;
+    @FXML private VBox vbox8;
+    @FXML private VBox vbox9;
+    @FXML private VBox vbox10;
+    @FXML private VBox vbox11;
+
+    @FXML private VBox vbox12;
+    @FXML private VBox vbox13;
+    @FXML private VBox vbox14;
+    @FXML private VBox vbox15;
+    @FXML private VBox vbox16;
+    @FXML private VBox vbox17;
+
+    @FXML private VBox vbox18;
+    @FXML private VBox vbox19;
+    @FXML private VBox vbox20;
+    @FXML private VBox vbox21;
+    @FXML private VBox vbox22;
+    @FXML private VBox vbox23;
+
     @FXML private ImageView templateFrame;
 
     @FXML private  Label pageLabel;
@@ -79,6 +107,7 @@ public class Controller extends BorderPane {
 
     //these variables store vital, frequently used information about images that have been imported.
     private ImageView[] imageFrameList;
+    private VBox[] vboxList;
     private ArrayList<SImage> SImagePool = new ArrayList<SImage>();
     private ArrayList<Image> imagePool = new ArrayList<Image>();
     private SImage templateSImage;
@@ -90,6 +119,7 @@ public class Controller extends BorderPane {
     //This initialises the interface with a new set of image displays, starting at page 0
     public void innit(Stage primaryStage) {
         imageFrameList = new ImageView[]{imageFrame0, imageFrame1, imageFrame2, imageFrame3, imageFrame4, imageFrame5, imageFrame6, imageFrame7, imageFrame8, imageFrame9, imageFrame10, imageFrame11, imageFrame12, imageFrame13, imageFrame14, imageFrame15, imageFrame16, imageFrame17, imageFrame18, imageFrame19, imageFrame20, imageFrame21, imageFrame22, imageFrame23};
+        vboxList = new VBox[]{vbox0, vbox1, vbox2, vbox3, vbox4, vbox5, vbox6, vbox7, vbox8, vbox9, vbox10, vbox11, vbox12, vbox13, vbox14, vbox15, vbox16, vbox17, vbox18, vbox19, vbox20, vbox21, vbox22, vbox23};
         pageLabel.setText(Integer.toString(page + 1));
     }
 
@@ -231,12 +261,11 @@ public class Controller extends BorderPane {
         }
         for (int index = startIndex; index <= endIndex; index++){
             imageFrameList[(index % 24)].setImage( (Image) imagePool.get(index));
-            System.out.println("Pre setting border");
             if (SImagePool.get(index).selected == false){
-                imageFrameList[index].setStyle("-fx-border-color: red");
+                vboxList[index].setStyle("-fx-border-color: #ff9e9b; -fx-border-width: 3px; -fx-background-color: #ff9e9b");
             }
             else{
-                imageFrameList[index].setStyle("-fx-border-color: dodgerblue");
+                vboxList[index].setStyle("-fx-border-color: #a5d9ff; -fx-border-width: 3px;-fx-background-color: #a5d9ff");
             }
         }
 
@@ -315,5 +344,76 @@ public class Controller extends BorderPane {
     public void image0Click(){
         handleClick(0);
     }
+    public void image1Click(){
+        handleClick(1);
+    }
+    public void image2Click(){
+        handleClick(2);
+    }
+    public void image3Click(){
+        handleClick(3);
+    }
+    public void image4Click(){
+        handleClick(4);
+    }
+    public void image5Click(){
+        handleClick(5);
+    }
+    public void image6Click(){
+        handleClick(6);
+    }
+    public void image7Click(){
+        handleClick(7);
+    }
+    public void image8Click(){
+        handleClick(8);
+    }
+    public void image9Click(){
+        handleClick(9);
+    }
+    public void image10Click(){
+        handleClick(10);
+    }
+    public void image11Click(){
+        handleClick(11);
+    }
+    public void image12Click(){
+        handleClick(12);
+    }
+    public void image13Click(){
+        handleClick(13);
+    }
+    public void image14Click(){
+        handleClick(14);
+    }
+    public void image15Click(){
+        handleClick(15);
+    }
+    public void image16Click(){
+        handleClick(16);
+    }
+    public void image17Click(){
+        handleClick(17);
+    }
+    public void image18Click(){
+        handleClick(18);
+    }
+    public void image19Click(){
+        handleClick(19);
+    }
+    public void image20Click(){
+        handleClick(20);
+    }
+    public void image21Click(){
+        handleClick(21);
+    }
+    public void image22Click(){
+        handleClick(22);
+    }
+    public void image23Click(){
+        handleClick(23);
+    }
+
+
 }
 

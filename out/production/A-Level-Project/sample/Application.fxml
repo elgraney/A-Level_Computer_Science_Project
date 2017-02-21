@@ -71,52 +71,70 @@
             <HBox prefHeight="200.0" spacing="5.0" VBox.vgrow="ALWAYS">
                <children>
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <VBox HBox.hgrow="ALWAYS">
+                  <VBox fx:id="vbox0" HBox.hgrow="ALWAYS">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame0" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#image0Click" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageFrame0" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#image0Click" pickOnBounds="true" preserveRatio="true">
+                           <VBox.margin>
+                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                           </VBox.margin></ImageView>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
                   </VBox>
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <VBox HBox.hgrow="ALWAYS">
+                  <VBox fx:id="vbox1" HBox.hgrow="ALWAYS">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame1" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageFrame1" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+                           <VBox.margin>
+                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                           </VBox.margin></ImageView>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
                   </VBox>
                   <Region layoutX="210.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <VBox HBox.hgrow="ALWAYS">
+                  <VBox fx:id="vbox2" HBox.hgrow="ALWAYS">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame2" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageFrame2" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#image2Click" pickOnBounds="true" preserveRatio="true">
+                           <VBox.margin>
+                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                           </VBox.margin></ImageView>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
                   </VBox>
                   <Region layoutX="610.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <VBox HBox.hgrow="ALWAYS">
+                  <VBox fx:id="vbox3" HBox.hgrow="ALWAYS">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame3" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageFrame3" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#image3Click" pickOnBounds="true" preserveRatio="true" />
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
+                     <HBox.margin>
+                        <Insets bottom="2.0" right="2.0" top="2.0" />
+                     </HBox.margin>
                   </VBox>
                   <Region layoutX="764.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <VBox HBox.hgrow="ALWAYS">
+                  <VBox fx:id="vbox4" HBox.hgrow="ALWAYS">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame4" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageFrame4" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#image4Click" pickOnBounds="true" preserveRatio="true" />
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </HBox.margin>
                   </VBox>
                   <Region layoutX="832.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <VBox HBox.hgrow="ALWAYS">
+                  <VBox fx:id="vbox5" HBox.hgrow="ALWAYS">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame5" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageFrame5" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#image5Click" pickOnBounds="true" preserveRatio="true" />
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </HBox.margin>
                   </VBox>
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                </children>
@@ -124,52 +142,70 @@
             <HBox prefHeight="200.0" spacing="5.0" VBox.vgrow="ALWAYS">
                <children>
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <VBox>
+                  <VBox fx:id="vbox6">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame6" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageFrame6" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#image6Click" pickOnBounds="true" preserveRatio="true" />
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </HBox.margin>
                   </VBox>
                   <Region prefHeight="200.0" prefWidth="200.0" />
-                  <VBox>
+                  <VBox fx:id="vbox7">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame7" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageFrame7" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#image7Click" pickOnBounds="true" preserveRatio="true" />
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </HBox.margin>
                   </VBox>
                   <Region prefHeight="200.0" prefWidth="200.0" />
-                  <VBox>
+                  <VBox fx:id="vbox8">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame8" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageFrame8" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#image8Click" pickOnBounds="true" preserveRatio="true" />
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </HBox.margin>
                   </VBox>
                   <Region prefHeight="200.0" prefWidth="200.0" />
-                  <VBox>
+                  <VBox fx:id="vbox9">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame9" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageFrame9" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#image9Click" pickOnBounds="true" preserveRatio="true" />
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </HBox.margin>
                   </VBox>
                   <Region prefHeight="200.0" prefWidth="200.0" />
-                  <VBox>
+                  <VBox fx:id="vbox10">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame10" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageFrame10" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#image10Click" pickOnBounds="true" preserveRatio="true" />
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </HBox.margin>
                   </VBox>
                   <Region prefHeight="200.0" prefWidth="200.0" />
-                  <VBox>
+                  <VBox fx:id="vbox11">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame11" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageFrame11" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#image11Click" pickOnBounds="true" preserveRatio="true" />
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </HBox.margin>
                   </VBox>
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                </children>
@@ -177,52 +213,70 @@
             <HBox prefHeight="200.0" spacing="5.0" VBox.vgrow="ALWAYS">
                <children>
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <VBox HBox.hgrow="ALWAYS">
+                  <VBox fx:id="vbox12" HBox.hgrow="ALWAYS">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame12" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageFrame12" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#image12Click" pickOnBounds="true" preserveRatio="true" />
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </HBox.margin>
                   </VBox>
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <VBox HBox.hgrow="ALWAYS">
+                  <VBox fx:id="vbox13" HBox.hgrow="ALWAYS">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame13" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageFrame13" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#image13Click" pickOnBounds="true" preserveRatio="true" />
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </HBox.margin>
                   </VBox>
                   <Region layoutX="210.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <VBox HBox.hgrow="ALWAYS">
+                  <VBox fx:id="vbox14" HBox.hgrow="ALWAYS">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame14" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageFrame14" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#image14Click" pickOnBounds="true" preserveRatio="true" />
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </HBox.margin>
                   </VBox>
                   <Region layoutX="610.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <VBox HBox.hgrow="ALWAYS">
+                  <VBox fx:id="vbox15" HBox.hgrow="ALWAYS">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame15" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageFrame15" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#image15Click" pickOnBounds="true" preserveRatio="true" />
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </HBox.margin>
                   </VBox>
                   <Region layoutX="764.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <VBox HBox.hgrow="ALWAYS">
+                  <VBox fx:id="vbox16" HBox.hgrow="ALWAYS">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame16" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageFrame16" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#image16Click" pickOnBounds="true" preserveRatio="true" />
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </HBox.margin>
                   </VBox>
                   <Region layoutX="832.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <VBox HBox.hgrow="ALWAYS">
+                  <VBox fx:id="vbox17" HBox.hgrow="ALWAYS">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame17" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageFrame17" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#image17Click" pickOnBounds="true" preserveRatio="true" />
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </HBox.margin>
                   </VBox>
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                </children>
@@ -230,52 +284,70 @@
             <HBox prefHeight="200.0" spacing="5.0" VBox.vgrow="ALWAYS">
                <children>
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <VBox HBox.hgrow="ALWAYS">
+                  <VBox fx:id="vbox18" HBox.hgrow="ALWAYS">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame18" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageFrame18" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#image18Click" pickOnBounds="true" preserveRatio="true" />
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </HBox.margin>
                   </VBox>
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <VBox HBox.hgrow="ALWAYS">
+                  <VBox fx:id="vbox19" HBox.hgrow="ALWAYS">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame19" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageFrame19" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#image19Click" pickOnBounds="true" preserveRatio="true" />
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </HBox.margin>
                   </VBox>
                   <Region layoutX="210.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <VBox HBox.hgrow="ALWAYS">
+                  <VBox fx:id="vbox20" HBox.hgrow="ALWAYS">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame20" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageFrame20" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#image20Click" pickOnBounds="true" preserveRatio="true" />
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </HBox.margin>
                   </VBox>
                   <Region layoutX="610.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <VBox HBox.hgrow="ALWAYS">
+                  <VBox fx:id="vbox21" HBox.hgrow="ALWAYS">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame21" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageFrame21" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#image21Click" pickOnBounds="true" preserveRatio="true" />
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </HBox.margin>
                   </VBox>
                   <Region layoutX="764.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <VBox HBox.hgrow="ALWAYS">
+                  <VBox fx:id="vbox22" HBox.hgrow="ALWAYS">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame22" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageFrame22" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#image22Click" pickOnBounds="true" preserveRatio="true" />
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </HBox.margin>
                   </VBox>
                   <Region layoutX="832.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <VBox HBox.hgrow="ALWAYS">
+                  <VBox fx:id="vbox23" HBox.hgrow="ALWAYS">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame23" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageFrame23" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#image23Click" pickOnBounds="true" preserveRatio="true" />
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </HBox.margin>
                   </VBox>
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                </children>
