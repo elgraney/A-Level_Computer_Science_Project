@@ -502,7 +502,8 @@ public class ImageFactory {
                         for (SImage image : recombinedList) {
                             if (((image.getMeanRGB(0) - difference) <= sectionRed) && ((image.getMeanRGB(0) + difference) >= sectionRed) &&
                                     ((image.getMeanRGB(1) - difference) <= sectionGreen) && ((image.getMeanRGB(1) + difference)) >= sectionGreen &&
-                                    ((image.getMeanRGB(2) - difference) <= sectionBlue) && ((image.getMeanRGB(2) + difference) >= sectionBlue)
+                                    ((image.getMeanRGB(2) - difference) <= sectionBlue) && ((image.getMeanRGB(2) + difference) >= sectionBlue) &&
+                                    image.selected == true
                                     ) {
                                 section.setLinkedImage(image);
 

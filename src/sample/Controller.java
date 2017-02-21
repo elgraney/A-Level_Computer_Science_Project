@@ -13,6 +13,7 @@ import javafx.scene.layout.*;
 import javafx.stage.*;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
@@ -99,7 +100,7 @@ public class Controller extends BorderPane {
     @FXML private VBox vbox22;
     @FXML private VBox vbox23;
 
-    @FXML private ImageView templateFrame;
+    @FXML private ImageView templateFrame = null;
 
     @FXML private  Label pageLabel;
 
@@ -125,7 +126,32 @@ public class Controller extends BorderPane {
 
     //This is activated when the "Generate" button is pressed
     //it takes inputs from a new popup window,then passes them over to imageFactory to begin the main process.
-    public void beginGenerationPhase() {
+    public void checkGenData(){
+        if (templateImage != null){
+            if (imagePool.size()>10){
+                int selectedImageCount=0;
+                for (SImage image : SImagePool){
+                    if (image.selected == true){
+                        selectedImageCount += 1;
+                    }
+                }
+                if (selectedImageCount>=10){
+                    beginGenerationPhase();
+                }
+                else{
+                    JOptionPane.showMessageDialog(null,"You have not selected enough images to generate a decent image, please select more.", "Generation Warning", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            else{
+                JOptionPane.showMessageDialog(null,"You have not imported enough images to generate a decent image, please add more.", "Generation Warning", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "You have not selected a template image, please select one.", "Generation Warning", JOptionPane.ERROR_MESSAGE);
+
+        }
+    }
+    private void beginGenerationPhase() {
 
         //this code sets up a new window with a new instance of this controller.
         Pane popupPane = new Pane();
@@ -262,10 +288,10 @@ public class Controller extends BorderPane {
         for (int index = startIndex; index <= endIndex; index++){
             imageFrameList[(index % 24)].setImage( (Image) imagePool.get(index));
             if (SImagePool.get(index).selected == false){
-                vboxList[index].setStyle("-fx-border-color: #ff9e9b; -fx-border-width: 3px; -fx-background-color: #ff9e9b");
+                vboxList[index % 24].setStyle("-fx-border-color: #ff9e9b; -fx-border-width: 3px; -fx-background-color: #ff9e9b");
             }
             else{
-                vboxList[index].setStyle("-fx-border-color: #a5d9ff; -fx-border-width: 3px;-fx-background-color: #a5d9ff");
+                vboxList[index % 24].setStyle("-fx-border-color: #a5d9ff; -fx-border-width: 3px;-fx-background-color: #a5d9ff");
             }
         }
 
@@ -323,6 +349,9 @@ public class Controller extends BorderPane {
     private void clearPool(){
         for (ImageView frame: imageFrameList){
             frame.setImage(null);
+        }
+        for (VBox vbox: vboxList){
+            vbox.setStyle(null);
         }
     }
 
