@@ -1,5 +1,7 @@
 package sample;
 
+import com.sun.javafx.iio.ImageFrame;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -7,11 +9,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.stage.*;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,6 +23,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import javafx.scene.Scene;
 
@@ -65,6 +74,7 @@ public class Controller extends BorderPane {
     @FXML private ImageView templateFrame;
 
     @FXML private  Label pageLabel;
+
 
 
     //these variables store vital, frequently used information about images that have been imported.
@@ -221,7 +231,15 @@ public class Controller extends BorderPane {
         }
         for (int index = startIndex; index <= endIndex; index++){
             imageFrameList[(index % 24)].setImage( (Image) imagePool.get(index));
+            System.out.println("Pre setting border");
+            if (SImagePool.get(index).selected == false){
+                imageFrameList[index].setStyle("-fx-border-color: red");
+            }
+            else{
+                imageFrameList[index].setStyle("-fx-border-color: dodgerblue");
+            }
         }
+
         }
 
 
@@ -277,6 +295,25 @@ public class Controller extends BorderPane {
         for (ImageView frame: imageFrameList){
             frame.setImage(null);
         }
+    }
+
+    private void handleClick(int image){
+        if(imagePool.size()>image){
+            System.out.println("found image "+image);
+            int SImageIndex = image + page*24;
+            System.out.println(SImageIndex);
+            if (SImagePool.get(SImageIndex).selected == true){
+                SImagePool.get(SImageIndex).selected = false;
+            }
+            else{
+                SImagePool.get(SImageIndex).selected = true;
+            }
+        }
+        updateImagePool(imagePool);
+    }
+
+    public void image0Click(){
+        handleClick(0);
     }
 }
 

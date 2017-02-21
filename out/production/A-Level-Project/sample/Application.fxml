@@ -74,7 +74,7 @@
                   <VBox HBox.hgrow="ALWAYS">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <ImageView fx:id="imageFrame0" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageFrame0" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#image0Click" pickOnBounds="true" preserveRatio="true" />
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
                   </VBox>

@@ -22,6 +22,7 @@ public class SImage {
     protected double ratioMultiple;
 
     private int analysisLevel;
+    public boolean selected = true;
 
     File file;
 
@@ -291,4 +292,5 @@ public class SImage {
     public Double getMeanOfModesRGB(int index){
         return meanOfModesRGB[index];
     }
+
 }
