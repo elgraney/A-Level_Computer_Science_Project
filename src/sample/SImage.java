@@ -12,25 +12,39 @@ import static java.lang.Math.pow;
 /**
  * Created by Matthew on 08/01/2017.
  */
+
+//The SImage class is used analyse images passed into the program, then store data about them.
 public class SImage {
 
+    //the following variables all store data about an image.
     protected int height;
     protected int width;
+    //Because colour is effectively 3 integers, red, green and blue, i always store colour in an int array of size 3.
     protected int[] modeRGB = new int[3];
     protected double[] meanRGB = new double[3];
     protected double[] meanOfModesRGB = new double[3];
+
+    //ratio multiple is the value by which the most common ratio must be multiplied by equal the ratio of this image.
     protected double ratioMultiple;
 
+
+    //REMOVE ANALYSIS LEVEL
     private int analysisLevel;
+    //selected is a variable which indicates if this image is to be included in the next generation of not.
+    //it's public because it is regularly used in other classes.
     public boolean selected = true;
 
-    File file;
+    //this is the file path of this image.
+    //it's public because it is regularly used in other classes.
+    public File file;
 
+    //SImage initialisation
     public SImage(File file, int analysisLevel) {
         this.analysisLevel = analysisLevel;
         this.file = file;
         this.ratioMultiple = 1;
         try {
+            //as soon as an SImage is created, the image's colour is analysed with this method.
             analyse();
         } catch (IOException e) {
             e.printStackTrace();
@@ -39,30 +53,34 @@ public class SImage {
     }
 
     private void analyse() throws IOException {
-
+        //a buffered image of the image must be created
         BufferedImage image = ImageIO.read(file);
+        //the resolution is found and stored
         width = image.getWidth();
         height = image.getHeight();
         int pixels = width * height;
+
+        //colour variables are initialised
         double redAverage = 0;
         double blueAverage = 0;
         double greenAverage = 0;
 
-        double modifierCount = 0;
-
-        //HashMap<Color, Double> RGBFrequencyMap = new HashMap<>(255 * 255);
+        //this is a list of the class colourRange. colourRange stores a range of RGB values (eg: red: 24-29, green: 131-136, blue: 249-254)
+        //so this array stores a set of ranges of RGB
         ArrayList<colourRange> RGBFrequencyArray = new ArrayList<colourRange>();
 
-        //RGBFrequencyMap.
+        //step is the incrementation value for the following loop.
         int step = calcStep();
+
+        //this nested for loop loops through every pixel in the image (or every other, or every 3rd, depending on step)
         for (int ix = 0; ix < width; ix = ix + step) {
             for (int iy = 0; iy < height; iy++) {
+                //the following gets the bit
                 int clr = image.getRGB(ix, iy);
                 int red = (clr & 0x00ff0000) >> 16;
                 int green = (clr & 0x0000ff00) >> 8;
                 int blue = clr & 0x000000ff;
                 double modifier = modifier(red, green, blue, height, width, iy, ix);
-                modifierCount += modifier;
 
                 red = (int) round(red);
                 green = (int) round(green);

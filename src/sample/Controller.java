@@ -136,7 +136,11 @@ public class Controller extends BorderPane {
                     }
                 }
                 if (selectedImageCount>=10){
-                    beginGenerationPhase();
+                    try {
+                        beginGenerationPhase();
+                    } catch (ImageFactory.GenerationException e) {
+                        JOptionPane.showMessageDialog(null,"Matching Failure.", "Generation Warning", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
                 else{
                     JOptionPane.showMessageDialog(null,"You have not selected enough images to generate a decent image, please select more.", "Generation Warning", JOptionPane.ERROR_MESSAGE);
@@ -151,7 +155,7 @@ public class Controller extends BorderPane {
 
         }
     }
-    private void beginGenerationPhase() {
+    private void beginGenerationPhase() throws ImageFactory.GenerationException {
 
         //this code sets up a new window with a new instance of this controller.
         Pane popupPane = new Pane();
