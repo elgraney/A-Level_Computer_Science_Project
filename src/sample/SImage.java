@@ -27,9 +27,6 @@ public class SImage {
     //ratio multiple is the value by which the most common ratio must be multiplied by equal the ratio of this image.
     protected double ratioMultiple;
 
-
-    //REMOVE ANALYSIS LEVEL
-    private int analysisLevel;
     //selected is a variable which indicates if this image is to be included in the next generation of not.
     //it's public because it is regularly used in other classes.
     public boolean selected = true;
@@ -38,9 +35,8 @@ public class SImage {
     //it's public because it is regularly used in other classes.
     public File file;
 
-    //SImage initialisation
-    public SImage(File file, int analysisLevel) {
-        this.analysisLevel = analysisLevel;
+    //SImage constructor
+    public SImage(File file) {
         this.file = file;
         this.ratioMultiple = 1;
         try {
@@ -92,10 +88,10 @@ public class SImage {
 
 
                 int[] RGB = {red, green, blue};
-                if (analysisLevel > 1) {
-                    RGBFrequencyArray = modeRGB(RGBFrequencyArray, RGB, modifier);
-                    //System.out.println("RGBFrequencyArray size "+RGBFrequencyArray.size());
-                }
+
+                RGBFrequencyArray = modeRGB(RGBFrequencyArray, RGB, modifier);
+                //System.out.println("RGBFrequencyArray size "+RGBFrequencyArray.size());
+
             }
         }
 
@@ -103,14 +99,8 @@ public class SImage {
         meanRGB[1] = round(pow((greenAverage / (pixels/step)), (1 / 2.2)));
         meanRGB[2] = round(pow((blueAverage /(pixels/step)), (1 / 2.2)));
 
+        calcModes(RGBFrequencyArray);
 
-        //System.out.println("Red Average: " + meanRGB[0]);
-        //System.out.println("Green Average: " + meanRGB[1]);
-        //System.out.println("Blue Average: " + meanRGB[2]);
-
-        if (analysisLevel > 1) {
-            calcModes(RGBFrequencyArray);
-        }
     }
 
 

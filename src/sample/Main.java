@@ -25,7 +25,7 @@ public class Main extends Application {
         pane = loader.load();
         Scene scene = new Scene(pane);
         stage.setScene(scene);
-        stage.setTitle("Title");
+        stage.setTitle("Collage Creator");
         stage.show();
         controller.innit(stage);
     }

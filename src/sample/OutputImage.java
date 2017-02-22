@@ -7,6 +7,6 @@ import java.io.File;
  */
 public abstract class OutputImage extends SImage {
     public OutputImage(File file) {
-        super(file, 2);
+        super(file);
     }
 }

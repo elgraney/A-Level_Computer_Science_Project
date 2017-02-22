@@ -139,7 +139,7 @@ public class Controller extends BorderPane {
                     try {
                         beginGenerationPhase();
                     } catch (ImageFactory.GenerationException e) {
-                        JOptionPane.showMessageDialog(null,"Matching Failure.", "Generation Warning", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null,"Generation Failure.", "Generation Warning", JOptionPane.ERROR_MESSAGE);
                     }
                 }
                 else{
@@ -251,7 +251,7 @@ public class Controller extends BorderPane {
         System.out.println(selectedFiles);
         //this loop takes every selected file, creates a new "SImage" from it, then displays it in the interfaces
         for (File selectedFile : selectedFiles) {
-            SImage currentImage = new SImage(selectedFile, 3);
+            SImage currentImage = new SImage(selectedFile);
             try {
                 SImagePool.add(currentImage);
                 //SImagePool is the collection of all imported images in SImage form.
@@ -289,6 +289,7 @@ public class Controller extends BorderPane {
         else{
             endIndex = (page * 24) + (length % 24) - 1;
         }
+        int selectedImages=0;
         for (int index = startIndex; index <= endIndex; index++){
             imageFrameList[(index % 24)].setImage( (Image) imagePool.get(index));
             if (SImagePool.get(index).selected == false){
@@ -296,13 +297,39 @@ public class Controller extends BorderPane {
             }
             else{
                 vboxList[index % 24].setStyle("-fx-border-color: #a5d9ff; -fx-border-width: 3px;-fx-background-color: #a5d9ff");
+                selectedImages+=1;
             }
         }
+        poolData(selectedImages);
+    }
 
+    private void poolData(int selectedImages){
+        int noImages = SImagePool.size();
+        int deselectedImages = noImages - selectedImages;
+        int widthDisplayRatio=0;
+        int heightDisplayRatio=0;
+        double mostCommonRatio = ImageFactory.getMostCommonRatio(SImagePool);
+        System.out.println("MCR: "+mostCommonRatio);
+        for (SImage image : SImagePool){
+            if(mostCommonRatio*image.getHeight() == image.getWidth()){
+                int greatestCommonDivisor =gcd(image.getWidth(), image.getHeight());
+                widthDisplayRatio = image.getWidth()/greatestCommonDivisor;
+                heightDisplayRatio = image.getHeight()/greatestCommonDivisor;
+                break;
+            }
         }
+        System.out.println(widthDisplayRatio +":"+ heightDisplayRatio );
 
+    }
+    //Euclid's algorithm for finding the highest common divisor.
+    public static int gcd(int p, int q) {
+        if (q == 0) {
+            return p;
+        }
+        return gcd(q, p % q);
+    }
 
-//this method is similar to importImage() except ony one image can be imported at a time and it is stored seperately
+//this method is similar to importImage() except ony one image can be imported at a time and it is stored separately
     public void importTemplate(){
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files","*.png", "*.jpg", "*.gif"));
@@ -310,7 +337,7 @@ public class Controller extends BorderPane {
         System.out.println(selectedFile);
 
 
-        templateSImage = new SImage(selectedFile, 2);
+        templateSImage = new SImage(selectedFile);
 
         try {
             templateFrame.setImage(new Image(new FileInputStream(templateSImage.file)));

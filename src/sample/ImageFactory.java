@@ -20,7 +20,6 @@ public class ImageFactory {
     private static int sectionHeight;
     private static SImage unalteredTemplate;
     private static BufferedImage templateFile;
-    private static int analysisLevel;
 
     private static BufferedImage processedTemplateFile;
 
@@ -30,7 +29,6 @@ public class ImageFactory {
 
 
         System.out.println("generate");
-        analysisLevel = analysisLvl;
         unalteredTemplate = SImageTemplate;
         templateFile = templateImage;
         Section[][] sectionList = formatAllImages(imagePool, outputRes);
@@ -40,7 +38,7 @@ public class ImageFactory {
     }
 
 
-    public static Section[][] formatAllImages(ArrayList<SImage> imagePool, int outputRes) {
+    public static Section[][] formatAllImages(ArrayList<SImage> imagePool, int outputRes) throws GenerationException {
         System.out.println("CreateSection");
         double mostCommonRatio;
         mostCommonRatio = getMostCommonRatio(imagePool);
@@ -49,9 +47,9 @@ public class ImageFactory {
 
         System.out.println("new height " + processedTemplateFile.getWidth());
         System.out.println("new Width " + processedTemplateFile.getHeight());
-        File outputfile = new File("2ndimage.jpg");
+        File outputFile = new File("2ndimage.jpg");
         try {
-            ImageIO.write(processedTemplateFile, "jpg", outputfile);
+            ImageIO.write(processedTemplateFile, "jpg", outputFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -70,10 +68,10 @@ public class ImageFactory {
                 try {
                     ImageIO.write(sectionImage, "jpg", sectionfile);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    throw new GenerationException();
                 }
 
-                Section currentSection = new Section(sectionfile, ix, iy, sectionWidth, sectionHeight, analysisLevel);
+                Section currentSection = new Section(sectionfile, ix, iy, sectionWidth, sectionHeight);
 
                 sectionList[ix / sectionWidth][iy / sectionHeight] = currentSection;
                 currentSection.setRatioMultiple(1);
@@ -93,7 +91,7 @@ public class ImageFactory {
     }
 
 
-    private static void defineSections(double mostCommonRatio) {
+    private static void defineSections(double mostCommonRatio) throws GenerationException {
         for (int potentialHeight = 1; potentialHeight < 1000; potentialHeight++) {
             double potentialWidth = potentialHeight * mostCommonRatio;
             //potentialWidth = (Math.round(potentialWidth*100)/100);
@@ -109,7 +107,8 @@ public class ImageFactory {
                 return;
             }
         }
-        System.out.println("NO RESOLUTION FOUND");
+        System.out.println("no possible section under 1000x1000");
+        throw new GenerationException();
     }
 
     private static void defineCompoundSections(Section[][] sectionList) {
@@ -197,7 +196,7 @@ public class ImageFactory {
 
     }
 
-    private static double getMostCommonRatio(ArrayList<SImage> imagePool) {
+    public static double getMostCommonRatio(ArrayList<SImage> imagePool) {
         HashMap<Double, Integer> ratioFrequencyMap = new HashMap();
         double selectedImageRatio = 0;
         double targetImageRatio = 0;
@@ -227,11 +226,7 @@ public class ImageFactory {
                 highest = ratioFrequencyMap.get(ratio);
             }
         }
-        //testing
-        for (double ratio : ratioFrequencyMap.keySet()) {
-            //System.out.println("ratio " + ratio);
-            //System.out.println("highest " + highest);
-        }
+
         System.out.println("Highest Ratio " + highestRatio);
         return highestRatio;
     }
@@ -289,9 +284,9 @@ public class ImageFactory {
         System.out.println(2 * cropTopLeftXCoord + templateWidth);
         System.out.println(2 * cropTopLeftYCoord + templateHeight);
 
-        File outputfile = new File("image.jpg");
+        File outputFile = new File("image.jpg");
         try {
-            ImageIO.write(enlargedTemplate, "jpg", outputfile);
+            ImageIO.write(enlargedTemplate, "jpg", outputFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -303,7 +298,7 @@ public class ImageFactory {
     }
 
 
-    private static void cropRatio(double mostCommonRatio, ArrayList<SImage> imagePool) {
+    private static void cropRatio(double mostCommonRatio, ArrayList<SImage> imagePool) throws GenerationException {
         double widthRatio = mostCommonRatio;
         double heightRatio = 1;
         for (SImage image : imagePool) {
@@ -341,7 +336,7 @@ public class ImageFactory {
         //return null;
     }
 
-    private static SImage crop(double mostCommonWidthRatio, double mostCommonHeightRatio, double imageRatio, SImage image) {
+    private static SImage crop(double mostCommonWidthRatio, double mostCommonHeightRatio, double imageRatio, SImage image) throws GenerationException {
         int width = image.getWidth();
         int height = image.getHeight();
 
@@ -368,8 +363,7 @@ public class ImageFactory {
                 try {
                     image.crop(widthCropValue, height);
                 } catch (IOException e) {
-                    System.out.println("broken here");
-                    e.printStackTrace();
+                    throw new GenerationException();
                 }
                 //System.out.println("crop, 1st if. widthcropvalue: " + widthCropValue);
                 return null;
@@ -383,8 +377,7 @@ public class ImageFactory {
                 try {
                     image.crop(width, heightCropValue);
                 } catch (IOException e) {
-                    System.out.println("broken here");
-                    e.printStackTrace();
+                    throw new GenerationException();
                 }
                 //System.out.println("crop, 2nd if. heightcropvalue: " + heightCropValue);
                 return null;
@@ -597,6 +590,7 @@ public class ImageFactory {
             throw new GenerationException();
         } else {
             System.out.println("Well Somethings gone wrong!");
+            throw new GenerationException();
         }
     }
 
@@ -639,9 +633,6 @@ public class ImageFactory {
             if (image.getRatio() == ratio) {
                 newList.add(image);
             }
-            //for each image in image pool
-            //if image.getratio = ratio
-            //add to this new array.
         }
         return newList;
     }
@@ -680,18 +671,7 @@ public class ImageFactory {
     }
 
     private static File generateOutput(Section[][] sectionArray, String outputFormat) {
-        for (Section[] sectionColumn : sectionArray) {
-            for (Section section : sectionColumn) {
-                if (section.getLinkedImage() == null && section.isCompoundSectionMarker() == true) {
-                    System.out.println("no connected image");
 
-
-                }
-                if (section.isCompoundSectionMarker() == true) {
-                    //System.out.println("number of compound sections");
-                }
-            }
-        }
         System.out.println("generateOutput");
         BufferedImage outputBufferedImage = processedTemplateFile;
         for (Section[] sectionColumn : sectionArray) {
@@ -751,14 +731,14 @@ public class ImageFactory {
             System.out.println("+1 section lot drawn.");
 
         }
-        File outputfile = new File("outputImage." + outputFormat);
+        File outputFile = new File("outputImage." + outputFormat);
         try {
             System.out.print("Writing...");
-            ImageIO.write(outputBufferedImage, outputFormat, outputfile);
+            ImageIO.write(outputBufferedImage, outputFormat, outputFile);
         } catch (IOException e) {
             System.out.print("eh?!");
         }
-        return outputfile;
+        return outputFile;
     }
 
     public static class GenerationException extends Exception {
