@@ -103,8 +103,10 @@ public class Controller extends BorderPane {
     @FXML private ImageView templateFrame = null;
 
     @FXML private  Label pageLabel;
-
-
+    @FXML private Label noImagesLabel;
+    @FXML private Label noSelectedImagesLabel;
+    @FXML private Label noDeselectedImagesLabel;
+    @FXML private Label MCRLabel;
 
     //these variables store vital, frequently used information about images that have been imported.
     private ImageView[] imageFrameList;
@@ -122,6 +124,10 @@ public class Controller extends BorderPane {
         imageFrameList = new ImageView[]{imageFrame0, imageFrame1, imageFrame2, imageFrame3, imageFrame4, imageFrame5, imageFrame6, imageFrame7, imageFrame8, imageFrame9, imageFrame10, imageFrame11, imageFrame12, imageFrame13, imageFrame14, imageFrame15, imageFrame16, imageFrame17, imageFrame18, imageFrame19, imageFrame20, imageFrame21, imageFrame22, imageFrame23};
         vboxList = new VBox[]{vbox0, vbox1, vbox2, vbox3, vbox4, vbox5, vbox6, vbox7, vbox8, vbox9, vbox10, vbox11, vbox12, vbox13, vbox14, vbox15, vbox16, vbox17, vbox18, vbox19, vbox20, vbox21, vbox22, vbox23};
         pageLabel.setText(Integer.toString(page + 1));
+        noImagesLabel.setText("0");
+        noSelectedImagesLabel.setText("0");;
+        noDeselectedImagesLabel.setText("0");;
+        MCRLabel.setText("N/A");;
     }
 
     //This is activated when the "Generate" button is pressed
@@ -319,6 +325,10 @@ public class Controller extends BorderPane {
             }
         }
         System.out.println(widthDisplayRatio +":"+ heightDisplayRatio );
+        noImagesLabel.setText(Integer.toString(noImages));
+        noSelectedImagesLabel.setText(Integer.toString(selectedImages));
+        noDeselectedImagesLabel.setText(Integer.toString(deselectedImages));
+        MCRLabel.setText(Integer.toString(widthDisplayRatio)+":"+Integer.toString(heightDisplayRatio));
 
     }
     //Euclid's algorithm for finding the highest common divisor.

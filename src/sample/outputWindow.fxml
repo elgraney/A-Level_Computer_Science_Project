@@ -70,7 +70,8 @@
    <right>
       <VBox prefHeight="600.0" prefWidth="230.0" style="-fx-border-color: grey;" BorderPane.alignment="CENTER">
          <children>
-            <TitledPane fx:id="imagePoolInfo" animated="false" prefHeight="10000.0" prefWidth="230.0" style="-fx-border-color: grey;" text="Image Pool information" />
+            <TitledPane fx:id="imagePoolInfo" animated="false" prefHeight="10000.0" prefWidth="230.0" style="-fx-border-color: grey;" text="Generated Image Information" />
+             
          </children>
       </VBox>
    </right>
