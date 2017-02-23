@@ -223,6 +223,11 @@ public class Controller extends BorderPane {
         //the main process begins
         File outputFile = ImageFactory.generate(templateSImage, SImagePool, templateImage, analysisLevel, outputResolution, generationStyle, outputFormat);
 
+        //The following fetches the data from the ImageFactory class that will be displayed in the output window
+        int noSections = ImageFactory.getNoSections();
+        int noUniqueImages = ImageFactory.getNoUniqueImages();
+
+
         //now an output image has been returned
         //a new window is setup to display this output.
         BorderPane outputPane = new BorderPane();
@@ -241,7 +246,7 @@ public class Controller extends BorderPane {
         outputStage.setScene(outputScene);
         outputStage.setTitle("Output View");
         outputStage.show();
-        outputController.innit(outputFile, outputFormat, stage);
+        outputController.innit(outputFile, outputFormat, stage, noSections, noUniqueImages);
         outputController.showOutputImage();
     }
 

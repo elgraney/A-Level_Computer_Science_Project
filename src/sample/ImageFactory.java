@@ -4,6 +4,7 @@ import javafx.scene.image.*;
 
 import java.awt.*;
 import java.awt.Image;
+import java.awt.image.PackedColorModel;
 import java.io.File;
 import java.util.*;
 import java.awt.image.BufferedImage;
@@ -21,7 +22,13 @@ public class ImageFactory {
     private static SImage unalteredTemplate;
     private static BufferedImage templateFile;
 
+    //these two variables only exist in order to pass data about the generation back to the output window
+    private static Section[][] finalSectionList;
+    //hash set is used because i want a count of all unique images. HashSets dont allow duplicates, so every item in it must be unique.
+    private static Set<SImage> usedImages = new HashSet<SImage>();
+
     private static BufferedImage processedTemplateFile;
+
 
     //SET CONSTANTS FOR OUTPUT RESOLUTION AND SECTION SIZE
 
@@ -436,6 +443,8 @@ public class ImageFactory {
 
         matchSections(ratio1Sections, ratio1Pool, sectionList);
 
+        finalSectionList = sectionList;
+
         File outputImage = generateOutput(sectionList, outputFormat);
         return outputImage;
     }
@@ -497,6 +506,7 @@ public class ImageFactory {
                                     image.selected == true
                                     ) {
                                 section.setLinkedImage(image);
+                                usedImages.add(image);
 
                                 //System.out.println(section.file);
                                 //System.out.println(image.file);
@@ -742,6 +752,22 @@ public class ImageFactory {
     }
 
     public static class GenerationException extends Exception {
+    }
+
+
+    public static int getNoSections(){
+        int count = 0;
+        for (Section[] sectionArray : finalSectionList ){
+            for (Section section : sectionArray){
+                if (section.isCompoundSectionMarker() == true || section.isInCompoundSection() == false){
+                    count +=1;
+                }
+            }
+        }
+        return count;
+    }
+    public static int getNoUniqueImages(){
+        return usedImages.size();
     }
 }
 

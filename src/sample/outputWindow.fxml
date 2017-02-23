@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -12,6 +13,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane prefHeight="720.0" prefWidth="1280.0" style="-fx-border-color: grey;" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1">
    <top>
@@ -70,7 +72,31 @@
    <right>
       <VBox prefHeight="600.0" prefWidth="230.0" style="-fx-border-color: grey;" BorderPane.alignment="CENTER">
          <children>
-            <TitledPane fx:id="imagePoolInfo" animated="false" prefHeight="10000.0" prefWidth="230.0" style="-fx-border-color: grey;" text="Generated Image Information" />
+            <TitledPane fx:id="imagePoolInfo" animated="false" prefHeight="10000.0" prefWidth="230.0" style="-fx-border-color: grey;" text="Generated Image Information">
+               <content>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Label text="Resolution:">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font></Label>
+                        <Label fx:id="resLabel" />
+                        <Region VBox.vgrow="ALWAYS" />
+                        <Label text="Number of Constituent Images:">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font></Label>
+                        <Label fx:id="noSectionsLabel" />
+                        <Region VBox.vgrow="ALWAYS" />
+                        <Label text="Number of Unique Constituent Images:" wrapText="true">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font></Label>
+                        <Label fx:id="noUniqueImagesLabel" text="Label" />
+                        <Region nodeOrientation="LEFT_TO_RIGHT" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
+               </content></TitledPane>
              
          </children>
       </VBox>

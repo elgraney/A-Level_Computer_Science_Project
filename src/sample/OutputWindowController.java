@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
@@ -35,15 +36,41 @@ public class OutputWindowController {
     private Button sendButton;
     @FXML
     private Button printButton;
+    @FXML
+    private Label resLabel;
+    @FXML
+    private Label noSectionsLabel;
+    @FXML
+    private Label noUniqueImagesLabel;
 
     private File outputFile;
     private String outputFormat;
     private Stage stage;
+    private int sectionCount;
+    private int uniqueImageCount;
+    private double width;
+    private double height;
 
-    public void innit(File outputFile, String outputFormat, Stage stage){
+    public void innit(File outputFile, String outputFormat, Stage stage, int sectionCount, int uniqueImageCount) {
         this.outputFile = outputFile;
         this.outputFormat = outputFormat;
         this.stage = stage;
+        this.sectionCount = sectionCount;
+        this.uniqueImageCount = uniqueImageCount;
+        Image image = null;
+        try {
+            image = new Image(new FileInputStream(outputFile));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        width = image.getWidth();
+        height = image.getHeight();
+
+        resLabel.setText(Long.toString(Math.round(width))+"x"+Long.toString(Math.round(height)));
+        noSectionsLabel.setText(Integer.toString(sectionCount));
+        noUniqueImagesLabel.setText(Integer.toString(uniqueImageCount));
+
+
     }
 
     public void showOutputImage() {

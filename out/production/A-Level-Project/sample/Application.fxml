@@ -389,25 +389,29 @@
                      <children>
                         <Label text="Number of Images:">
                            <font>
-                              <Font size="14.0" />
+                              <Font name="System Bold" size="14.0" />
                            </font></Label>
                         <Label fx:id="noImagesLabel" />
+                        <Region VBox.vgrow="ALWAYS" />
                         <Label text="Number of Selected Images:">
                            <font>
-                              <Font size="14.0" />
+                              <Font name="System Bold" size="14.0" />
                            </font></Label>
                         <Label fx:id="noSelectedImagesLabel" />
+                        <Region VBox.vgrow="ALWAYS" />
                         <Label text="Number of Deselected Images:">
                            <font>
-                              <Font size="14.0" />
+                              <Font name="System Bold" size="14.0" />
                            </font></Label>
                         <Label fx:id="noDeselectedImagesLabel" />
+                        <Region VBox.vgrow="ALWAYS" />
                         <Label text="Most Common Image Ratio">
                            <font>
-                              <Font size="14.0" />
+                              <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
-                        <Label fx:id="MCRLabel" text="Label" />
+                        <Label fx:id="MCRLabel" />
+                        <Region VBox.vgrow="ALWAYS" />
                      </children>
                   </VBox>
                </content></TitledPane>
