@@ -4,9 +4,9 @@ import com.sun.javafx.iio.ImageFrame;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -108,6 +108,12 @@ public class Controller extends BorderPane {
     @FXML private Label noDeselectedImagesLabel;
     @FXML private Label MCRLabel;
 
+    @FXML private MenuItem closeMenuItem;
+    @FXML private MenuItem newMenuItem;
+    @FXML private MenuItem importImageMenuItem;
+    @FXML private MenuItem importTemplateMenuItem;
+
+
     //these variables store vital, frequently used information about images that have been imported.
     private ImageView[] imageFrameList;
     private VBox[] vboxList;
@@ -115,12 +121,14 @@ public class Controller extends BorderPane {
     private ArrayList<Image> imagePool = new ArrayList<Image>();
     private SImage templateSImage;
     private BufferedImage templateImage;
+    private Stage stage;
 
 
     private Integer page = 0;
 
     //This initialises the interface with a new set of image displays, starting at page 0
     public void innit(Stage primaryStage) {
+        this.stage = primaryStage;
         imageFrameList = new ImageView[]{imageFrame0, imageFrame1, imageFrame2, imageFrame3, imageFrame4, imageFrame5, imageFrame6, imageFrame7, imageFrame8, imageFrame9, imageFrame10, imageFrame11, imageFrame12, imageFrame13, imageFrame14, imageFrame15, imageFrame16, imageFrame17, imageFrame18, imageFrame19, imageFrame20, imageFrame21, imageFrame22, imageFrame23};
         vboxList = new VBox[]{vbox0, vbox1, vbox2, vbox3, vbox4, vbox5, vbox6, vbox7, vbox8, vbox9, vbox10, vbox11, vbox12, vbox13, vbox14, vbox15, vbox16, vbox17, vbox18, vbox19, vbox20, vbox21, vbox22, vbox23};
         pageLabel.setText(Integer.toString(page + 1));
@@ -261,25 +269,27 @@ public class Controller extends BorderPane {
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(null);
         System.out.println(selectedFiles);
         //this loop takes every selected file, creates a new "SImage" from it, then displays it in the interfaces
-        for (File selectedFile : selectedFiles) {
-            SImage currentImage = new SImage(selectedFile);
-            try {
-                SImagePool.add(currentImage);
-                //SImagePool is the collection of all imported images in SImage form.
-                //ImagePool is the collection of all imported images in FXImage form. This is needed to display them.
-                if (currentImage.getWidth() > 500 || currentImage.getHeight() > 500) {
-                    imagePool.add(new Image(new FileInputStream(currentImage.file), currentImage.getWidth() / 5, currentImage.getHeight() / 5, false, false));
-                } else if (currentImage.getWidth() > 1000 || currentImage.getHeight() > 1000) {
-                    imagePool.add(new Image(new FileInputStream(currentImage.file), currentImage.getWidth() / 10, currentImage.getHeight() / 10, false, false));
-                } else {
-                    imagePool.add(new Image(new FileInputStream(currentImage.file)));
+        if (selectedFiles != null) {
+            for (File selectedFile : selectedFiles) {
+                SImage currentImage = new SImage(selectedFile);
+                try {
+                    SImagePool.add(currentImage);
+                    //SImagePool is the collection of all imported images in SImage form.
+                    //ImagePool is the collection of all imported images in FXImage form. This is needed to display them.
+                    if (currentImage.getWidth() > 500 || currentImage.getHeight() > 500) {
+                        imagePool.add(new Image(new FileInputStream(currentImage.file), currentImage.getWidth() / 5, currentImage.getHeight() / 5, false, false));
+                    } else if (currentImage.getWidth() > 1000 || currentImage.getHeight() > 1000) {
+                        imagePool.add(new Image(new FileInputStream(currentImage.file), currentImage.getWidth() / 10, currentImage.getHeight() / 10, false, false));
+                    } else {
+                        imagePool.add(new Image(new FileInputStream(currentImage.file)));
+                    }
+                    //This if statement resizes the displayed version of the image so that the program doesn't use too much memory
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
                 }
-                //This if statement resizes the displayed version of the image so that the program doesn't use too much memory
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
 
-            updateImagePool(imagePool);
+                updateImagePool(imagePool);
+            }
         }
     }
 
@@ -345,27 +355,30 @@ public class Controller extends BorderPane {
     }
 
 //this method is similar to importImage() except ony one image can be imported at a time and it is stored separately
-    public void importTemplate(){
+    public void importTemplate() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files","*.png", "*.jpg", "*.gif"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
         File selectedFile = fileChooser.showOpenDialog(null);
-        System.out.println(selectedFile);
+        if (selectedFile != null) {
+
+            System.out.println(selectedFile);
 
 
-        templateSImage = new SImage(selectedFile);
+            templateSImage = new SImage(selectedFile);
 
-        try {
-            templateFrame.setImage(new Image(new FileInputStream(templateSImage.file)));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            try {
+                templateFrame.setImage(new Image(new FileInputStream(templateSImage.file)));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                templateImage = ImageIO.read(selectedFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
-
-        try {
-            templateImage = ImageIO.read(selectedFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
     //increments the page if it possible to based on the number of imported images. (wont display an empty page)
@@ -487,6 +500,22 @@ public class Controller extends BorderPane {
     }
     public void image23Click(){
         handleClick(23);
+    }
+
+    public void newPool(){
+        clearPool();
+        SImagePool = new ArrayList<SImage>();
+        imagePool =  new ArrayList<Image>();
+        updateImagePool(imagePool);
+    }
+    public void close(){
+        stage.close();
+    }
+    public void about(){
+
+    }
+    public void help(){
+
     }
 
 

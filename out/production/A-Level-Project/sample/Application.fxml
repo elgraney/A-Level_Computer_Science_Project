@@ -20,17 +20,20 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
+                  <MenuItem fx:id="newMenuItem" mnemonicParsing="false" onAction="#newPool" text="New" />
+              <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" onAction="#close" text="Close" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
+              <MenuItem fx:id="importImageMenuItem" mnemonicParsing="false" onAction="#importImage" text="Import Images" />
+                  <MenuItem fx:id="importTemplateMenuItem" mnemonicParsing="false" onAction="#importTemplate" text="Import Template" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" onAction="#about" text="About" />
+                  <MenuItem fx:id="gettingStartedMenuItem" mnemonicParsing="false" onAction="#help" text="Getting Started" />
             </items>
           </Menu>
         </menus>
