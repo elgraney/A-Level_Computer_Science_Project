@@ -3,8 +3,10 @@ package sample;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+
 
 
 //the purpose of this entire class is to start up the application.
@@ -27,6 +29,7 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.setTitle("Collage Creator");
         stage.show();
+        stage.getIcons().add(new Image("file:icon3.png"));
         controller.innit(stage);
     }
 }

@@ -106,6 +106,11 @@ public class OutputWindowController {
                 System.out.println(ex.getMessage());
             }
         }
+        ImageFactory.generating = false;
+    }
+    public void discard(){
+        ImageFactory.generating = false;
+        stage.close();
     }
 }
 

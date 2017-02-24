@@ -29,12 +29,14 @@ public class ImageFactory {
 
     private static BufferedImage processedTemplateFile;
 
+    public static Boolean generating = false;
+
 
     //SET CONSTANTS FOR OUTPUT RESOLUTION AND SECTION SIZE
 
     public static File generate(SImage SImageTemplate, ArrayList<SImage> imagePool, BufferedImage templateImage, int analysisLvl, int outputRes, int generationStyle, String outputFormat) throws GenerationException {
 
-
+        generating = true;
         System.out.println("generate");
         unalteredTemplate = SImageTemplate;
         templateFile = templateImage;

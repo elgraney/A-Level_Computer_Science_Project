@@ -150,10 +150,12 @@ public class Controller extends BorderPane {
                     }
                 }
                 if (selectedImageCount>=10){
-                    try {
-                        beginGenerationPhase();
-                    } catch (ImageFactory.GenerationException e) {
-                        JOptionPane.showMessageDialog(null,"Generation Failure.", "Generation Warning", JOptionPane.ERROR_MESSAGE);
+                    if (ImageFactory.generating != true){
+                        try {
+                            beginGenerationPhase();
+                        } catch (ImageFactory.GenerationException e) {
+                            JOptionPane.showMessageDialog(null, "Generation Failure.", "Generation Warning", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 }
                 else{
@@ -187,6 +189,7 @@ public class Controller extends BorderPane {
         stage.setTitle("Output Preferences");
         stage.initModality(Modality.APPLICATION_MODAL);
         controller.innit(stage);
+        stage.getIcons().add(new Image("file:icon2.png"));
         stage.showAndWait();
 
         System.out.println("Output res index: " + controller.outputResolutionInt);
