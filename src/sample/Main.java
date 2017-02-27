@@ -29,7 +29,7 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.setTitle("Collage Creator");
         stage.show();
-        stage.getIcons().add(new Image("file:icon3.png"));
+        stage.getIcons().add(new Image("file:icon.png"));
         controller.innit(stage);
     }
 }

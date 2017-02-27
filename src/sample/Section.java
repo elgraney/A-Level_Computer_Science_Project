@@ -86,4 +86,10 @@ public class Section extends SImage {
     public int getY(){
         return sectionArrayY;
     }
+    public int getCentreX(){return  centreX;}
+    public int getCentreY(){return  centreY;}
+    public void updateCentre(){
+        centreX = topLeftX+ width/2;
+        centreY = topLeftY + height/2;
+    }
 }
