@@ -1,6 +1,8 @@
 package sample;
 
 import com.sun.javafx.iio.ImageFrame;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,6 +25,7 @@ import java.util.List;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -123,6 +126,11 @@ public class Controller extends BorderPane {
     private BufferedImage templateImage;
     private Stage stage;
 
+    private int noImages;
+    private int noSelectedImages;
+    private int noDeselectedImages;
+    private int widthRatio;
+    private int heightRatio;
 
     private Integer page = 0;
 
@@ -272,28 +280,48 @@ public class Controller extends BorderPane {
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(null);
         System.out.println(selectedFiles);
         //this loop takes every selected file, creates a new "SImage" from it, then displays it in the interfaces
-        if (selectedFiles != null) {
-            for (File selectedFile : selectedFiles) {
-                SImage currentImage = new SImage(selectedFile);
-                try {
-                    SImagePool.add(currentImage);
-                    //SImagePool is the collection of all imported images in SImage form.
-                    //ImagePool is the collection of all imported images in FXImage form. This is needed to display them.
-                    if (currentImage.getWidth() > 500 || currentImage.getHeight() > 500) {
-                        imagePool.add(new Image(new FileInputStream(currentImage.file), currentImage.getWidth() / 5, currentImage.getHeight() / 5, false, false));
-                    } else if (currentImage.getWidth() > 1000 || currentImage.getHeight() > 1000) {
-                        imagePool.add(new Image(new FileInputStream(currentImage.file), currentImage.getWidth() / 10, currentImage.getHeight() / 10, false, false));
-                    } else {
-                        imagePool.add(new Image(new FileInputStream(currentImage.file)));
+        Task<Void> task = new Task<Void>() {
+            @Override
+            public Void call() throws Exception {
+                final CountDownLatch latch = new CountDownLatch(1);
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {try{
+                        //PROGRESS BAR GOES HERE
+                        latch.await();
+                        updateImagePool(imagePool);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } finally{
+                        latch.countDown();
                     }
-                    //This if statement resizes the displayed version of the image so that the program doesn't use too much memory
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                    }
+                });
+                if (selectedFiles != null) {
+                    for (File selectedFile : selectedFiles) {
+                        SImage currentImage = new SImage(selectedFile);
+                        try {
+                            SImagePool.add(currentImage);
+                            //SImagePool is the collection of all imported images in SImage form.
+                            //ImagePool is the collection of all imported images in FXImage form. This is needed to display them.
+                            if (currentImage.getWidth() > 500 || currentImage.getHeight() > 500) {
+                                imagePool.add(new Image(new FileInputStream(currentImage.file), currentImage.getWidth() / 5, currentImage.getHeight() / 5, false, false));
+                            } else if (currentImage.getWidth() > 1000 || currentImage.getHeight() > 1000) {
+                                imagePool.add(new Image(new FileInputStream(currentImage.file), currentImage.getWidth() / 10, currentImage.getHeight() / 10, false, false));
+                            } else {
+                                imagePool.add(new Image(new FileInputStream(currentImage.file)));
+                            }
+                            //This if statement resizes the displayed version of the image so that the program doesn't use too much memory
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
+                latch.countDown();
 
-                updateImagePool(imagePool);
-            }
-        }
+                return null ;}
+        };
+        new Thread(task).start();
     }
 
 
@@ -333,7 +361,6 @@ public class Controller extends BorderPane {
         int widthDisplayRatio=0;
         int heightDisplayRatio=0;
         double mostCommonRatio = ImageFactory.getMostCommonRatio(SImagePool);
-        System.out.println("MCR: "+mostCommonRatio);
         for (SImage image : SImagePool){
             if(mostCommonRatio*image.getHeight() == image.getWidth()){
                 int greatestCommonDivisor =gcd(image.getWidth(), image.getHeight());
@@ -342,11 +369,15 @@ public class Controller extends BorderPane {
                 break;
             }
         }
-        System.out.println(widthDisplayRatio +":"+ heightDisplayRatio );
+        this.noImages = noImages;
+        this.noSelectedImages = selectedImages;
+        this.noDeselectedImages = deselectedImages;
+        this.widthRatio = widthDisplayRatio;
+        this.heightRatio = heightDisplayRatio;
         noImagesLabel.setText(Integer.toString(noImages));
-        noSelectedImagesLabel.setText(Integer.toString(selectedImages));
-        noDeselectedImagesLabel.setText(Integer.toString(deselectedImages));
-        MCRLabel.setText(Integer.toString(widthDisplayRatio)+":"+Integer.toString(heightDisplayRatio));
+        noSelectedImagesLabel.setText(Integer.toString(noSelectedImages));
+        noDeselectedImagesLabel.setText(Integer.toString(noDeselectedImages));
+        MCRLabel.setText(Integer.toString(widthRatio)+":"+Integer.toString(heightRatio));
 
     }
     //Euclid's algorithm for finding the highest common divisor.
@@ -418,7 +449,7 @@ public class Controller extends BorderPane {
     }
 
     private void handleClick(int image){
-        if(imagePool.size()>image){
+        if(imagePool.size()>image+page*24){
             System.out.println("found image "+image);
             int SImageIndex = image + page*24;
             System.out.println(SImageIndex);
