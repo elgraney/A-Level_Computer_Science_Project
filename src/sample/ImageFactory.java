@@ -24,7 +24,7 @@ public class ImageFactory {
 
     //these two variables only exist in order to pass data about the generation back to the output window
     private static Section[][] finalSectionList;
-    //hash set is used because i want a count of all unique images. HashSets dont allow duplicates, so every item in it must be unique.
+    //hash set is used because i want a count of all unique images. HashSets don't allow duplicates, so every item in it must be unique.
     private static Set<SImage> usedImages = new HashSet<SImage>();
 
     private static BufferedImage processedTemplateFile;

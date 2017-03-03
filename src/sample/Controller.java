@@ -250,8 +250,17 @@ public class Controller extends BorderPane {
         //make editable.
         int analysisLevel = 3;
 
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Importing your images, please wait.");
+        alert.setHeaderText("Importing...");
+        alert.setContentText("This will likely take a considerable amount of time");
+        alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
+        alert.show();
+
         //the main process begins
         File outputFile = ImageFactory.generate(templateSImage, SImagePool, templateImage, analysisLevel, outputResolution, generationStyle, outputFormat);
+
+        alert.close();
 
         //The following fetches the data from the ImageFactory class that will be displayed in the output window
         int noSections = ImageFactory.getNoSections();
@@ -283,7 +292,7 @@ public class Controller extends BorderPane {
 
     //This is activated when Select New Images is pressed.
     //it allows the user to select images from their file directory and import them into the program
-    public void importImage(){
+    public void importImage() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Image files");
 
@@ -292,84 +301,40 @@ public class Controller extends BorderPane {
         System.out.println(selectedFiles);
         int importSize = selectedFiles.size();
         //this loop takes every selected file, creates a new "SImage" from it, then displays it in the interface
-        System.out.println("its a least slightly working!");
-        Group progressRoot = new Group();
-        Scene progressScene = new Scene(progressRoot, 200, 100);
-        System.out.println("its a least slightly working!");
-        Stage progressStage = new Stage();
-        progressStage.setScene(progressScene);
-        System.out.println("its a least slightly working!");
-        progressStage.setTitle("Progress Controls");
-        System.out.println("Hello there 1");
-        progressStage.show();
 
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Importing your images, please wait.");
+        alert.setHeaderText("Importing...");
+        alert.setContentText("This will likely take around "+(Math.round(importSize*0.25))+" seconds");
+        alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
+        alert.show();
 
-        final ProgressBar pb = new ProgressBar(0);
-        final ProgressIndicator pi = new ProgressIndicator(0);
-        pb.setProgress(0.0);
-        pi.setProgress(0.0);
-        final HBox hb = new HBox();
-        hb.setSpacing(5);
-        hb.setAlignment(Pos.CENTER);
-        hb.getChildren().addAll(pb, pi);
-        progressScene.setRoot(hb);
-        progressStage.show();
-        //final CountDownLatch latch = new CountDownLatch(1);
-        Thread thread = new Thread() {
-            public void run() {
-
-                Platform.runLater(new Runnable() {
-                    @Override public void run() {
-                        if (selectedFiles != null) {
-                            int count = 0;
-                            for (File selectedFile : selectedFiles) {
-                                count += 1;
-                                SImage currentImage = new SImage(selectedFile);
-                                try {
-                                    SImagePool.add(currentImage);
-                                    //SImagePool is the collection of all imported images in SImage form.
-                                    //ImagePool is the collection of all imported images in FXImage form. This is needed to display them.
-                                    if (currentImage.getWidth() > 500 || currentImage.getHeight() > 500) {
-                                        imagePool.add(new Image(new FileInputStream(currentImage.file), currentImage.getWidth() / 5, currentImage.getHeight() / 5, false, false));
-                                    } else if (currentImage.getWidth() > 1000 || currentImage.getHeight() > 1000) {
-                                        imagePool.add(new Image(new FileInputStream(currentImage.file), currentImage.getWidth() / 10, currentImage.getHeight() / 10, false, false));
-                                    } else {
-                                        imagePool.add(new Image(new FileInputStream(currentImage.file)));
-                                    }
-                                    //This if statement resizes the displayed version of the image so that the program doesn't use too much memory
-                                } catch (FileNotFoundException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                        updateImagePool(imagePool);
-                        //latch.countDown();
-                    }});
-            }
-        };
-        thread.start();
-
-                    for (int count=0; count< importSize; count++) {
-                        System.out.println("hello there in progress bar " + count + ", max = " + importSize);
-                        pb.setProgress(count / importSize);
-                        pi.setProgress(count / importSize);
-                        try {
-                            TimeUnit.MILLISECONDS.sleep(100);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+        if (selectedFiles != null) {
+            int count = 0;
+            for (File selectedFile : selectedFiles) {
+                count += 1;
+                SImage currentImage = new SImage(selectedFile);
+                try {
+                    SImagePool.add(currentImage);
+                    //SImagePool is the collection of all imported images in SImage form.
+                    //ImagePool is the collection of all imported images in FXImage form. This is needed to display them.
+                    if (currentImage.getWidth() > 500 || currentImage.getHeight() > 500) {
+                        imagePool.add(new Image(new FileInputStream(currentImage.file), currentImage.getWidth() / 5, currentImage.getHeight() / 5, false, false));
+                    } else if (currentImage.getWidth() > 1000 || currentImage.getHeight() > 1000) {
+                        imagePool.add(new Image(new FileInputStream(currentImage.file), currentImage.getWidth() / 10, currentImage.getHeight() / 10, false, false));
+                    } else {
+                        imagePool.add(new Image(new FileInputStream(currentImage.file)));
                     }
-
-
-        //try {
-            //latch.await();
-        //} catch (InterruptedException e) {
-            //e.printStackTrace();
-        //}
-        pb.setProgress(1);
-        pi.setProgress(1);
-
+                    //This if statement resizes the displayed version of the image so that the program doesn't use too much memory
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        updateImagePool(imagePool);
+        alert.close();
     }
+
 
 
 
