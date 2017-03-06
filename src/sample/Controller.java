@@ -13,9 +13,12 @@ import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.*;
 
 import javax.imageio.ImageIO;
@@ -24,6 +27,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.net.URL;
 import java.util.List;
 
 import java.io.File;
@@ -299,7 +303,10 @@ public class Controller extends BorderPane {
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(null);
         System.out.println(selectedFiles);
-        int importSize = selectedFiles.size();
+        int importSize =0;
+        if (selectedFiles != null) {
+            importSize = selectedFiles.size();
+        }
         //this loop takes every selected file, creates a new "SImage" from it, then displays it in the interface
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -563,9 +570,39 @@ public class Controller extends BorderPane {
         stage.close();
     }
     public void about(){
+        Stage webStage = new Stage();
+        webStage.setTitle("About");
 
+        WebView  browser = new WebView();
+        WebEngine engine = browser.getEngine();
+        String url = Controller.class.getResource("ABOUT.htm").toExternalForm();
+        engine.load(url);
+
+        StackPane sp = new StackPane();
+        sp.getChildren().add(browser);
+
+        Scene root = new Scene(sp);
+        webStage.getIcons().add(new Image("file:aboutIcon.jpg"));
+        webStage.setScene(root);
+        webStage.show();
     }
     public void help(){
+        Stage webStage = new Stage();
+        webStage.setTitle("help");
+
+        WebView  browser = new WebView();
+        WebEngine engine = browser.getEngine();
+        String url = Controller.class.getResource("HELP.htm").toExternalForm();
+        engine.load(url);
+
+        StackPane sp = new StackPane();
+        sp.getChildren().add(browser);
+
+        Scene root = new Scene(sp);
+        webStage.getIcons().add(new Image("file:helpIcon.jpg"));
+
+        webStage.setScene(root);
+        webStage.show();
 
     }
 
