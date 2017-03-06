@@ -22,6 +22,7 @@
             <items>
                   <MenuItem fx:id="newMenuItem" mnemonicParsing="false" onAction="#newPool" text="New" />
               <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" onAction="#close" text="Close" />
+                  <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" onAction="#save" text="Save" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">

@@ -25,13 +25,10 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.net.URL;
 import java.util.List;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -603,6 +600,37 @@ public class Controller extends BorderPane {
 
         webStage.setScene(root);
         webStage.show();
+
+    }
+
+    public void save() throws IOException{
+        System.out.println("SAVE");
+        File fOut = new File("saveFile.txt");
+        FileOutputStream fos = new FileOutputStream(fOut);
+        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fos));
+        bufferedWriter.newLine();
+        for (SImage image : SImagePool) {
+                bufferedWriter.write((image.file.getAbsolutePath()));
+                bufferedWriter.newLine();
+        }
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Saving");
+        alert.setHeaderText("Saving");
+        alert.setContentText("Saving complete");
+        alert.show();
+        bufferedWriter.close();
+
+    }
+    public void load() throws  IOException{
+        System.out.println("SAVE");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Saving");
+        alert.setHeaderText("Saving");
+        alert.setContentText("Saving complete");
+        alert.show();
+
+
+
 
     }
 
