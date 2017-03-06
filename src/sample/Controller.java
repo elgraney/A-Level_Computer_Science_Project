@@ -252,8 +252,8 @@ public class Controller extends BorderPane {
         int analysisLevel = 3;
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Importing your images, please wait.");
-        alert.setHeaderText("Importing...");
+        alert.setTitle("Beginning generation");
+        alert.setHeaderText("Beginning generation");
         alert.setContentText("This will likely take a considerable amount of time");
         alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
         alert.show();
@@ -300,11 +300,11 @@ public class Controller extends BorderPane {
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(null);
         System.out.println(selectedFiles);
+
         int importSize =0;
         if (selectedFiles != null) {
             importSize = selectedFiles.size();
         }
-        //this loop takes every selected file, creates a new "SImage" from it, then displays it in the interface
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Importing your images, please wait.");
@@ -312,6 +312,12 @@ public class Controller extends BorderPane {
         alert.setContentText("This will likely take around "+(Math.round(importSize*0.25))+" seconds");
         alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
         alert.show();
+
+        importAnalysis(selectedFiles);
+        alert.close();
+    }
+
+    public void importAnalysis(List<File> selectedFiles) {
 
         if (selectedFiles != null) {
             int count = 0;
@@ -336,8 +342,8 @@ public class Controller extends BorderPane {
             }
         }
         updateImagePool(imagePool);
-        alert.close();
     }
+
 
 
 
@@ -608,7 +614,6 @@ public class Controller extends BorderPane {
         File fOut = new File("saveFile.txt");
         FileOutputStream fos = new FileOutputStream(fOut);
         BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fos));
-        bufferedWriter.newLine();
         for (SImage image : SImagePool) {
                 bufferedWriter.write((image.file.getAbsolutePath()));
                 bufferedWriter.newLine();
@@ -622,18 +627,27 @@ public class Controller extends BorderPane {
 
     }
     public void load() throws  IOException{
-        System.out.println("SAVE");
+        newPool();
+        System.out.println("Load");
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Saving");
-        alert.setHeaderText("Saving");
-        alert.setContentText("Saving complete");
+        alert.setTitle("Loading");
+        alert.setHeaderText("Loading");
+        alert.setContentText("loading complete");
         alert.show();
+        List<File> selectedFiles = new ArrayList<File>();
+
+        FileReader fr = new FileReader("saveFile.txt");
+        BufferedReader bufferedReader = new BufferedReader(fr);
 
 
-
-
+        while ((bufferedReader.readLine()) != null) {
+            selectedFiles.add(new File(bufferedReader.readLine()));
+        }
+        importAnalysis(selectedFiles);
     }
 
-
 }
+
+
+
 
