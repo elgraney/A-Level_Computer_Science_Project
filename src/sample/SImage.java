@@ -106,9 +106,9 @@ public class SImage {
 
     private ArrayList<colourRange> modeRGB( ArrayList<colourRange> RGBFrequencyArray, int[] RGB, double modifier) {
         for (colourRange item : RGBFrequencyArray) {
-            if ((RGB[0] < item.getRGB(0) + 5) && (RGB[0] > item.getRGB(0) - 5)
-                    && (RGB[1] < item.getRGB(1) + 5) && (RGB[1] > item.getRGB(1) - 5)
-                    && (RGB[2] < item.getRGB(2) + 5) && (RGB[2] > item.getRGB(2) - 5)
+            if ((RGB[0] < item.getRGB(0) + 8) && (RGB[0] > item.getRGB(0) - 8)
+                    && (RGB[1] < item.getRGB(1) + 8) && (RGB[1] > item.getRGB(1) - 8)
+                    && (RGB[2] < item.getRGB(2) + 8) && (RGB[2] > item.getRGB(2) - 8)
                     ) {
                     //System.out.println("modeRGB past if");
                     item.incrementFrequency(modifier);
@@ -233,7 +233,7 @@ public class SImage {
 
 
         for (colourRange colourRange : RGBFrequencyArray) {
-            if (colourRange.getFrequency() > highest * 0.75) {
+            if (colourRange.getFrequency() > highest * 0.6) {
                 SigmaXF[0] += colourRange.getFrequency() * colourRange.getRGB(0);
                 SigmaXF[1] += colourRange.getFrequency() * colourRange.getRGB(1);
                 SigmaXF[2] += colourRange.getFrequency() * colourRange.getRGB(2);
