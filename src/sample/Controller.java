@@ -638,10 +638,14 @@ public class Controller extends BorderPane {
 
         FileReader fr = new FileReader("saveFile.txt");
         BufferedReader bufferedReader = new BufferedReader(fr);
-
-
-        while ((bufferedReader.readLine()) != null) {
-            selectedFiles.add(new File(bufferedReader.readLine()));
+        while (true){
+            String file = bufferedReader.readLine();
+            if(file!=null){
+                selectedFiles.add(new File(file));
+            }
+            else{
+                break;
+            }
         }
         importAnalysis(selectedFiles);
     }
