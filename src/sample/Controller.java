@@ -640,8 +640,19 @@ public class Controller extends BorderPane {
         BufferedReader bufferedReader = new BufferedReader(fr);
         while (true){
             String file = bufferedReader.readLine();
+            Boolean existing = true;
             if(file!=null){
-                selectedFiles.add(new File(file));
+                try{
+                    new FileInputStream(new File(file));
+                    existing = true;
+                }
+                catch(IOException exception){
+                    existing=false;
+                }
+                if(existing == true) {
+                    selectedFiles.add(new File(file));
+                }
+
             }
             else{
                 break;
