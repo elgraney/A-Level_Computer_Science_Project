@@ -52,7 +52,7 @@ public class Controller extends BorderPane {
     @FXML public Label boom;
     @FXML private Button importTemplate;
 
-    //here are 24 seperate ImageView items, hence the 24 variables here. Each will display a different image.
+    //here are 24 separate ImageView items, hence the 24 variables here. Each will display a different image.
     @FXML private ImageView imageFrame0;
     @FXML private ImageView imageFrame1;
     @FXML private ImageView imageFrame2;
@@ -80,7 +80,7 @@ public class Controller extends BorderPane {
     @FXML private ImageView imageFrame21;
     @FXML private ImageView imageFrame22;
     @FXML private ImageView imageFrame23;
-
+    //Again there are 24 separate Vboxs here, each containing their own imageview, hence the 24 variables here.
     @FXML private VBox vbox0;
     @FXML private VBox vbox1;
     @FXML private VBox vbox2;
@@ -111,16 +111,12 @@ public class Controller extends BorderPane {
 
     @FXML private ImageView templateFrame = null;
 
+    //These variables are for labels that will be changed to represent data as the program is running
     @FXML private  Label pageLabel;
     @FXML private Label noImagesLabel;
     @FXML private Label noSelectedImagesLabel;
     @FXML private Label noDeselectedImagesLabel;
     @FXML private Label MCRLabel;
-
-    @FXML private MenuItem closeMenuItem;
-    @FXML private MenuItem newMenuItem;
-    @FXML private MenuItem importImageMenuItem;
-    @FXML private MenuItem importTemplateMenuItem;
 
 
     //these variables store vital, frequently used information about images that have been imported.
@@ -140,11 +136,6 @@ public class Controller extends BorderPane {
 
     private Integer page = 0;
 
-    final Float[] values = new Float[] {-1.0f, 0f, 0.6f, 1.0f};
-    final Label [] labels = new Label[values.length];
-    final ProgressBar[] pbs = new ProgressBar[values.length];
-    final ProgressIndicator[] pins = new ProgressIndicator[values.length];
-    final HBox hbs [] = new HBox [values.length];
 
     //This initialises the interface with a new set of image displays, starting at page 0
     public void innit(Stage primaryStage) {
@@ -160,6 +151,7 @@ public class Controller extends BorderPane {
 
     //This is activated when the "Generate" button is pressed
     //it takes inputs from a new popup window,then passes them over to imageFactory to begin the main process.
+    //there are many checks here that prevent the continuation of the generation phase if the imported images are insufficient.
     public void checkGenData(){
         if (templateImage != null){
             if (imagePool.size()>10){
@@ -174,6 +166,7 @@ public class Controller extends BorderPane {
                         try {
                             beginGenerationPhase();
                         } catch (ImageFactory.GenerationException e) {
+                            //The following message is displayed if there is any issue within the generation (takes place in ImageFactory)
                             JOptionPane.showMessageDialog(null, "Generation Failure.", "Generation Warning", JOptionPane.ERROR_MESSAGE);
                         }
                     }
@@ -194,6 +187,7 @@ public class Controller extends BorderPane {
     private void beginGenerationPhase() throws ImageFactory.GenerationException {
 
         //this code sets up a new window with a new instance of this controller.
+        //the window displays generation options
         Pane popupPane = new Pane();
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("GeneratePopUp.fxml"));
