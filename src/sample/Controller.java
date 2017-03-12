@@ -239,6 +239,8 @@ public class Controller extends BorderPane {
             case 2:
                 outputFormat = "gif";
                 break;
+            case 3:
+                outputFormat = "bmp";
         }
 
         System.out.println(outputResolution + ", " + outputFormat + ", " + generationStyle);
@@ -248,7 +250,7 @@ public class Controller extends BorderPane {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Beginning generation");
         alert.setHeaderText("Beginning generation");
-        alert.setContentText("This will likely take a considerable amount of time");
+        alert.setContentText("This will likely take a considerable amount of time. More than enough to make a cup of tea.");
         alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
         alert.show();
 
@@ -291,7 +293,7 @@ public class Controller extends BorderPane {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Image files");
 
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif", "*.bmp"));
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(null);
         System.out.println(selectedFiles);
 
@@ -412,7 +414,7 @@ public class Controller extends BorderPane {
     //this method is similar to importImage() except ony one image can be imported at a time and it is stored separately
     public void importTemplate() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif","*.bmp"));
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
 

@@ -49,7 +49,7 @@ public class GeneratePopupController {
         });
 
         outputFormatBox.setValue("JPG");
-        outputFormatBox.setItems(FXCollections.observableArrayList("JPG", "PNG", "GIF"));
+        outputFormatBox.setItems(FXCollections.observableArrayList("JPG", "PNG", "GIF", "BMP"));
         outputFormatBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 outputFormatInt = newValue.intValue();
