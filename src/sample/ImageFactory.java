@@ -17,6 +17,7 @@ import javax.imageio.ImageIO;
  * Created by Matthew on 08/01/2017.
  */
 public class ImageFactory {
+    //these are values used frequently throughout the class
     private static int sectionWidth;
     private static int sectionHeight;
     private static SImage unalteredTemplate;
@@ -34,26 +35,32 @@ public class ImageFactory {
 
     //SET CONSTANTS FOR OUTPUT RESOLUTION AND SECTION SIZE
 
-    public static File generate(SImage SImageTemplate, ArrayList<SImage> imagePool, BufferedImage templateImage, int analysisLvl, int outputRes, int generationStyle, String outputFormat) throws GenerationException {
-
+    public static File generate(SImage SImageTemplate, ArrayList<SImage> imagePool, BufferedImage templateImage, int outputRes, int generationStyle, String outputFormat) throws GenerationException {
+        //generating is set to true and will be kept as true untill the generation is finished.
         generating = true;
         System.out.println("generate");
         unalteredTemplate = SImageTemplate;
         templateFile = templateImage;
+        //all images are formatted and ordered in preparation for matching and generating
         Section[][] sectionList = formatAllImages(imagePool, outputRes, generationStyle);
+        //following this the matching process begins
         File outputImage = matchController(imagePool, sectionList, outputFormat, generationStyle);
+        //the final output image is returned to the Controller class
         return outputImage;
 
     }
 
-
-    public static Section[][] formatAllImages(ArrayList<SImage> imagePool, int outputRes, int generationStyle) throws GenerationException {
+//this class takes the images pool and the generation preferences and uses them to eventually return a list of sections of the larger template image
+    private static Section[][] formatAllImages(ArrayList<SImage> imagePool, int outputRes, int generationStyle) throws GenerationException {
         System.out.println("CreateSection");
         double mostCommonRatio;
+        //MCR is calculated here. It is fundamental to the rest of the formatting
         mostCommonRatio = getMostCommonRatio(imagePool);
+        //Define sections uses the MCR to decide the dimensions of a section
         defineSections(mostCommonRatio);
+        //resizeTemplate enlarges and crops the original template so that the sections fit into it without remainder
         resizeTemplate(unalteredTemplate, outputRes);
-
+        
         System.out.println("new height " + processedTemplateFile.getWidth());
         System.out.println("new Width " + processedTemplateFile.getHeight());
         File outputFile = new File("2ndimage.jpg");

@@ -61,9 +61,9 @@ public class SImage {
         double blueAverage = 0;
         double greenAverage = 0;
 
-        //this is a list of the class colourRange. colourRange stores a range of RGB values (eg: red: 24-29, green: 131-136, blue: 249-254)
+        //this is a list of the class ColourRange. ColourRange stores a range of RGB values (eg: red: 24-29, green: 131-136, blue: 249-254)
         //so this array stores a set of ranges of RGB
-        ArrayList<colourRange> RGBFrequencyArray = new ArrayList<colourRange>();
+        ArrayList<ColourRange> RGBFrequencyArray = new ArrayList<ColourRange>();
 
         //step is the incrementation value for the following loop.
         int step = calcStep();
@@ -104,8 +104,8 @@ public class SImage {
     }
 
 
-    private ArrayList<colourRange> modeRGB( ArrayList<colourRange> RGBFrequencyArray, int[] RGB, double modifier) {
-        for (colourRange item : RGBFrequencyArray) {
+    private ArrayList<ColourRange> modeRGB( ArrayList<ColourRange> RGBFrequencyArray, int[] RGB, double modifier) {
+        for (ColourRange item : RGBFrequencyArray) {
             if ((RGB[0] < item.getRGB(0) + 8) && (RGB[0] > item.getRGB(0) - 8)
                     && (RGB[1] < item.getRGB(1) + 8) && (RGB[1] > item.getRGB(1) - 8)
                     && (RGB[2] < item.getRGB(2) + 8) && (RGB[2] > item.getRGB(2) - 8)
@@ -115,7 +115,7 @@ public class SImage {
                     return RGBFrequencyArray;
                 }
         }
-        colourRange newColourRange = new colourRange(RGB);
+        ColourRange newColourRange = new ColourRange(RGB);
         RGBFrequencyArray.add(newColourRange);
         return RGBFrequencyArray;
     }
@@ -207,17 +207,17 @@ public class SImage {
         return (finalModifier);
     }
 
-    private void calcModes(ArrayList<colourRange> RGBFrequencyArray) {
+    private void calcModes(ArrayList<ColourRange> RGBFrequencyArray) {
         double highest = 0;
         int[] singleColour = new int[3];
 
-        for (colourRange colourRange : RGBFrequencyArray) {
-            if (colourRange.getFrequency() > highest) {
-                singleColour[0] = colourRange.getRGB(0);
-                singleColour[1] = colourRange.getRGB(1);
-                singleColour[2] = colourRange.getRGB(2);
+        for (ColourRange ColourRange : RGBFrequencyArray) {
+            if (ColourRange.getFrequency() > highest) {
+                singleColour[0] = ColourRange.getRGB(0);
+                singleColour[1] = ColourRange.getRGB(1);
+                singleColour[2] = ColourRange.getRGB(2);
 
-                highest = colourRange.getFrequency();
+                highest = ColourRange.getFrequency();
             }
         }
         modeRGB = singleColour;
@@ -232,13 +232,13 @@ public class SImage {
         double SigmaF = 0;
 
 
-        for (colourRange colourRange : RGBFrequencyArray) {
-            if (colourRange.getFrequency() > highest * 0.6) {
-                SigmaXF[0] += colourRange.getFrequency() * colourRange.getRGB(0);
-                SigmaXF[1] += colourRange.getFrequency() * colourRange.getRGB(1);
-                SigmaXF[2] += colourRange.getFrequency() * colourRange.getRGB(2);
+        for (ColourRange ColourRange : RGBFrequencyArray) {
+            if (ColourRange.getFrequency() > highest * 0.6) {
+                SigmaXF[0] += ColourRange.getFrequency() * ColourRange.getRGB(0);
+                SigmaXF[1] += ColourRange.getFrequency() * ColourRange.getRGB(1);
+                SigmaXF[2] += ColourRange.getFrequency() * ColourRange.getRGB(2);
 
-                SigmaF += colourRange.getFrequency();
+                SigmaF += ColourRange.getFrequency();
 
             }
         }

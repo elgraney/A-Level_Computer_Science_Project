@@ -46,11 +46,7 @@ import javafx.scene.Scene;
 
 //This class handles all possible actions from the main application interface
 public class Controller extends BorderPane {
-    //these variable are all necessary to reference because they are each individual objects in the interface.
-    @FXML private MenuBar menuBar;
-    @FXML private Button importButton;
-    @FXML public Label boom;
-    @FXML private Button importTemplate;
+    //the variables with tag @FXML are all necessary to reference because they are each individual objects in the interface that are being changed in the program in some way.
 
     //here are 24 separate ImageView items, hence the 24 variables here. Each will display a different image.
     @FXML private ImageView imageFrame0;
@@ -81,6 +77,7 @@ public class Controller extends BorderPane {
     @FXML private ImageView imageFrame22;
     @FXML private ImageView imageFrame23;
     //Again there are 24 separate Vboxs here, each containing their own imageview, hence the 24 variables here.
+    //The colour of the VBoxs are changed when an image is selected or deslected which is why they must be referenced.
     @FXML private VBox vbox0;
     @FXML private VBox vbox1;
     @FXML private VBox vbox2;
@@ -109,6 +106,7 @@ public class Controller extends BorderPane {
     @FXML private VBox vbox22;
     @FXML private VBox vbox23;
 
+    //This individual ImageView references the template view in the top right.
     @FXML private ImageView templateFrame = null;
 
     //These variables are for labels that will be changed to represent data as the program is running
@@ -128,40 +126,44 @@ public class Controller extends BorderPane {
     private BufferedImage templateImage;
     private Stage stage;
 
-    private int noImages;
-    private int noSelectedImages;
-    private int noDeselectedImages;
-    private int widthRatio;
-    private int heightRatio;
-
+//page starts at 0 because the index of imagePool starts at 0. When the page variable is 0, the user will see "page: 1" because the label is set to page+1
     private Integer page = 0;
 
 
     //This initialises the interface with a new set of image displays, starting at page 0
     public void innit(Stage primaryStage) {
         this.stage = primaryStage;
+        //this initialises every imageFrame object
         imageFrameList = new ImageView[]{imageFrame0, imageFrame1, imageFrame2, imageFrame3, imageFrame4, imageFrame5, imageFrame6, imageFrame7, imageFrame8, imageFrame9, imageFrame10, imageFrame11, imageFrame12, imageFrame13, imageFrame14, imageFrame15, imageFrame16, imageFrame17, imageFrame18, imageFrame19, imageFrame20, imageFrame21, imageFrame22, imageFrame23};
+        //this initialises every VBox object
         vboxList = new VBox[]{vbox0, vbox1, vbox2, vbox3, vbox4, vbox5, vbox6, vbox7, vbox8, vbox9, vbox10, vbox11, vbox12, vbox13, vbox14, vbox15, vbox16, vbox17, vbox18, vbox19, vbox20, vbox21, vbox22, vbox23};
+        //this displays page+1 to the user
         pageLabel.setText(Integer.toString(page + 1));
+        //the following sets the initial values of the labels that display image pool information.
         noImagesLabel.setText("0");
-        noSelectedImagesLabel.setText("0");;
-        noDeselectedImagesLabel.setText("0");;
-        MCRLabel.setText("N/A");;
+        noSelectedImagesLabel.setText("0");
+        noDeselectedImagesLabel.setText("0");
+        MCRLabel.setText("N/A");
     }
 
     //This is activated when the "Generate" button is pressed
     //it takes inputs from a new popup window,then passes them over to imageFactory to begin the main process.
     //there are many checks here that prevent the continuation of the generation phase if the imported images are insufficient.
     public void checkGenData(){
+        //first check is that a template has been selected
         if (templateImage != null){
+            //second check is that the pool size is greater than 10
             if (imagePool.size()>10){
+                //counts the number of selected images
                 int selectedImageCount=0;
                 for (SImage image : SImagePool){
                     if (image.selected == true){
                         selectedImageCount += 1;
                     }
                 }
-                if (selectedImageCount>=10){
+                //third check is that the number of selected images is also greater than 10
+                if (selectedImageCount>10){
+                    //this is additional insurance that stops the generation process from being started when it is already running
                     if (ImageFactory.generating != true){
                         try {
                             beginGenerationPhase();
@@ -171,6 +173,7 @@ public class Controller extends BorderPane {
                         }
                     }
                 }
+                //the following are all messages displayed to the user if conditions to begin generation are not met.
                 else{
                     JOptionPane.showMessageDialog(null,"You have not selected enough images to generate a decent image, please select more.", "Generation Warning", JOptionPane.ERROR_MESSAGE);
                 }
@@ -186,7 +189,7 @@ public class Controller extends BorderPane {
     }
     private void beginGenerationPhase() throws ImageFactory.GenerationException {
 
-        //this code sets up a new window with a new instance of this controller.
+        //this code sets up a new window using generatePopupController
         //the window displays generation options
         Pane popupPane = new Pane();
         Stage stage = new Stage();
@@ -205,16 +208,19 @@ public class Controller extends BorderPane {
         controller.innit(stage);
         stage.getIcons().add(new Image("file:icon2.png"));
         stage.showAndWait();
+        //the code proceeds only when the window is closed down
 
         System.out.println("Output res index: " + controller.outputResolutionInt);
         System.out.println("Gen style index: " + controller.generationStyleInt);
         System.out.println("out format index: " + controller.outputFormatInt);
 
+        //these values are default settings
         int outputResolution = 3000;
         int generationStyle = controller.generationStyleInt + 1;
         String outputFormat = "jpg";
 
-
+        //this acts on inputs from GeneratePopupController
+        //output resolution is the minimum dimensions for the output image (eg 6000x6000)
         switch (controller.outputResolutionInt) {
             case 0:
                 outputResolution = 1500;
@@ -229,6 +235,7 @@ public class Controller extends BorderPane {
                 outputResolution = 9000;
                 break;
         }
+        //output format is used to decide the final format for the output window
         switch (controller.outputFormatInt) {
             case 0:
                 outputFormat = "jpg";
@@ -242,10 +249,7 @@ public class Controller extends BorderPane {
             case 3:
                 outputFormat = "bmp";
         }
-
-        System.out.println(outputResolution + ", " + outputFormat + ", " + generationStyle);
-        //make editable.
-        int analysisLevel = 3;
+        //this alert pops up to tell the user that the generation is beginning. It will remain until the output is generated
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Beginning generation");
@@ -254,9 +258,9 @@ public class Controller extends BorderPane {
         alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
         alert.show();
 
-        //the main process begins
-        File outputFile = ImageFactory.generate(templateSImage, SImagePool, templateImage, analysisLevel, outputResolution, generationStyle, outputFormat);
-
+        //the main process begins in ImageFactory
+        File outputFile = ImageFactory.generate(templateSImage, SImagePool, templateImage, outputResolution, generationStyle, outputFormat);
+        //the alert closes when ImageFactory has finished
         alert.close();
 
         //The following fetches the data from the ImageFactory class that will be displayed in the output window
@@ -265,7 +269,7 @@ public class Controller extends BorderPane {
 
 
         //now an output image has been returned
-        //a new window is setup to display this output.
+        //a new window is setup to display this output using the OutputWindowController class
         BorderPane outputPane = new BorderPane();
         Stage outputStage = new Stage();
         FXMLLoader outputLoader = new FXMLLoader(getClass().getResource("OutputWindow.fxml"));
@@ -282,26 +286,29 @@ public class Controller extends BorderPane {
         outputStage.setScene(outputScene);
         outputStage.setTitle("Output View");
         outputStage.show();
+        //the generation information is passed to outputController so that it can be displayed
         outputController.innit(outputFile, outputFormat, stage, noSections, noUniqueImages);
         outputController.showOutputImage();
     }
 
 
-    //This is activated when Select New Images is pressed.
+    //This is activated when the button "Select New Images" is pressed.
     //it allows the user to select images from their file directory and import them into the program
     public void importImage() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Image files");
-
+        //the extension filer makes only PNGs, JPGs, GIFs and BMPs visible so that it is impossible to import an invalid type
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif", "*.bmp"));
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(null);
         System.out.println(selectedFiles);
 
+        //gets the number of images imported
         int importSize =0;
         if (selectedFiles != null) {
             importSize = selectedFiles.size();
         }
 
+        //displays an alert to the user that informs them that their images are being imported and gives a rough estimate of the time it will take.
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Importing your images, please wait.");
         alert.setHeaderText("Importing...");
@@ -311,19 +318,21 @@ public class Controller extends BorderPane {
 
         importAnalysis(selectedFiles);
         alert.close();
+        //the message is closed when the images have imported.
     }
 
+    //import analysis makes a new SImage for each imported image then adds it to the SImage pool.
+    //it also adds FXImage versions of the imported image to the Image pool so that they can be displayed in the application. They are compressed if they are too large to reduce memory usage.
     public void importAnalysis(List<File> selectedFiles) {
 
         if (selectedFiles != null) {
-            int count = 0;
             for (File selectedFile : selectedFiles) {
-                count += 1;
                 SImage currentImage = new SImage(selectedFile);
                 try {
                     SImagePool.add(currentImage);
                     //SImagePool is the collection of all imported images in SImage form.
                     //ImagePool is the collection of all imported images in FXImage form. This is needed to display them.
+                    //This if statement resizes the displayed version of the image so that the program doesn't use too much memory
                     if (currentImage.getWidth() > 500 || currentImage.getHeight() > 500) {
                         imagePool.add(new Image(new FileInputStream(currentImage.file), currentImage.getWidth() / 5, currentImage.getHeight() / 5, false, false));
                     } else if (currentImage.getWidth() > 1000 || currentImage.getHeight() > 1000) {
@@ -331,7 +340,6 @@ public class Controller extends BorderPane {
                     } else {
                         imagePool.add(new Image(new FileInputStream(currentImage.file)));
                     }
-                    //This if statement resizes the displayed version of the image so that the program doesn't use too much memory
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -340,63 +348,75 @@ public class Controller extends BorderPane {
         updateImagePool(imagePool);
     }
 
-
-
-
-
     //This method updates the display whenever anything related to the interface changes.
     private void updateImagePool(List imagePool){
+        //the images already being displayed are cleared so they can be replace.
         clearPool();
+        //page label is updated
         pageLabel.setText(Integer.toString(page+1));
         int length =  imagePool.size();
         int startIndex = (page * 24);
         int endIndex;
 
         //the page number is used to calculate which images from the array need to be displayed.
-
         if (length>(page + 1)*24-1){
             endIndex = (page+1)*24 -1;
         }
         else{
             endIndex = (page * 24) + (length % 24) - 1;
         }
+        //Finds the number of selected images to display to the user
         int selectedImages=0;
         for (SImage image : SImagePool){
             if (image.selected == true){
                 selectedImages+=1;
             }
         }
+        //checks if each image is selected or deselected and gives it the appropriate VBox colour
         for (int index = startIndex; index <= endIndex; index++){
             imageFrameList[(index % 24)].setImage( (Image) imagePool.get(index));
+            //deselected get red
             if (SImagePool.get(index).selected == false){
                 vboxList[index % 24].setStyle("-fx-border-color: #ff9e9b; -fx-border-width: 3px; -fx-background-color: #ff9e9b");
             }
+            //selected get blue
             else{
                 vboxList[index % 24].setStyle("-fx-border-color: #a5d9ff; -fx-border-width: 3px;-fx-background-color: #a5d9ff");
             }
         }
+        //once all values are updates the program moves on to inform the user what has changed
         poolData(selectedImages);
     }
 
+    //this finds and displays data about the pool to the user
     private void poolData(int selectedImages){
-        int noImages = SImagePool.size();
-        int deselectedImages = noImages - selectedImages;
+        //total number of images is the same as the size of the array used to store them
+        int numImages = SImagePool.size();
+        //deselected images are calculated by taking selected images (already calculated) from total images
+        int deselectedImages = numImages - selectedImages;
+
         int widthDisplayRatio=0;
         int heightDisplayRatio=0;
+        //MCR is found by reusing a function designed for the ImageFactory that is calculates it.
+        //it returns a decimal, which is not useful to the user.
         double mostCommonRatio = ImageFactory.getMostCommonRatio(SImagePool);
+        //the following finds an image of the most common ratio and uses it's height and width value to produce an integer ratio of width:height
         for (SImage image : SImagePool){
             if(mostCommonRatio*image.getHeight() == image.getWidth()){
+                //integer ratios can be found by dividing height and width by the greatest common divisor
+                //GCD can be found using Euclid's recursive algorithm
                 int greatestCommonDivisor =gcd(image.getWidth(), image.getHeight());
                 widthDisplayRatio = image.getWidth()/greatestCommonDivisor;
                 heightDisplayRatio = image.getHeight()/greatestCommonDivisor;
                 break;
             }
         }
-        this.noImages = noImages;
-        this.noSelectedImages = selectedImages;
-        this.noDeselectedImages = deselectedImages;
-        this.widthRatio = widthDisplayRatio;
-        this.heightRatio = heightDisplayRatio;
+        int noImages = numImages;
+        int noSelectedImages = selectedImages;
+        int noDeselectedImages = deselectedImages;
+        int widthRatio = widthDisplayRatio;
+        int heightRatio =heightDisplayRatio;
+
         noImagesLabel.setText(Integer.toString(noImages));
         noSelectedImagesLabel.setText(Integer.toString(noSelectedImages));
         noDeselectedImagesLabel.setText(Integer.toString(noDeselectedImages));
@@ -404,31 +424,33 @@ public class Controller extends BorderPane {
 
     }
     //Euclid's algorithm for finding the highest common divisor.
-    public static int gcd(int p, int q) {
-        if (q == 0) {
-            return p;
+    //it takes two values and calls itself with new parameter until the parameters divide without remainder, at which point num1 is the GCD.
+    public static int gcd(int num1, int num2) {
+        if (num2 == 0) {
+            return num1;
         }
-        return gcd(q, p % q);
+        //gcd is called within gcd
+        return gcd(num2, num1 % num2);
     }
 
     //this method is similar to importImage() except ony one image can be imported at a time and it is stored separately
     public void importTemplate() {
         FileChooser fileChooser = new FileChooser();
+        //the same filters are used to limit the files that can be imported
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif","*.bmp"));
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
-
             System.out.println(selectedFile);
-
-
+            //a new instance of SImage is created for this image
             templateSImage = new SImage(selectedFile);
 
+            //a new FXImage is created so that this image can be displayed in the application
             try {
                 templateFrame.setImage(new Image(new FileInputStream(templateSImage.file)));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-
+            //a buffered image of the template is created for future use in ImageFactory
             try {
                 templateImage = ImageIO.read(selectedFile);
             } catch (IOException e) {
@@ -439,9 +461,12 @@ public class Controller extends BorderPane {
     }
 
     //increments the page if it possible to based on the number of imported images. (wont display an empty page)
+    //it is called when the "Next Page" button is pressed
     public void nextPage(){
+        //if the next page would have images on it, move to next page
         if (((page+1)*24)<= imagePool.size()){
             page = page +1;
+            //the displayed pool and pool information is updated
             updateImagePool(imagePool);
         }
         else{
@@ -450,10 +475,11 @@ public class Controller extends BorderPane {
     }
 
     //decrements the page if the page is greater than 0.
+    //it is called when the "Previous Page" button is pressed
     public void previousPage(){
         if(page > 0) {
             page = page - 1;
-
+            //the displayed pool and pool information is updated
             updateImagePool(imagePool);
         }
         else{
@@ -463,19 +489,23 @@ public class Controller extends BorderPane {
     }
     //removes the current contents of every frame so that new images can be displayed.
     private void clearPool(){
+        //sets every frame to null
         for (ImageView frame: imageFrameList){
             frame.setImage(null);
         }
+        //removes every VBox colouring
         for (VBox vbox: vboxList){
             vbox.setStyle(null);
         }
     }
 
+    //this is called when an image is clicked either set it to selected or deselected
     private void handleClick(int image){
+        //the if statement stops anything from happening if the user clicks on an empty frame on the final page
         if(imagePool.size()>image+page*24){
-            System.out.println("found image "+image);
+            //calculates the index of the image clicked
             int SImageIndex = image + page*24;
-            System.out.println(SImageIndex);
+            //if the image is already selected, set it to deselected and vice versa.
             if (SImagePool.get(SImageIndex).selected == true){
                 SImagePool.get(SImageIndex).selected = false;
             }
@@ -483,9 +513,13 @@ public class Controller extends BorderPane {
                 SImagePool.get(SImageIndex).selected = true;
             }
         }
+        //change display and pool information with new changes
         updateImagePool(imagePool);
     }
 
+    //the following list of functions is extremely regrettable, but unfortunately entirely necessary
+    //each individual imageFrame object must have its own unique function that is called when it is clicked otherwise there is no way of tracing which image was clicked on
+    //I have limited the duplicate code as much as possible by creating handle click which is called immediately after imageClick
     public void image0Click(){
         handleClick(0);
     }
@@ -559,15 +593,23 @@ public class Controller extends BorderPane {
         handleClick(23);
     }
 
+    //newPool is called when the "New" menu item is selected
     public void newPool(){
+        //clears the display
         clearPool();
+        //removes the contents of SImagePool and imagePool
         SImagePool = new ArrayList<SImage>();
         imagePool =  new ArrayList<Image>();
+        //updates the display and Image Pool Information
         updateImagePool(imagePool);
     }
+    //closes if the close menu item is selected
     public void close(){
         stage.close();
     }
+
+    //about is called when the about menu item is selected.
+    //it opens the "ABOUT.htm" file in the default browser
     public void about(){
         Stage webStage = new Stage();
         webStage.setTitle("About");
@@ -585,6 +627,9 @@ public class Controller extends BorderPane {
         webStage.setScene(root);
         webStage.show();
     }
+
+    //help is called when the Getting Started menu item is selected.
+    //it opens the "HELP.htm" file in the default browser
     public void help(){
         Stage webStage = new Stage();
         webStage.setTitle("help");
@@ -602,18 +647,20 @@ public class Controller extends BorderPane {
 
         webStage.setScene(root);
         webStage.show();
-
     }
 
-    public void save() throws IOException{
-        System.out.println("SAVE");
+    //save is called when the Save menu item is selected
+    //it saves the file path of each imported image on its own line in the "saveFile.txt" text file
+    public void save() throws IOException {
         File fOut = new File("saveFile.txt");
         FileOutputStream fos = new FileOutputStream(fOut);
         BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fos));
+        //each image is written to a new line in the file
         for (SImage image : SImagePool) {
-                bufferedWriter.write((image.file.getAbsolutePath()));
-                bufferedWriter.newLine();
+            bufferedWriter.write((image.file.getAbsolutePath()));
+            bufferedWriter.newLine();
         }
+        //an alert is presented to the user that shows that saving is taking place
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Saving");
         alert.setHeaderText("Saving");
@@ -622,9 +669,11 @@ public class Controller extends BorderPane {
         bufferedWriter.close();
 
     }
+    //load is called when the Load menu item is selected
     public void load() throws  IOException{
+        //the old pool is cleared
         newPool();
-        System.out.println("Load");
+        //an alert is presented to the user that shows that loading is taking place
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Loading");
         alert.setHeaderText("Loading");
@@ -634,6 +683,7 @@ public class Controller extends BorderPane {
 
         FileReader fr = new FileReader("saveFile.txt");
         BufferedReader bufferedReader = new BufferedReader(fr);
+        //each line in the text file is extracted and converted to a file path
         while (true){
             String file = bufferedReader.readLine();
             Boolean existing = true;
@@ -654,6 +704,7 @@ public class Controller extends BorderPane {
                 break;
             }
         }
+        //the files are sent to importAnalysis where they are implemented into the program
         importAnalysis(selectedFiles);
     }
 
