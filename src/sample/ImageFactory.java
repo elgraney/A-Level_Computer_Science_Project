@@ -457,7 +457,7 @@ public class ImageFactory {
         return outputImage;
     }
 
-    
+
     private static void matchSections(ArrayList<Section> sectionList, ArrayList<SImage> imageList, Section[][] sectionArray) throws GenerationException {
         ArrayList<SImage> redSortedImages;
         ArrayList<SImage> greenSortedImages;
