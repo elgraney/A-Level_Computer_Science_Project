@@ -89,10 +89,10 @@ public class OutputWindowController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Specify a file to save");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files","*"+outputFormat));
+        //the user names the file in the dialog
         File file = fileChooser.showSaveDialog(stage);
-        System.out.println(file);
         String fileString = file.toString();
-        System.out.println(fileString);
+        //if the user does not write ".jpg" or ".png" (or whatever is appropriate for the file) then it is appended to the string
         if(fileString.length()>=4) {
             if (fileString.substring(fileString.length() - 3) != "." + outputFormat) {
                 file = new File(fileString + "." + outputFormat);
@@ -111,8 +111,8 @@ public class OutputWindowController {
         }
 
     }
+    //the window is closed and the image is not saved.
     public void discard(){
-        System.out.println("discard! Hello there.");
         stage.close();
 
     }

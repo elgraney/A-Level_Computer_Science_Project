@@ -8,6 +8,7 @@ import java.io.File;
  * Created by ma.crane on 26/01/2017.
  */
 
+//Section extends SImage because it is a special type of image that  has additional properties
 public class Section extends SImage {
 
     private int topLeftX;
@@ -16,12 +17,12 @@ public class Section extends SImage {
     private int centreY;
     private SImage linkedImage;
 
-    //compound section only
     private boolean inCompoundSection = false;
     private boolean compoundSectionMarker = false;
     private int sectionArrayX;
     private int sectionArrayY;
 
+    //a Section is initialised with location coordinates and section dimensions
     public Section(File file, int x, int y, int width, int height) {
         super(file);
         topLeftX = x;
@@ -31,11 +32,12 @@ public class Section extends SImage {
 
     }
 
+    //this uses the top left coordinates and the section dimensions to find the central coordinate
     private void findCentreXY(int width, int height) {
         centreX = topLeftX + Math.round(width / 2);
         centreY = topLeftY + Math.round(height / 2);
     }
-
+    //a linked image can be associated with every section
     public void setLinkedImage(SImage image) {
         linkedImage = image;
     }
@@ -56,6 +58,7 @@ public class Section extends SImage {
         return inCompoundSection;
     }
 
+    //when a compound section is made, the top left section is made into the compound section marker
     public void setCompound(int width, int height, int X, int Y, double ratioMultiple) {
         setRatioMultiple(ratioMultiple);
         compoundSectionMarker = true;
@@ -64,7 +67,7 @@ public class Section extends SImage {
         sectionArrayX = X;
         sectionArrayY = Y;
     }
-
+    //sections that are in compound sections, but not the marker section are set as inCompoundSection
     public void setInCompound() {
         inCompoundSection = true;
     }
@@ -73,6 +76,8 @@ public class Section extends SImage {
         return  compoundSectionMarker;
     }
 
+    //if no match can be found for a compound section it is broken down into standard sections
+    //breakdown is run for every section in a compound section
     public void breakdown(int width, int height){
         this.width = width;
         this.height = height;
