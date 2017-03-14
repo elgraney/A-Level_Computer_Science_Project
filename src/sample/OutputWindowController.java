@@ -24,24 +24,17 @@ import java.io.IOException;
 /**
  * Created by ma.crane on 20/02/2017.
  */
+//This class controls the running of the output window
 public class OutputWindowController {
-
-    @FXML
-    private ImageView outputFrame = null;
-    @FXML
-    private Button discardButton;
-    @FXML
-    private Button saveButton;
-    @FXML
-    private Button sendButton;
-    @FXML
-    private Button printButton;
-    @FXML
-    private Label resLabel;
-    @FXML
-    private Label noSectionsLabel;
-    @FXML
-    private Label noUniqueImagesLabel;
+    //All @FXML variable are objects within the output window that are accessed at some point in the program
+    @FXML private ImageView outputFrame = null;
+    @FXML private Button discardButton;
+    @FXML private Button saveButton;
+    @FXML private Button sendButton;
+    @FXML private Button printButton;
+    @FXML private Label resLabel;
+    @FXML private Label noSectionsLabel;
+    @FXML private Label noUniqueImagesLabel;
 
     private File outputFile;
     private String outputFormat;
@@ -51,30 +44,39 @@ public class OutputWindowController {
     private double width;
     private double height;
 
+
+    //the controller is initialised with a set of necessary values
     public void innit(File outputFile, String outputFormat, Stage stage, int sectionCount, int uniqueImageCount) {
+
+        //print and send are not currently implemented
+        printButton.setDisable(true);
+        sendButton.setDisable(true);
         this.outputFile = outputFile;
         this.outputFormat = outputFormat;
         this.stage = stage;
+
+        //metadata to display to the user
         this.sectionCount = sectionCount;
         this.uniqueImageCount = uniqueImageCount;
+
+        //loads the output file
         Image image = null;
         try {
             image = new Image(new FileInputStream(outputFile));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        //more metadata
         width = image.getWidth();
         height = image.getHeight();
-
+        //displays the metadata
         resLabel.setText(Long.toString(Math.round(width))+"x"+Long.toString(Math.round(height)));
         noSectionsLabel.setText(Integer.toString(sectionCount));
         noUniqueImagesLabel.setText(Integer.toString(uniqueImageCount));
-
-
     }
 
+    //the output image is displayed in an imageFrame
     public void showOutputImage() {
-
         try {
             outputFrame.setImage(new Image(new FileInputStream(outputFile)));
         } catch (FileNotFoundException e) {
@@ -82,6 +84,7 @@ public class OutputWindowController {
         }
     }
 
+    //triggered when the "Save" button is pressed
     public void save() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Specify a file to save");
@@ -106,11 +109,12 @@ public class OutputWindowController {
                 System.out.println(ex.getMessage());
             }
         }
-        ImageFactory.generating = false;
+
     }
     public void discard(){
-        ImageFactory.generating = false;
+        System.out.println("discard! Hello there.");
         stage.close();
+
     }
 }
 

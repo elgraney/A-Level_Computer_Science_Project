@@ -457,117 +457,103 @@ public class ImageFactory {
         return outputImage;
     }
 
-
+    //sections are linked to the most appropriate image
     private static void matchSections(ArrayList<Section> sectionList, ArrayList<SImage> imageList, Section[][] sectionArray) throws GenerationException {
+
+        //the image pool is reduced before matching begins. This decreases the time complexity of the matching algorithm by making it largely logarithmic rather than linear
         ArrayList<SImage> redSortedImages;
         ArrayList<SImage> greenSortedImages;
         ArrayList<SImage> blueSortedImages;
-
+        //if there are images of this ratio in the imagePool, proceed
         if (imageList.size() != 0) {
+            //sorts the images into 3 different lists, ordered by ascending red, green and blue values respectively
+            //this is required for the binary search later
             redSortedImages = MergeSort.mergeSort(imageList, 0);
-            System.out.println("original red length: " + redSortedImages.size());
             greenSortedImages = MergeSort.mergeSort(imageList, 1);
             blueSortedImages = MergeSort.mergeSort(imageList, 2);
-            System.out.println("Merge complete");
-            System.out.println("SectionList size: " + sectionList.size());
+        //if there are no possible matches then all of the compound sections can be immediately broken down
         } else {
             for (Section section : sectionList) {
                 compoundSectionBreakdown(section, sectionArray);
             }
             return;
         }
+        //the beginning of the actual matching process
         for (Section section : sectionList) {
+            //must not already be in a compound section
             if ((section.isInCompoundSection() == false) || (section.isCompoundSectionMarker() == true)) {
-                //System.out.println("Passed ratio "+section.getRatio());
-                //System.out.println("Entered for?");
+                //uses mean of modes algorithm because it is most frequently the best choice of analysis
                 double sectionRed = section.getMeanOfModesRGB(0);
                 double sectionGreen = section.getMeanOfModesRGB(1);
                 double sectionBlue = section.getMeanOfModesRGB(2);
 
                 int sortedListMaxRange = 5;
                 int difference = 0;
-
+                //this loop increments from 0 to 999, exiting when the closest match is found
                 while ((difference != 999)) {
-                    //System.out.println("While loop " + difference);
+                    //each RGB list is passed through a binary search to return only the images with R, G and B values close to the RGB of the target section
+                    //sortedListMaxRange directly affects the number of items returned from this. The greater it is, the more values are returned
                     ArrayList<SImage> newRedSortedImages = binarySearch(redSortedImages, 0, sectionRed, sortedListMaxRange);
-                    //System.out.println("binary search red output size "+redSortedImages.size());
                     ArrayList<SImage> newGreenSortedImages = binarySearch(greenSortedImages, 1, sectionGreen, sortedListMaxRange);
                     ArrayList<SImage> newBlueSortedImages = binarySearch(blueSortedImages, 2, sectionBlue, sortedListMaxRange);
-                    //System.out.println("Binary Search complete or skipped.");
 
                     //HashSet is used to remove dupicates. It is a data type that does not allow the entry of an item that already exists.
+                    //this also servers to minimise the size of the linear search
                     Set<SImage> recombinedList = new HashSet<SImage>();
                     recombinedList.addAll(newRedSortedImages);
                     recombinedList.addAll(newGreenSortedImages);
                     recombinedList.addAll(newBlueSortedImages);
-                    //System.out.println("recombined.");
-                    //System.out.println("SetionRatioMultiple: "+section.getRatio());
-                    //System.out.println("recominedList size: "+recombinedList.size());
-
 
                     difference = 0;
                     do {
                         for (SImage image : recombinedList) {
+                            //if the image has adequetely similar colour and is included in the pool it is linked
                             if (((image.getMeanRGB(0) - difference) <= sectionRed) && ((image.getMeanRGB(0) + difference) >= sectionRed) &&
                                     ((image.getMeanRGB(1) - difference) <= sectionGreen) && ((image.getMeanRGB(1) + difference)) >= sectionGreen &&
                                     ((image.getMeanRGB(2) - difference) <= sectionBlue) && ((image.getMeanRGB(2) + difference) >= sectionBlue) &&
                                     image.selected == true
                                     ) {
                                 section.setLinkedImage(image);
+                                //usedImages is a metadata variable used in the output window to display total and unique images
                                 usedImages.add(image);
-
-                                //System.out.println(section.file);
-                                //System.out.println(image.file);
+                                //difference is set to 998 so that when it increments by 1 after this it equals 999 and the loop ends
                                 difference = 998;
                                 break;
                             }
                         }
+                        //increments difference by 1
                         difference++;
                     }
-                    //now match them
-                    //follow design algorithm.
-
-                    while (difference < 200);
-
+                    //the loop exits if the difference reaches 150, at which point the only possible match is so inappropriate that it isn't worth doing.
+                    while (difference < 150);
+                    //this catches instances when a match was not found: when a match is found difference will be set to 999
                     if (difference != 999) {
-                        //System.out.println("Match Failed");
+                        //increases the potential number of images returned from the binary search
                         sortedListMaxRange += 5;
+                        //if sortedListMax has been increased to 100 and there are still no matches, it is highly unlikely that there is a suitable image to match to the section
                         if (sortedListMaxRange > 100) {
+                            //it is dealt with appropriately in compoundSectionBreakdown
                             compoundSectionBreakdown(section, sectionArray);
-                            System.out.println("This image has failed.");
-                            System.out.println("Red length: " + redSortedImages.size());
-                            System.out.println("Green length: " + greenSortedImages.size());
-                            System.out.println("Blue length: " + blueSortedImages.size());
-                            System.out.println("new Red length" + newRedSortedImages.size());
-                            System.out.println("Recombined list length: " + recombinedList.size());
-                            System.out.println("sortedListMaxRange " + sortedListMaxRange);
-                            System.out.println("section RGB: " + section.getMeanRGB(0) + ", " + section.getMeanRGB(1) + ", " + section.getMeanRGB(2));
                             break;
                         }
                     }
-
-                    //System.out.println("Match section complete");
-                    //System.out.println("For skipped.");
-
                 }
             }
-            if (section.getLinkedImage() == null && section.isCompoundSectionMarker() == true) {
-                System.out.println("match fail on compound section.");
-            }
         }
-
-        System.out.println("every section covered.");
         return;
     }
 
+    //This deals with failed sections that have not found any images to match with
     private static void compoundSectionBreakdown(Section section, Section[][] sectionArray) throws GenerationException {
+        //the type of compound section directly affects which sections must be made independent
+        //if the section is 3x3, break down into 9 independent sections
         if ((section.getWidth() == sectionWidth * 3) && (section.getHeight() == sectionHeight * 3)) {
-            System.out.println("Caught 3x3 to breakdown.");
             for (int y = section.getY(); y < section.getY() + 3; y++) {
                 for (int x = section.getX(); x < section.getX() + 3; x++) {
                     sectionArray[x][y].breakdown(sectionWidth, sectionHeight);
                 }
             }
+        //if the section is 3x1, break down into 3 independent sections
         } else if ((section.getWidth() == sectionWidth * 3) && (section.getHeight() == sectionHeight * 1)) {
             System.out.println("Caught 3x1 to breakdown.");
             for (int y = section.getY(); y < section.getY() + 1; y++) {
@@ -575,6 +561,7 @@ public class ImageFactory {
                     sectionArray[x][y].breakdown(sectionWidth, sectionHeight);
                 }
             }
+        //if the section is 2x2, break down into 4 independent sections
         } else if ((section.getWidth() == sectionWidth * 2) && (section.getHeight() == sectionHeight * 2)) {
             System.out.println("Caught 2x2 to breakdown.");
             for (int y = section.getY(); y < section.getY() + 2; y++) {
@@ -582,6 +569,7 @@ public class ImageFactory {
                     sectionArray[x][y].breakdown(sectionWidth, sectionHeight);
                 }
             }
+        //if the section is 1x3, break down into 3 independent sections
         } else if ((section.getWidth() == sectionWidth * 1) && (section.getHeight() == sectionHeight * 3)) {
             System.out.println("Caught 1x3 to breakdown.");
             for (int y = section.getY(); y < section.getY() + 3; y++) {
@@ -589,6 +577,7 @@ public class ImageFactory {
                     sectionArray[x][y].breakdown(sectionWidth, sectionHeight);
                 }
             }
+        //if the section is 1x2, break down into 2 independent sections
         } else if ((section.getWidth() == sectionWidth * 1) && (section.getHeight() == sectionHeight * 2)) {
             System.out.println("Caught 1x2 to breakdown.");
             for (int y = section.getY(); y < section.getY() + 2; y++) {
@@ -596,6 +585,7 @@ public class ImageFactory {
                     sectionArray[x][y].breakdown(sectionWidth, sectionHeight);
                 }
             }
+        //if the section is 1x2, break down into 2 independent sections
         } else if ((section.getWidth() == sectionWidth * 2) && (section.getHeight() == sectionHeight * 1)) {
             System.out.println("Caught 2x1 to breakdown.");
             for (int y = section.getY(); y < section.getY() + 1; y++) {
@@ -603,32 +593,32 @@ public class ImageFactory {
                     sectionArray[x][y].breakdown(sectionWidth, sectionHeight);
                 }
             }
+        //otherwise the unmatched image must be a standard section. If this has failed to match then the generation process must be canceled so an error is thrown.
         } else if ((section.getWidth() == sectionWidth * 1) && (section.getHeight() == sectionHeight * 1)) {
             System.out.println("TOTAL MATCHING FAILURE");
-            throw new GenerationException();
-        } else {
-            System.out.println("Well Somethings gone wrong!");
             throw new GenerationException();
         }
     }
 
+    //the binary search narrows down the list of images that must be searched through to find a match
     private static ArrayList<SImage> binarySearch(ArrayList<SImage> imageList, int colour, double targetColour, int sortedListMaxRange) {
-
         ArrayList<SImage> reducedImageArray = new ArrayList<SImage>();
         int size = imageList.size();
         int low = 0;
         int high = size - 1;
         int middle = 0;
-
+        //the high and low markers move closer together until the index where the perfect match would be
         while (high > low) {
             middle = (low + high) / 2;
+            //if the image is a perfect match then add that image and the nearest set of images (size dependant on sortedListMaxRange (5 by default)) to the reduced list
             if (imageList.get(middle).getMeanRGB(colour) == targetColour) {
                 for (int index = (middle - sortedListMaxRange < 0 ? 0 : middle - sortedListMaxRange); index <= (middle + sortedListMaxRange > size - 1 ? size - 1 : middle + sortedListMaxRange); index++) {
-
                     reducedImageArray.add(imageList.get(index));
                 }
+                //return the finished reduced list
                 return reducedImageArray;
             }
+            //the following narrow the gap between high and low if a match isn't found by the normal binary search algorithm
             if (imageList.get(middle).getMeanRGB(colour) < targetColour) {
                 low = middle + 1;
             }
@@ -636,6 +626,8 @@ public class ImageFactory {
                 high = middle - 1;
             }
         }
+        //if high = low then no perfect match has been found. This does not matter because we need a range of images anyway
+        //the image at most recently checked index and nearest set of images (size dependant on sortedListMaxRange) is added to the reduced list
         for (int index = (middle - sortedListMaxRange < 0 ? 0 : middle - sortedListMaxRange); index <= (middle + sortedListMaxRange > size - 1 ? size - 1 : middle + sortedListMaxRange); index++) {
             reducedImageArray.add(imageList.get(index));
         }
@@ -646,7 +638,6 @@ public class ImageFactory {
     //This method takes a ratio and every image in the image Pool, then return only the images of the specified ratio.
     private static ArrayList<SImage> populateList(double ratio, ArrayList<SImage> imagePool) {
         ArrayList<SImage> newList = new ArrayList<SImage>();
-
         for (SImage image : imagePool) {
             if (image.getRatio() == ratio) {
                 newList.add(image);
@@ -656,10 +647,10 @@ public class ImageFactory {
     }
 
     //This method takes an input ratio and the 2D Section Array, reformats the Section array into an Arraylist, then finds all sections in the section pool of that ratio.
-//It then returns these images as a new Section ArrayList.
+    //It then returns these images as a new Section ArrayList.
     private static ArrayList<Section> reformatAndPopulateSectionArray(Section[][] sectionList, double ratio) {
         ArrayList<Section> formattedSectionList = new ArrayList<Section>();
-
+        //this adds each section in the 2D array to a list in order of rows then columns
         for (int y = 0; y < sectionList[0].length; y++) {
             for (int x = 0; x < sectionList.length; x++) {
                 formattedSectionList.add(sectionList[x][y]);
@@ -667,99 +658,100 @@ public class ImageFactory {
         }
         ArrayList<Section> newSectionList = new ArrayList<Section>();
 
+        //if the section is not in a compound section or the section marks a compound section it is added to the new list
         for (Section image : formattedSectionList) {
-            //System.out.println("ReformatAndPopulateSectionArray: "+image.getRatio());
-
             if ((image.getRatio() == ratio)) {
                 if (image.isCompoundSectionMarker() == true || image.isInCompoundSection() == false) {
                     newSectionList.add(image);
                 }
             }
-            //for each image in image pool
-            //if image.getratio = ratio
-            //add to this new array.
         }
-        //for (Section section : newSectionList){
-        //System.out.println("newSectionList Ratio: "+section.getRatio());
-        //}
-
+        //the reformatted and reduced list is returned
         return newSectionList;
-
-
     }
 
+    //the output image is drawn and returned using the images linked to each section
     private static File generateOutput(Section[][] sectionArray, String outputFormat, int generationStyle) {
-
-        System.out.println("generateOutput");
         BufferedImage outputBufferedImage = processedTemplateFile;
+        //every section that is not overwritten by a compound section is considered
         for (Section[] sectionColumn : sectionArray) {
             for (Section section : sectionColumn) {
                 if (section.isInCompoundSection() == false || section.isCompoundSectionMarker() == true) {
                     int startX;
                     int startY;
-
                     SImage linkedSImage = section.getLinkedImage();
-
                     File imagefile = linkedSImage.file;
-
                     BufferedImage linkedImage = null;
-
+                    //the linked image is buffered
                     try {
                         linkedImage = ImageIO.read(imagefile);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    //for the "ordered" style
                     if (generationStyle == 1) {
                         startX = section.getTopLeftX();
                         startY = section.getTopLeftY();
+                        //every pixel in a section is given a new RGB value based on the linked image
                         for (int x = 0; x < section.getWidth(); x++) {
                             for (int y = 0; y < section.getHeight(); y++) {
-
+                                //enlargementFactor is used to find the equivalent pixel on the linked image for the pixel being considered in the section
                                 double enlargementFactor = section.getHeight() / (float) linkedSImage.getHeight();
 
                                 int imageX = (int) (Math.round(x / enlargementFactor));
                                 int imageY = (int) (Math.round(y / enlargementFactor));
 
+                                //the following prevents potential out of bounds errors caused by rounding pixel coordinates
                                 if (imageX >= linkedImage.getWidth()) {
                                     imageX = linkedImage.getWidth() - 1;
                                 } else if (imageX < 0) {
                                     imageX = 0;
                                 }
-
                                 if (imageY >= linkedImage.getHeight()) {
                                     imageY = linkedImage.getHeight() - 1;
                                 } else if (imageY < 0) {
                                     imageY = 0;
                                 }
-
-
+                                //the current template file is overwritten with the new pixel
                                 outputBufferedImage.setRGB(startX + x, startY + y, linkedImage.getRGB(imageX, imageY));
+                                //this process is repeated for every single pixel in the template image
+                                //in the most extreme scenario this could mean over 80 billion pixels... hence why it takes a while.
                             }
                         }
                     }
+                    // if the generation style is not "ordered" (meaning it is "messy")
+                    // this is more difficult because images do not fit neatly into sections
                     else{
+                        //this is the ratio of a standard section
                         double standardImageRatio = sectionWidth/(float) sectionHeight;
+
                         double thisImageMultiple = linkedSImage.getRatio();
+                        //this is the ratio of the image linked to the section that is currently being considered
                         double thisImageRatio = linkedSImage.getWidth()/(float) linkedSImage.getHeight();
+
                         int drawWidth= 0;
                         int drawHeight=0;
 
-                        if ( thisImageRatio<standardImageRatio*thisImageMultiple){
+                        //if the ratio of the image is smaller than the ratio of this section then the width must fit the section because the height is bigger than it should be
+                        //to clarify, this would result in an image the overflows the section boundaries on the y, but fits perfectly on the x
+                        if (thisImageRatio < standardImageRatio*thisImageMultiple){
                             drawWidth = section.getWidth();
                             drawHeight = (int) ((drawWidth/(float)linkedSImage.getWidth())*linkedSImage.getHeight())+1;
-                        //fit to width
                         }
+                        //if the ratio of the image is greater than the ratio of this section then the height must fit the section because the width is bigger than it should be
+                        //this would result in an image the overflows the section boundaries on the x, but fits perfectly on the y
                         else if (thisImageRatio >= standardImageRatio*thisImageMultiple){
-                            //fit to height
                             drawHeight = section.getHeight();
                             drawWidth = (int) ((drawHeight/(float)linkedSImage.getHeight())*linkedSImage.getWidth())+1;
                         }
+
+                        //finding the point from which to draw the image (top left coordinate) based on where its centre is so that it overflows the boundaries of the section as little as possible and evenly on all sides
                         int centreX = section.getCentreX();
                         int centreY = section.getCentreY();
-
                         startX = centreX- (drawWidth/2);
                         startY = centreY - (drawHeight/2);
 
+                        //similarly to the method for "ordered" every pixel is rewritten based on pixels from the linked image
                         for (int x = 0; x < drawWidth; x++) {
                             for (int y = 0; y < drawHeight; y++) {
 
@@ -792,6 +784,7 @@ public class ImageFactory {
             System.out.println("+1 section lot drawn.");
 
         }
+        //the final output image is written to a file
         File outputFile = new File("outputImage." + outputFormat);
         try {
             System.out.print("Writing...");
@@ -799,15 +792,19 @@ public class ImageFactory {
         } catch (IOException e) {
             System.out.print("eh?!");
         }
+        //generating is set to false so that another generation can be started
         generating=false;
         return outputFile;
     }
 
+    //This exception is thrown if there is an issue at any point during the generation phase which would force the termination of the generation process
+    //it returns to the default listening state in Controller
     public static class GenerationException extends Exception {
     }
 
-
+    //These two functions exist to gather data to output to the user in the output window
     public static int getNoSections(){
+        //the total number of images used can be calculated from the size of the final section list
         int count = 0;
         for (Section[] sectionArray : finalSectionList ){
             for (Section section : sectionArray){
@@ -819,6 +816,7 @@ public class ImageFactory {
         return count;
     }
     public static int getNoUniqueImages(){
+        //usedImages is a HashSet so cannot contain duplicates. Therefore it's size shows the number of unique images used
         return usedImages.size();
     }
 }

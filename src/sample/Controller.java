@@ -287,7 +287,7 @@ public class Controller extends BorderPane {
         outputStage.setTitle("Output View");
         outputStage.show();
         //the generation information is passed to outputController so that it can be displayed
-        outputController.innit(outputFile, outputFormat, stage, noSections, noUniqueImages);
+        outputController.innit(outputFile, outputFormat, outputStage, noSections, noUniqueImages);
         outputController.showOutputImage();
     }
 
