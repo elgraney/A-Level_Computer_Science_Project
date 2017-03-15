@@ -264,20 +264,28 @@ public class SImage {
         height = newHeight;
 
         //a new image of the correct type and dimensions is created
-        BufferedImage croppedImage = new BufferedImage(newWidth, newHeight,ImageIO.read(file).getType());
-        //the existing image is loaded
-        BufferedImage bufferedImage = ImageIO.read(file);
-        //relevant pixels are coppied from the existing image into the new image
-        for (int x=((width - newWidth)/2); x< newWidth; x++) {
-            for (int y = ((height- newHeight)/2); y < newHeight; y++) {
-                croppedImage.setRGB(x, y, bufferedImage.getRGB(x, y));
+        BufferedImage croppedImage = null;
+        try{
+            croppedImage = new BufferedImage(newWidth, newHeight,ImageIO.read(file).getType());
+            //the existing image is loaded
+            BufferedImage bufferedImage = ImageIO.read(file);
+            //relevant pixels are coppied from the existing image into the new image
+            for (int x=((width - newWidth)/2); x< newWidth; x++) {
+                for (int y = ((height- newHeight)/2); y < newHeight; y++) {
+                    croppedImage.setRGB(x, y, bufferedImage.getRGB(x, y));
+                }
+            }
+            //the new image is written so that it overwrites the old image
+            try {
+                ImageIO.write(croppedImage, "jpg", file);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
-        //the new image is written so that it overwrites the old image
-        try {
-            ImageIO.write(croppedImage, "jpg", file);
-        } catch (IOException e) {
-            e.printStackTrace();
+        //in rare instances the file type of an image is not recognised. This catch removes this problem image from the generation if it arrises
+        catch (IllegalArgumentException e) {
+            System.out.println("Bad file caught");
+            selected=false;
         }
     }
 
