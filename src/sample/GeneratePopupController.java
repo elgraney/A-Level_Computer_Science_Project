@@ -24,6 +24,7 @@ public class GeneratePopupController {
     @FXML private ChoiceBox generationStyleBox;
     @FXML private Button generationButton;
 
+    public boolean beginGenerationPressed = false;
     public int outputResolutionInt = 1;
     public int generationStyleInt;
     public int outputFormatInt;
@@ -63,6 +64,7 @@ public class GeneratePopupController {
     }
     //when the generation begins, this window closes
     public void beginGeneration(){
+        beginGenerationPressed = true;
         stage.close();
     }
 }

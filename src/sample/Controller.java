@@ -209,15 +209,16 @@ public class Controller extends BorderPane {
         stage.getIcons().add(new Image("file:icon2.png"));
         stage.showAndWait();
         //the code proceeds only when the window is closed down
+        //only passes if statement if the window closed after "Begin Generation" was pressed
+        if(controller.beginGenerationPressed){
+            System.out.println("Output res index: " + controller.outputResolutionInt);
+            System.out.println("Gen style index: " + controller.generationStyleInt);
+            System.out.println("out format index: " + controller.outputFormatInt);
 
-        System.out.println("Output res index: " + controller.outputResolutionInt);
-        System.out.println("Gen style index: " + controller.generationStyleInt);
-        System.out.println("out format index: " + controller.outputFormatInt);
-
-        //these values are default settings
-        int outputResolution = 3000;
-        int generationStyle = controller.generationStyleInt + 1;
-        String outputFormat = "jpg";
+            //these values are default settings
+            int outputResolution = 3000;
+            int generationStyle = controller.generationStyleInt + 1;
+            String outputFormat = "jpg";
 
         //this acts on inputs from GeneratePopupController
         //output resolution is the minimum dimensions for the output image (eg 6000x6000)
@@ -289,6 +290,7 @@ public class Controller extends BorderPane {
         //the generation information is passed to outputController so that it can be displayed
         outputController.innit(outputFile, outputFormat, outputStage, noSections, noUniqueImages);
         outputController.showOutputImage();
+        }
     }
 
 

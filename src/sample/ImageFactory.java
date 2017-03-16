@@ -507,7 +507,7 @@ public class ImageFactory {
                     difference = 0;
                     do {
                         for (SImage image : recombinedList) {
-                            //if the image has adequetely similar colour and is included in the pool it is linked
+                            //if the image has adequately similar colour and is included in the pool it is linked
                             if (((image.getMeanRGB(0) - difference) <= sectionRed) && ((image.getMeanRGB(0) + difference) >= sectionRed) &&
                                     ((image.getMeanRGB(1) - difference) <= sectionGreen) && ((image.getMeanRGB(1) + difference)) >= sectionGreen &&
                                     ((image.getMeanRGB(2) - difference) <= sectionBlue) && ((image.getMeanRGB(2) + difference) >= sectionBlue) &&
@@ -520,6 +520,12 @@ public class ImageFactory {
                                 difference = 998;
                                 break;
                             }
+                        }
+                        //if the best match has RGB greater than +-20 difference from the section and the section is a compound section of unusual ratio (not ratio 1), it is broken down
+                        //it can't be ratio 1 because 3x3 and 2x2 compound sections are matched in the same pass as regular sections, so if they are broken down, the sections making up those compound sections are never matched
+                        //there would also be no benefit in treating these compound sections differently to regular sections because they can only be matched to the same images as can be matched to regular sections
+                        if (difference >=20 && section.isCompoundSectionMarker()==true && section.getRatio()!=1){
+                            difference = 150;
                         }
                         //increments difference by 1
                         difference++;

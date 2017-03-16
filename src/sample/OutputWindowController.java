@@ -113,7 +113,12 @@ public class OutputWindowController {
     }
     //the window is closed and the image is not saved.
     public void discard(){
-        stage.close();
+        int dialogButton = JOptionPane.YES_NO_OPTION;
+        int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure? This window will close and all unsaved progress will be lost", "Discard?", dialogButton);
+        if(dialogResult == 0) {
+            stage.close();
+        }
+
 
     }
 }
