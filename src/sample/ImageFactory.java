@@ -217,7 +217,6 @@ public class ImageFactory {
 
                                 }
                             }
-                            System.out.println("break");
                             break;
                     }
                     //corrects the central coordinate of of the compound section so that is directly in the middle
