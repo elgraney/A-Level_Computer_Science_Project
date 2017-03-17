@@ -384,16 +384,19 @@ public class ImageFactory {
         if (imageRatio > toCropRatio) {
             //this calculates a modifier by which to times the width to bring it to the required size
             double widthModifier = ((height / (float) width) * toCropRatio);
-            //this modifier must be less than 1
+            //this modifier must be less than 1 and not 1
+            if(widthModifier<1){
 
-            //this ensures the width value is always rounded up. It would be unacceptable for an image to be 1 pixel to small, therefore leaving a region of empty space.
-            int widthCropValue = (int) (width * widthModifier) + 1;
-            //the image is then finally actually cropped
-            try {
-                image.crop(widthCropValue, height);
-            } catch (IOException e) {
-                throw new GenerationException();
+                //this ensures the width value is always rounded up. It would be unacceptable for an image to be 1 pixel to small, therefore leaving a region of empty space.
+                int widthCropValue = (int) (width * widthModifier) + 1;
+                //the image is then finally actually cropped
+                try {
+                    image.crop(widthCropValue, height);
+                } catch (IOException e) {
+                    throw new GenerationException();
+                }
             }
+
             return;
 
         //if the output is greater than the image ratio it can be inferred that the height of this image is too great and must be reduced

@@ -339,6 +339,12 @@ public class Controller extends BorderPane {
                         imagePool.add(new Image(new FileInputStream(currentImage.file), currentImage.getWidth() / 5, currentImage.getHeight() / 5, false, false));
                     } else if (currentImage.getWidth() > 1000 || currentImage.getHeight() > 1000) {
                         imagePool.add(new Image(new FileInputStream(currentImage.file), currentImage.getWidth() / 10, currentImage.getHeight() / 10, false, false));
+                    } else if (currentImage.getWidth() > 1500 || currentImage.getHeight() > 1500) {
+                        imagePool.add(new Image(new FileInputStream(currentImage.file), currentImage.getWidth() / 15, currentImage.getHeight() / 15, false, false));
+                    } else if (currentImage.getWidth() > 2000 || currentImage.getHeight() > 2000) {
+                        imagePool.add(new Image(new FileInputStream(currentImage.file), currentImage.getWidth() / 20, currentImage.getHeight() / 20, false, false));
+                    } else if (currentImage.getWidth() > 3000 || currentImage.getHeight() > 3000) {
+                        imagePool.add(new Image(new FileInputStream(currentImage.file), currentImage.getWidth() / 30, currentImage.getHeight() / 30, false, false));
                     } else {
                         imagePool.add(new Image(new FileInputStream(currentImage.file)));
                     }

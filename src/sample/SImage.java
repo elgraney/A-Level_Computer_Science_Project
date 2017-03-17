@@ -95,6 +95,7 @@ public class SImage {
 
         //call the method for finding the mode RGB
         calcModes(RGBFrequencyArray);
+
     }
 
     //Uses the ColourRange class to record the frequency of RGB values within a certain range
@@ -269,7 +270,7 @@ public class SImage {
             croppedImage = new BufferedImage(newWidth, newHeight,ImageIO.read(file).getType());
             //the existing image is loaded
             BufferedImage bufferedImage = ImageIO.read(file);
-            //relevant pixels are coppied from the existing image into the new image
+            //relevant pixels are copied from the existing image into the new image
             for (int x=((width - newWidth)/2); x< newWidth; x++) {
                 for (int y = ((height- newHeight)/2); y < newHeight; y++) {
                     croppedImage.setRGB(x, y, bufferedImage.getRGB(x, y));
