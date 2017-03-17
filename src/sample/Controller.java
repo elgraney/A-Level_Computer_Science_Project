@@ -167,6 +167,7 @@ public class Controller extends BorderPane {
                     if (ImageFactory.generating != true){
                         try {
                             beginGenerationPhase();
+                            ImageFactory.generating = false;
                         } catch (ImageFactory.GenerationException e) {
                             //The following message is displayed if there is any issue within the generation (takes place in ImageFactory)
                             JOptionPane.showMessageDialog(null, "Generation Failure.", "Generation Warning", JOptionPane.ERROR_MESSAGE);

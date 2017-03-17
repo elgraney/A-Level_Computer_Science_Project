@@ -541,6 +541,7 @@ public class ImageFactory {
                         //if sortedListMax has been increased to 100 and there are still no matches, it is highly unlikely that there is a suitable image to match to the section
                         if (sortedListMaxRange > 100) {
                             //it is dealt with appropriately in compoundSectionBreakdown
+                            System.out.println("Breakdown");
                             compoundSectionBreakdown(section, sectionArray);
                             break;
                         }
@@ -555,25 +556,12 @@ public class ImageFactory {
     private static void compoundSectionBreakdown(Section section, Section[][] sectionArray) throws GenerationException {
         //the type of compound section directly affects which sections must be made independent
         //if the section is 3x3, break down into 9 independent sections
-        if ((section.getWidth() == sectionWidth * 3) && (section.getHeight() == sectionHeight * 3)) {
-            for (int y = section.getY(); y < section.getY() + 3; y++) {
-                for (int x = section.getX(); x < section.getX() + 3; x++) {
-                    sectionArray[x][y].breakdown(sectionWidth, sectionHeight);
-                }
-            }
+
         //if the section is 3x1, break down into 3 independent sections
-        } else if ((section.getWidth() == sectionWidth * 3) && (section.getHeight() == sectionHeight * 1)) {
+        if ((section.getWidth() == sectionWidth * 3) && (section.getHeight() == sectionHeight * 1)) {
             System.out.println("Caught 3x1 to breakdown.");
             for (int y = section.getY(); y < section.getY() + 1; y++) {
                 for (int x = section.getX(); x < section.getX() + 3; x++) {
-                    sectionArray[x][y].breakdown(sectionWidth, sectionHeight);
-                }
-            }
-        //if the section is 2x2, break down into 4 independent sections
-        } else if ((section.getWidth() == sectionWidth * 2) && (section.getHeight() == sectionHeight * 2)) {
-            System.out.println("Caught 2x2 to breakdown.");
-            for (int y = section.getY(); y < section.getY() + 2; y++) {
-                for (int x = section.getX(); x < section.getX() + 2; x++) {
                     sectionArray[x][y].breakdown(sectionWidth, sectionHeight);
                 }
             }
@@ -602,7 +590,7 @@ public class ImageFactory {
                 }
             }
         //otherwise the unmatched image must be a standard section. If this has failed to match then the generation process must be canceled so an error is thrown.
-        } else if ((section.getWidth() == sectionWidth * 1) && (section.getHeight() == sectionHeight * 1)) {
+        } else{
             System.out.println("TOTAL MATCHING FAILURE");
             throw new GenerationException();
         }
