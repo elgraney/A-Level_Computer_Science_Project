@@ -276,12 +276,14 @@ public class SImage {
                     croppedImage.setRGB(x, y, bufferedImage.getRGB(x, y));
                 }
             }
-            //the new image is written so that it overwrites the old image
+            //the new image is written to a new file that it does not overwrite the old image
+            file = new File("image "+ImageFactory.imageID);
             try {
                 ImageIO.write(croppedImage, "jpg", file);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            ImageFactory.imageID+=1;
         }
         //in rare instances the file type of an image is not recognised. This catch removes this problem image from the generation if it arrises
         catch (IllegalArgumentException e) {

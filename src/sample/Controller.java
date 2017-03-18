@@ -186,6 +186,7 @@ public class Controller extends BorderPane {
             JOptionPane.showMessageDialog(null, "You have not selected a template image, please select one.", "Generation Warning", JOptionPane.ERROR_MESSAGE);
 
         }
+
     }
     private void beginGenerationPhase() throws ImageFactory.GenerationException {
 
@@ -329,7 +330,20 @@ public class Controller extends BorderPane {
 
         if (selectedFiles != null) {
             for (File selectedFile : selectedFiles) {
-                SImage currentImage = new SImage(selectedFile);
+                SImage currentImage = null;
+                try {
+                    currentImage = new SImage(selectedFile);
+                }
+                //if the user imports so many images that java runs out of heap space, this error is thrown and the imports stop.
+                catch(java.lang.OutOfMemoryError e){
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("Error importing files");
+                    alert.setContentText("You have selected too many files and your computer does not have the memory to add more");
+                    alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
+                    alert.show();
+                    selectedFiles = null;
+                }
                 try {
                     SImagePool.add(currentImage);
                     //SImagePool is the collection of all imported images in SImage form.

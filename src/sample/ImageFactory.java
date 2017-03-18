@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.Image;
 import java.awt.image.PackedColorModel;
 import java.io.File;
+import java.nio.file.Files;
 import java.util.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -31,6 +32,7 @@ public class ImageFactory {
     private static BufferedImage processedTemplateFile;
 
     public static Boolean generating = false;
+    public static int imageID = 0;
 
 
     //SET CONSTANTS FOR OUTPUT RESOLUTION AND SECTION SIZE
@@ -456,7 +458,7 @@ public class ImageFactory {
         finalSectionList = sectionList;
 
         //the final output is generated then returned
-        File outputImage = generateOutput(sectionList, outputFormat, generationStyle);
+        File outputImage = generateOutput(sectionList, outputFormat, generationStyle, imagePool);
         return outputImage;
     }
 
@@ -680,7 +682,7 @@ public class ImageFactory {
     }
 
     //the output image is drawn and returned using the images linked to each section
-    private static File generateOutput(Section[][] sectionArray, String outputFormat, int generationStyle) {
+    private static File generateOutput(Section[][] sectionArray, String outputFormat, int generationStyle, ArrayList<SImage> imagePool) {
         BufferedImage outputBufferedImage = processedTemplateFile;
         //every section that is not overwritten by a compound section is considered
         for (Section[] sectionColumn : sectionArray) {
@@ -800,6 +802,10 @@ public class ImageFactory {
             ImageIO.write(outputBufferedImage, outputFormat, outputFile);
         } catch (IOException e) {
             System.out.print("eh?!");
+        }
+
+        for (SImage image : imagePool){
+            image.file.delete();
         }
         //generating is set to false so that another generation can be started
         generating=false;

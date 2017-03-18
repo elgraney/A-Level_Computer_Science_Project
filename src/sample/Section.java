@@ -83,6 +83,7 @@ public class Section extends SImage {
         this.height = height;
         compoundSectionMarker = false;
         inCompoundSection = false;
+        findCentreXY(width, height);
         setRatioMultiple(1);
     }
     public int getX(){
